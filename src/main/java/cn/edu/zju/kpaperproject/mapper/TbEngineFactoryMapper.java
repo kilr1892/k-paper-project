@@ -4,7 +4,9 @@ import cn.edu.zju.kpaperproject.pojo.TbEngineFactory;
 import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TbEngineFactoryMapper {
     int countByExample(TbEngineFactoryExample example);
 

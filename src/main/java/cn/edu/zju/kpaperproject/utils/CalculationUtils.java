@@ -2,6 +2,7 @@ package cn.edu.zju.kpaperproject.utils;
 
 
 import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
+import cn.edu.zju.kpaperproject.enums.NumberEnum;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +33,7 @@ public class CalculationUtils {
         k1 = k1 + cycleTimes * k1Step;
         k2 = k2 + cycleTimes  * k2Step;
 
-        int price = RandomUtils.nextInt(priceLow, priceUpper + 1);
+        int price = RandomUtils.nextInt(priceLow, priceUpper + NumberEnum.NUMBER_1);
 
         return (int)Math.round(k1 - k2 * price / quality);
     }

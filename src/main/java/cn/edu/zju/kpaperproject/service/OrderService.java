@@ -15,5 +15,5 @@ public interface OrderService {
      * 生成主机厂任务
      * @return 每个主机厂的任务
      */
-    ArrayList<EngineFactoryManufacturingTask> genTask();
+    ArrayList<EngineFactoryManufacturingTask> genTask(int cycleTimes);
 }

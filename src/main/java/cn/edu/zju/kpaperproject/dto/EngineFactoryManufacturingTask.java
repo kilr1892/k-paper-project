@@ -12,9 +12,9 @@ import lombok.Setter;
 @Getter @Setter
 public class EngineFactoryManufacturingTask {
     /** 任务类型 */
-    private String taskType;
+    private int taskType;
     /** 零件需求 */
-    private int serviceDemand;
+    private int engineFactoryNeedServiceNumber;
     /** 期望价格区间 */
     private int[] engineFactory2ServiceOfferPrice;
     /** 期望质量 */

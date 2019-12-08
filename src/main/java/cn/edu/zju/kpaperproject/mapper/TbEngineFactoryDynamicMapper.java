@@ -4,7 +4,9 @@ import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamic;
 import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamicExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TbEngineFactoryDynamicMapper {
     int countByExample(TbEngineFactoryDynamicExample example);
 
