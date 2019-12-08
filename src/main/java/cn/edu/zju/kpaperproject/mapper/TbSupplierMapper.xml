@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.zju.kpaperproject.mapper.TbSupplierMapper" >
+  <resultMap id="BaseResultMap" type="cn.edu.zju.kpaperproject.pojo.TbSupplier" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="experiments_number" property="experimentsNumber" jdbcType="INTEGER" />
+    <result column="cycle_times" property="cycleTimes" jdbcType="INTEGER" />
+    <result column="supplier_id" property="supplierId" jdbcType="VARCHAR" />
+    <result column="supplier_location_g_x" property="supplierLocationGX" jdbcType="INTEGER" />
+    <result column="supplier_location_g_y" property="supplierLocationGY" jdbcType="INTEGER" />
+    <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
+    <result column="supplier_fixed_cost_c" property="supplierFixedCostC" jdbcType="INTEGER" />
+    <result column="supplier_alive" property="supplierAlive" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, experiments_number, cycle_times, supplier_id, supplier_location_g_x, supplier_location_g_y, 
+    supplier_type, supplier_fixed_cost_c, supplier_alive
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplierExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_supplier
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_supplier
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_supplier
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplierExample" >
+    delete from tb_supplier
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplier" >
+    insert into tb_supplier (id, experiments_number, cycle_times, 
+      supplier_id, supplier_location_g_x, supplier_location_g_y, 
+      supplier_type, supplier_fixed_cost_c, supplier_alive
+      )
+    values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
+      #{supplierId,jdbcType=VARCHAR}, #{supplierLocationGX,jdbcType=INTEGER}, #{supplierLocationGY,jdbcType=INTEGER}, 
+      #{supplierType,jdbcType=INTEGER}, #{supplierFixedCostC,jdbcType=INTEGER}, #{supplierAlive,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplier" >
+    insert into tb_supplier
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="experimentsNumber != null" >
+        experiments_number,
+      </if>
+      <if test="cycleTimes != null" >
+        cycle_times,
+      </if>
+      <if test="supplierId != null" >
+        supplier_id,
+      </if>
+      <if test="supplierLocationGX != null" >
+        supplier_location_g_x,
+      </if>
+      <if test="supplierLocationGY != null" >
+        supplier_location_g_y,
+      </if>
+      <if test="supplierType != null" >
+        supplier_type,
+      </if>
+      <if test="supplierFixedCostC != null" >
+        supplier_fixed_cost_c,
+      </if>
+      <if test="supplierAlive != null" >
+        supplier_alive,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="experimentsNumber != null" >
+        #{experimentsNumber,jdbcType=INTEGER},
+      </if>
+      <if test="cycleTimes != null" >
+        #{cycleTimes,jdbcType=INTEGER},
+      </if>
+      <if test="supplierId != null" >
+        #{supplierId,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierLocationGX != null" >
+        #{supplierLocationGX,jdbcType=INTEGER},
+      </if>
+      <if test="supplierLocationGY != null" >
+        #{supplierLocationGY,jdbcType=INTEGER},
+      </if>
+      <if test="supplierType != null" >
+        #{supplierType,jdbcType=INTEGER},
+      </if>
+      <if test="supplierFixedCostC != null" >
+        #{supplierFixedCostC,jdbcType=INTEGER},
+      </if>
+      <if test="supplierAlive != null" >
+        #{supplierAlive,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplierExample" resultType="java.lang.Integer" >
+    select count(*) from tb_supplier
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tb_supplier
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.experimentsNumber != null" >
+        experiments_number = #{record.experimentsNumber,jdbcType=INTEGER},
+      </if>
+      <if test="record.cycleTimes != null" >
+        cycle_times = #{record.cycleTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.supplierId != null" >
+        supplier_id = #{record.supplierId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.supplierLocationGX != null" >
+        supplier_location_g_x = #{record.supplierLocationGX,jdbcType=INTEGER},
+      </if>
+      <if test="record.supplierLocationGY != null" >
+        supplier_location_g_y = #{record.supplierLocationGY,jdbcType=INTEGER},
+      </if>
+      <if test="record.supplierType != null" >
+        supplier_type = #{record.supplierType,jdbcType=INTEGER},
+      </if>
+      <if test="record.supplierFixedCostC != null" >
+        supplier_fixed_cost_c = #{record.supplierFixedCostC,jdbcType=INTEGER},
+      </if>
+      <if test="record.supplierAlive != null" >
+        supplier_alive = #{record.supplierAlive,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tb_supplier
+    set id = #{record.id,jdbcType=INTEGER},
+      experiments_number = #{record.experimentsNumber,jdbcType=INTEGER},
+      cycle_times = #{record.cycleTimes,jdbcType=INTEGER},
+      supplier_id = #{record.supplierId,jdbcType=VARCHAR},
+      supplier_location_g_x = #{record.supplierLocationGX,jdbcType=INTEGER},
+      supplier_location_g_y = #{record.supplierLocationGY,jdbcType=INTEGER},
+      supplier_type = #{record.supplierType,jdbcType=INTEGER},
+      supplier_fixed_cost_c = #{record.supplierFixedCostC,jdbcType=INTEGER},
+      supplier_alive = #{record.supplierAlive,jdbcType=BIT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplier" >
+    update tb_supplier
+    <set >
+      <if test="experimentsNumber != null" >
+        experiments_number = #{experimentsNumber,jdbcType=INTEGER},
+      </if>
+      <if test="cycleTimes != null" >
+        cycle_times = #{cycleTimes,jdbcType=INTEGER},
+      </if>
+      <if test="supplierId != null" >
+        supplier_id = #{supplierId,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierLocationGX != null" >
+        supplier_location_g_x = #{supplierLocationGX,jdbcType=INTEGER},
+      </if>
+      <if test="supplierLocationGY != null" >
+        supplier_location_g_y = #{supplierLocationGY,jdbcType=INTEGER},
+      </if>
+      <if test="supplierType != null" >
+        supplier_type = #{supplierType,jdbcType=INTEGER},
+      </if>
+      <if test="supplierFixedCostC != null" >
+        supplier_fixed_cost_c = #{supplierFixedCostC,jdbcType=INTEGER},
+      </if>
+      <if test="supplierAlive != null" >
+        supplier_alive = #{supplierAlive,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplier" >
+    update tb_supplier
+    set experiments_number = #{experimentsNumber,jdbcType=INTEGER},
+      cycle_times = #{cycleTimes,jdbcType=INTEGER},
+      supplier_id = #{supplierId,jdbcType=VARCHAR},
+      supplier_location_g_x = #{supplierLocationGX,jdbcType=INTEGER},
+      supplier_location_g_y = #{supplierLocationGY,jdbcType=INTEGER},
+      supplier_type = #{supplierType,jdbcType=INTEGER},
+      supplier_fixed_cost_c = #{supplierFixedCostC,jdbcType=INTEGER},
+      supplier_alive = #{supplierAlive,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
