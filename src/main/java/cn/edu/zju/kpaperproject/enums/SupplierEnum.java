@@ -13,15 +13,15 @@ import org.springframework.beans.factory.annotation.Value;
 public class SupplierEnum {
 
     @Value("${experiments.supplier.init210}")
-    public static int supplierInit210;
+    public static int supplierInit210Sum;
     @Value("${experiments.supplier.init220}")
-    public static int supplierInit220;
+    public static int supplierInit220Sum;
     @Value("${experiments.supplier.init230}")
-    public static int supplierInit230;
+    public static int supplierInit230Sum;
     @Value("${experiments.supplier.init240}")
-    public static int supplierInit240;
+    public static int supplierInit240Sum;
     @Value("${experiments.supplier.init250}")
-    public static int supplierInit250;
+    public static int supplierInit250Sum;
 
     @Value("${experiments.supplier.location.low}")
     public static int supplierLocationLow;

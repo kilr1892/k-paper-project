@@ -54,7 +54,7 @@ public class InitSupplierUtils {
      * @param type 类型代码
      * @return 类型代码
      */
-    public static String initType(int type) {
+    public static int initType(int type) {
         switch (type) {
             case 210:
                 return SupplierEnum.supplierType210;
