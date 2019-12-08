@@ -11,7 +11,7 @@ public class TbRelationMatrix {
 
     private String supplierId;
 
-    private String relationScore;
+    private Double relationScore;
 
     public Integer getId() {
         return id;
@@ -53,11 +53,11 @@ public class TbRelationMatrix {
         this.supplierId = supplierId == null ? null : supplierId.trim();
     }
 
-    public String getRelationScore() {
+    public Double getRelationScore() {
         return relationScore;
     }
 
-    public void setRelationScore(String relationScore) {
-        this.relationScore = relationScore == null ? null : relationScore.trim();
+    public void setRelationScore(Double relationScore) {
+        this.relationScore = relationScore;
     }
 }

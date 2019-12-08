@@ -3,21 +3,19 @@ package cn.edu.zju.kpaperproject.service.impl;
 import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
 import cn.edu.zju.kpaperproject.enums.NumberEnum;
 import cn.edu.zju.kpaperproject.enums.SupplierEnum;
-import cn.edu.zju.kpaperproject.mapper.TbEngineFactoryDynamicMapper;
-import cn.edu.zju.kpaperproject.mapper.TbEngineFactoryMapper;
-import cn.edu.zju.kpaperproject.mapper.TbSupplierDynamicMapper;
-import cn.edu.zju.kpaperproject.mapper.TbSupplierMapper;
-import cn.edu.zju.kpaperproject.pojo.TbEngineFactory;
-import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamic;
-import cn.edu.zju.kpaperproject.pojo.TbSupplier;
-import cn.edu.zju.kpaperproject.pojo.TbSupplierDynamic;
+import cn.edu.zju.kpaperproject.mapper.*;
+import cn.edu.zju.kpaperproject.pojo.*;
 import cn.edu.zju.kpaperproject.service.InitService;
 import cn.edu.zju.kpaperproject.utils.CommonUtils;
 import cn.edu.zju.kpaperproject.utils.InitEngineFactoryUtils;
+import cn.edu.zju.kpaperproject.utils.InitRelationMatrixUtils;
 import cn.edu.zju.kpaperproject.utils.InitSupplierUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * .
@@ -39,6 +37,10 @@ public class InitServiceImpl implements InitService {
     @Autowired
     private TbSupplierDynamicMapper tbSupplierDynamicMapper;
 
+    @Autowired
+    private TbRelationMatrixMapper tbRelationMatrixMapper;
+
+
     @Override
     public void init(int experimentsNumber) {
         // 初始化 主机厂
@@ -53,7 +55,7 @@ public class InitServiceImpl implements InitService {
      * 初始化主机厂
      * @param experimentsNumber 实验次数
      */
-    public void engineFactoryInit(int experimentsNumber) {
+    private void engineFactoryInit(int experimentsNumber) {
         // TODO 要判断下是否已经实验过了
         // TODO 以后要改为批量插入数据库...
         TbEngineFactory tbEngineFactory = new TbEngineFactory();
@@ -102,7 +104,8 @@ public class InitServiceImpl implements InitService {
      * 初始化供应商
      * @param experimentsNumber 实验次数
      */
-    public void supplierInit(int experimentsNumber) {
+    private void supplierInit(int experimentsNumber) {
+        // TODO 以后要改为批量插入数据库...
         TbSupplier tbSupplier = new TbSupplier();
         tbSupplier.setExperimentsNumber(experimentsNumber);
         // 0
@@ -134,7 +137,7 @@ public class InitServiceImpl implements InitService {
      * @param tbSupplier        同一个TbSupplier
      * @param tbSupplierDynamic 同一个TbSupplierDynamic
      */
-    public void supplierInit(int typeCode, TbSupplier tbSupplier, TbSupplierDynamic tbSupplierDynamic) {
+    private void supplierInit(int typeCode, TbSupplier tbSupplier, TbSupplierDynamic tbSupplierDynamic) {
         // 供应商id
         String supplierId = CommonUtils.genId();
         tbSupplier.setSupplierId(supplierId);
@@ -171,7 +174,51 @@ public class InitServiceImpl implements InitService {
      * 初始化关系矩阵
      * @param experimentsNumber 实验次数
      */
-    public void relationMatrixInit(int experimentsNumber) {
+    private void relationMatrixInit(int experimentsNumber) {
+        // TODO 以后要改为批量插入数据库...
+        // 查出所有的主机厂, 供应商
+        // 主机厂
+        List<TbEngineFactory> tbEngineFactories = listInitEngineFactory(experimentsNumber);
+        // 供应商
+        List<TbSupplier> tbSuppliers = listInitSupplier(experimentsNumber);
+        // 两个循环生成关系矩阵
+        // 填充用的
+        TbRelationMatrix tbRelationMatrix = new TbRelationMatrix();
+        tbRelationMatrix.setExperimentsNumber(experimentsNumber);
+        tbRelationMatrix.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
+        for (TbEngineFactory aTbEngineFactory : tbEngineFactories) {
+            tbRelationMatrix.setEngineFactoryId(aTbEngineFactory.getEngineFactoryId());
+            for (TbSupplier aTbSupplier : tbSuppliers) {
+                tbRelationMatrix.setSupplierId(aTbSupplier.getSupplierId());
+                tbRelationMatrix.setRelationScore(InitRelationMatrixUtils.initRelationshipStrengthScore());
+                tbRelationMatrixMapper.insertSelective(tbRelationMatrix);
+            }
+        }
 
     }
+
+    /**
+     * 初始化的主机厂
+     * @param experimentsNumber 实验次数
+     * @return                  所有初始的主机厂
+     */
+    private List<TbEngineFactory> listInitEngineFactory(int experimentsNumber) {
+        TbEngineFactoryExample tbEngineFactoryExample = new TbEngineFactoryExample();
+        TbEngineFactoryExample.Criteria engineFactoryExampleCriteria = tbEngineFactoryExample.createCriteria();
+        engineFactoryExampleCriteria.andExperimentsNumberEqualTo(experimentsNumber);
+        return tbEngineFactoryMapper.selectByExample(tbEngineFactoryExample);
+    }
+    /**
+     * 初始化的供应商
+     * @param experimentsNumber 实验次数
+     * @return                  所有初始的供应商
+     */
+    private List<TbSupplier> listInitSupplier(int experimentsNumber) {
+        TbSupplierExample tbSupplierExample = new TbSupplierExample();
+        TbSupplierExample.Criteria supplierExampleCriteria = tbSupplierExample.createCriteria();
+        supplierExampleCriteria.andExperimentsNumberEqualTo(experimentsNumber);
+        return tbSupplierMapper.selectByExample(tbSupplierExample);
+    }
+
+
 }

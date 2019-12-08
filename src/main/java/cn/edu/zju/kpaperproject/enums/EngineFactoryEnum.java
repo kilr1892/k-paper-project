@@ -1,6 +1,8 @@
 package cn.edu.zju.kpaperproject.enums;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 /**
  * .
@@ -8,53 +10,105 @@ import org.springframework.beans.factory.annotation.Value;
  * @author RichardLee
  * @version v1.0
  */
+@Component
+@PropertySource("classpath:/config/experiments.properties")
 public class EngineFactoryEnum {
-
-    @Value("${experiments.engineFactory.initSum}")
     public static int engineFactoryInitSum;
 
-    @Value("${experiments.engineFactory.location.low}")
+
     public static int engineFactoryLocationLow;
 
-    @Value("${experiments.engineFactory.location.upper}")
     public static int engineFactoryLocationUpper;
 
-    @Value("${experiments.engineFactory.initTotalAssets.low}")
     public static int engineFactoryInitTotalAssetsLow;
 
-    @Value("${experiments.engineFactory.initTotalAssets.upper}")
     public static int engineFactoryInitTotalAssetsUpper;
 
-    @Value("${experiments.engineFactory.fixedCost}")
     public static int engineFactoryFixedCost;
 
-    @Value("${experiments.engineFactory.initCredit}")
     public static double engineFactoryInitCredit;
 
-    @Value("${experiments.engineFactory.initCapacity.low}")
     public static int engineFactoryInitCapacityLow;
 
-    @Value("${experiments.engineFactory.initCapacity.upper}")
     public static int engineFactoryInitCapacityUpper;
-    @Value("${experiments.engineFactory.initPrice.low}")
     public static int engineFactoryInitPriceLow;
-    @Value("${experiments.engineFactory.initPrice.upper}")
     public static int engineFactoryInitPriceUpper;
 
-    @Value("${experiments.engineFactory.quality.low}")
     public static int engineFactoryInitQualityLow;
-    @Value("${experiments.engineFactory.quality.upper}")
     public static int engineFactoryInitQualityUpper;
 
 
-    @Value("${experiments.engineFactory.DemandForecast.initK1}")
     public static int engineFactoryDemandForecastInitK1;
-    @Value("${experiments.engineFactory.DemandForecast.initK2}")
     public static double engineFactoryDemandForecastInitK2;
-    @Value("${experiments.engineFactory.DemandForecast.K1.step}")
     public static int engineFactoryDemandForecastK1Step;
-    @Value("${experiments.engineFactory.DemandForecast.K2.step}")
     public static double engineFactoryDemandForecastK2Step;
 
-
+    @Value("${experiments.engineFactory.initSum}")
+    public void setEngineFactoryInitSum(int engineFactoryInitSum) {
+        EngineFactoryEnum.engineFactoryInitSum = engineFactoryInitSum;
+    }
+    @Value("${experiments.engineFactory.location.low}")
+    public  void setEngineFactoryLocationLow(int engineFactoryLocationLow) {
+        EngineFactoryEnum.engineFactoryLocationLow = engineFactoryLocationLow;
+    }
+    @Value("${experiments.engineFactory.location.upper}")
+    public  void setEngineFactoryLocationUpper(int engineFactoryLocationUpper) {
+        EngineFactoryEnum.engineFactoryLocationUpper = engineFactoryLocationUpper;
+    }
+    @Value("${experiments.engineFactory.initTotalAssets.low}")
+    public  void setEngineFactoryInitTotalAssetsLow(int engineFactoryInitTotalAssetsLow) {
+        EngineFactoryEnum.engineFactoryInitTotalAssetsLow = engineFactoryInitTotalAssetsLow;
+    }
+    @Value("${experiments.engineFactory.initTotalAssets.upper}")
+    public  void setEngineFactoryInitTotalAssetsUpper(int engineFactoryInitTotalAssetsUpper) {
+        EngineFactoryEnum.engineFactoryInitTotalAssetsUpper = engineFactoryInitTotalAssetsUpper;
+    }
+    @Value("${experiments.engineFactory.fixedCost}")
+    public  void setEngineFactoryFixedCost(int engineFactoryFixedCost) {
+        EngineFactoryEnum.engineFactoryFixedCost = engineFactoryFixedCost;
+    }
+    @Value("${experiments.engineFactory.initCredit}")
+    public  void setEngineFactoryInitCredit(double engineFactoryInitCredit) {
+        EngineFactoryEnum.engineFactoryInitCredit = engineFactoryInitCredit;
+    }
+    @Value("${experiments.engineFactory.initCapacity.low}")
+    public  void setEngineFactoryInitCapacityLow(int engineFactoryInitCapacityLow) {
+        EngineFactoryEnum.engineFactoryInitCapacityLow = engineFactoryInitCapacityLow;
+    }
+    @Value("${experiments.engineFactory.initCapacity.upper}")
+    public  void setEngineFactoryInitCapacityUpper(int engineFactoryInitCapacityUpper) {
+        EngineFactoryEnum.engineFactoryInitCapacityUpper = engineFactoryInitCapacityUpper;
+    }
+    @Value("${experiments.engineFactory.initPrice.low}")
+    public  void setEngineFactoryInitPriceLow(int engineFactoryInitPriceLow) {
+        EngineFactoryEnum.engineFactoryInitPriceLow = engineFactoryInitPriceLow;
+    }
+    @Value("${experiments.engineFactory.initPrice.upper}")
+    public  void setEngineFactoryInitPriceUpper(int engineFactoryInitPriceUpper) {
+        EngineFactoryEnum.engineFactoryInitPriceUpper = engineFactoryInitPriceUpper;
+    }
+    @Value("${experiments.engineFactory.quality.low}")
+    public  void setEngineFactoryInitQualityLow(int engineFactoryInitQualityLow) {
+        EngineFactoryEnum.engineFactoryInitQualityLow = engineFactoryInitQualityLow;
+    }
+    @Value("${experiments.engineFactory.quality.upper}")
+    public  void setEngineFactoryInitQualityUpper(int engineFactoryInitQualityUpper) {
+        EngineFactoryEnum.engineFactoryInitQualityUpper = engineFactoryInitQualityUpper;
+    }
+    @Value("${experiments.engineFactory.DemandForecast.initK1}")
+    public  void setEngineFactoryDemandForecastInitK1(int engineFactoryDemandForecastInitK1) {
+        EngineFactoryEnum.engineFactoryDemandForecastInitK1 = engineFactoryDemandForecastInitK1;
+    }
+    @Value("${experiments.engineFactory.DemandForecast.initK2}")
+    public  void setEngineFactoryDemandForecastInitK2(double engineFactoryDemandForecastInitK2) {
+        EngineFactoryEnum.engineFactoryDemandForecastInitK2 = engineFactoryDemandForecastInitK2;
+    }
+    @Value("${experiments.engineFactory.DemandForecast.K1.step}")
+    public  void setEngineFactoryDemandForecastK1Step(int engineFactoryDemandForecastK1Step) {
+        EngineFactoryEnum.engineFactoryDemandForecastK1Step = engineFactoryDemandForecastK1Step;
+    }
+    @Value("${experiments.engineFactory.DemandForecast.K2.step}")
+    public  void setEngineFactoryDemandForecastK2Step(double engineFactoryDemandForecastK2Step) {
+        EngineFactoryEnum.engineFactoryDemandForecastK2Step = engineFactoryDemandForecastK2Step;
+    }
 }

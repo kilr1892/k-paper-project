@@ -3,6 +3,7 @@ package cn.edu.zju.kpaperproject.utils;
 import cn.edu.zju.kpaperproject.enums.SupplierEnum;
 import cn.edu.zju.kpaperproject.enums.SupplierEnum;
 import org.apache.commons.lang3.RandomUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * .
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.RandomUtils;
  * @author RichardLee
  * @version v1.0
  */
+@Component
 public class InitSupplierUtils {
     /**
      * 生成供应商的地址

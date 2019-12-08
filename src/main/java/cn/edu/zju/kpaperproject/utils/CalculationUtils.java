@@ -2,13 +2,15 @@ package cn.edu.zju.kpaperproject.utils;
 
 
 import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
+import org.springframework.stereotype.Component;
 
 /**
- * .
+ * 与计算相关.
  *
  * @author RichardLee
  * @version v1.0
  */
+@Component
 public class CalculationUtils {
 
     /**

@@ -1,11 +1,14 @@
 package cn.edu.zju.kpaperproject.enums;
 
+import org.springframework.stereotype.Component;
+
 /**
  * .
  *
  * @author RichardLee
  * @version v1.0
  */
+@Component
 public class NumberEnum {
     public static final int NUMBER_0 = 0;
     public static final int CYCLE_TIME_INIT = 0;

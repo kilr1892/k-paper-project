@@ -2,6 +2,7 @@ package cn.edu.zju.kpaperproject.utils;
 
 import cn.edu.zju.kpaperproject.enums.CalculationEnum;
 import org.apache.commons.lang3.RandomUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * .
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.RandomUtils;
  * @author RichardLee
  * @version v1.0
  */
+@Component
 public class InitRelationMatrixUtils {
     /**
      * 初始关系强度

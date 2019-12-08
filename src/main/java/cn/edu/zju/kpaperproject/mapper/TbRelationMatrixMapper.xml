@@ -7,7 +7,7 @@
     <result column="cycle_times" property="cycleTimes" jdbcType="INTEGER" />
     <result column="engine_factory_id" property="engineFactoryId" jdbcType="VARCHAR" />
     <result column="supplier_id" property="supplierId" jdbcType="VARCHAR" />
-    <result column="relation_score" property="relationScore" jdbcType="VARCHAR" />
+    <result column="relation_score" property="relationScore" jdbcType="DOUBLE" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -105,7 +105,7 @@
       engine_factory_id, supplier_id, relation_score
       )
     values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
-      #{engineFactoryId,jdbcType=VARCHAR}, #{supplierId,jdbcType=VARCHAR}, #{relationScore,jdbcType=VARCHAR}
+      #{engineFactoryId,jdbcType=VARCHAR}, #{supplierId,jdbcType=VARCHAR}, #{relationScore,jdbcType=DOUBLE}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbRelationMatrix" >
@@ -147,7 +147,7 @@
         #{supplierId,jdbcType=VARCHAR},
       </if>
       <if test="relationScore != null" >
-        #{relationScore,jdbcType=VARCHAR},
+        #{relationScore,jdbcType=DOUBLE},
       </if>
     </trim>
   </insert>
@@ -176,7 +176,7 @@
         supplier_id = #{record.supplierId,jdbcType=VARCHAR},
       </if>
       <if test="record.relationScore != null" >
-        relation_score = #{record.relationScore,jdbcType=VARCHAR},
+        relation_score = #{record.relationScore,jdbcType=DOUBLE},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -190,7 +190,7 @@
       cycle_times = #{record.cycleTimes,jdbcType=INTEGER},
       engine_factory_id = #{record.engineFactoryId,jdbcType=VARCHAR},
       supplier_id = #{record.supplierId,jdbcType=VARCHAR},
-      relation_score = #{record.relationScore,jdbcType=VARCHAR}
+      relation_score = #{record.relationScore,jdbcType=DOUBLE}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -211,7 +211,7 @@
         supplier_id = #{supplierId,jdbcType=VARCHAR},
       </if>
       <if test="relationScore != null" >
-        relation_score = #{relationScore,jdbcType=VARCHAR},
+        relation_score = #{relationScore,jdbcType=DOUBLE},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -222,7 +222,7 @@
       cycle_times = #{cycleTimes,jdbcType=INTEGER},
       engine_factory_id = #{engineFactoryId,jdbcType=VARCHAR},
       supplier_id = #{supplierId,jdbcType=VARCHAR},
-      relation_score = #{relationScore,jdbcType=VARCHAR}
+      relation_score = #{relationScore,jdbcType=DOUBLE}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

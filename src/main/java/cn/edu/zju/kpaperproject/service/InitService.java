@@ -9,7 +9,7 @@ package cn.edu.zju.kpaperproject.service;
 public interface InitService {
 
     /**
-     * 初始化实验数值
+     * 初始化实验(主机厂/ 供应商/ 关系矩阵 )
      * @param experimentsNumber 实验次数
      */
     void init(int experimentsNumber);

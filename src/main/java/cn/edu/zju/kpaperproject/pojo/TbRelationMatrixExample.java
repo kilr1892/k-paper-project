@@ -434,62 +434,52 @@ public class TbRelationMatrixExample {
             return (Criteria) this;
         }
 
-        public Criteria andRelationScoreEqualTo(String value) {
+        public Criteria andRelationScoreEqualTo(Double value) {
             addCriterion("relation_score =", value, "relationScore");
             return (Criteria) this;
         }
 
-        public Criteria andRelationScoreNotEqualTo(String value) {
+        public Criteria andRelationScoreNotEqualTo(Double value) {
             addCriterion("relation_score <>", value, "relationScore");
             return (Criteria) this;
         }
 
-        public Criteria andRelationScoreGreaterThan(String value) {
+        public Criteria andRelationScoreGreaterThan(Double value) {
             addCriterion("relation_score >", value, "relationScore");
             return (Criteria) this;
         }
 
-        public Criteria andRelationScoreGreaterThanOrEqualTo(String value) {
+        public Criteria andRelationScoreGreaterThanOrEqualTo(Double value) {
             addCriterion("relation_score >=", value, "relationScore");
             return (Criteria) this;
         }
 
-        public Criteria andRelationScoreLessThan(String value) {
+        public Criteria andRelationScoreLessThan(Double value) {
             addCriterion("relation_score <", value, "relationScore");
             return (Criteria) this;
         }
 
-        public Criteria andRelationScoreLessThanOrEqualTo(String value) {
+        public Criteria andRelationScoreLessThanOrEqualTo(Double value) {
             addCriterion("relation_score <=", value, "relationScore");
             return (Criteria) this;
         }
 
-        public Criteria andRelationScoreLike(String value) {
-            addCriterion("relation_score like", value, "relationScore");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationScoreNotLike(String value) {
-            addCriterion("relation_score not like", value, "relationScore");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationScoreIn(List<String> values) {
+        public Criteria andRelationScoreIn(List<Double> values) {
             addCriterion("relation_score in", values, "relationScore");
             return (Criteria) this;
         }
 
-        public Criteria andRelationScoreNotIn(List<String> values) {
+        public Criteria andRelationScoreNotIn(List<Double> values) {
             addCriterion("relation_score not in", values, "relationScore");
             return (Criteria) this;
         }
 
-        public Criteria andRelationScoreBetween(String value1, String value2) {
+        public Criteria andRelationScoreBetween(Double value1, Double value2) {
             addCriterion("relation_score between", value1, value2, "relationScore");
             return (Criteria) this;
         }
 
-        public Criteria andRelationScoreNotBetween(String value1, String value2) {
+        public Criteria andRelationScoreNotBetween(Double value1, Double value2) {
             addCriterion("relation_score not between", value1, value2, "relationScore");
             return (Criteria) this;
         }
