@@ -21,6 +21,10 @@ public class TbOrder {
 
     private String supplierActualNumberM;
 
+    private Integer engineFactoryToSupplierScore;
+
+    private Integer supplierToEngineFactoryScore;
+
     public Integer getId() {
         return id;
     }
@@ -99,5 +103,21 @@ public class TbOrder {
 
     public void setSupplierActualNumberM(String supplierActualNumberM) {
         this.supplierActualNumberM = supplierActualNumberM == null ? null : supplierActualNumberM.trim();
+    }
+
+    public Integer getEngineFactoryToSupplierScore() {
+        return engineFactoryToSupplierScore;
+    }
+
+    public void setEngineFactoryToSupplierScore(Integer engineFactoryToSupplierScore) {
+        this.engineFactoryToSupplierScore = engineFactoryToSupplierScore;
+    }
+
+    public Integer getSupplierToEngineFactoryScore() {
+        return supplierToEngineFactoryScore;
+    }
+
+    public void setSupplierToEngineFactoryScore(Integer supplierToEngineFactoryScore) {
+        this.supplierToEngineFactoryScore = supplierToEngineFactoryScore;
     }
 }

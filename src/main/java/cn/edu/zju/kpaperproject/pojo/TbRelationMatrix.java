@@ -13,6 +13,8 @@ public class TbRelationMatrix {
 
     private Double relationScore;
 
+    private Integer accumulativeTotalScore;
+
     public Integer getId() {
         return id;
     }
@@ -59,5 +61,13 @@ public class TbRelationMatrix {
 
     public void setRelationScore(Double relationScore) {
         this.relationScore = relationScore;
+    }
+
+    public Integer getAccumulativeTotalScore() {
+        return accumulativeTotalScore;
+    }
+
+    public void setAccumulativeTotalScore(Integer accumulativeTotalScore) {
+        this.accumulativeTotalScore = accumulativeTotalScore;
     }
 }

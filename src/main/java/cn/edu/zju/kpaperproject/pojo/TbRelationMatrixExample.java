@@ -483,6 +483,66 @@ public class TbRelationMatrixExample {
             addCriterion("relation_score not between", value1, value2, "relationScore");
             return (Criteria) this;
         }
+
+        public Criteria andAccumulativeTotalScoreIsNull() {
+            addCriterion("accumulative_total_score is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccumulativeTotalScoreIsNotNull() {
+            addCriterion("accumulative_total_score is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccumulativeTotalScoreEqualTo(Integer value) {
+            addCriterion("accumulative_total_score =", value, "accumulativeTotalScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccumulativeTotalScoreNotEqualTo(Integer value) {
+            addCriterion("accumulative_total_score <>", value, "accumulativeTotalScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccumulativeTotalScoreGreaterThan(Integer value) {
+            addCriterion("accumulative_total_score >", value, "accumulativeTotalScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccumulativeTotalScoreGreaterThanOrEqualTo(Integer value) {
+            addCriterion("accumulative_total_score >=", value, "accumulativeTotalScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccumulativeTotalScoreLessThan(Integer value) {
+            addCriterion("accumulative_total_score <", value, "accumulativeTotalScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccumulativeTotalScoreLessThanOrEqualTo(Integer value) {
+            addCriterion("accumulative_total_score <=", value, "accumulativeTotalScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccumulativeTotalScoreIn(List<Integer> values) {
+            addCriterion("accumulative_total_score in", values, "accumulativeTotalScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccumulativeTotalScoreNotIn(List<Integer> values) {
+            addCriterion("accumulative_total_score not in", values, "accumulativeTotalScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccumulativeTotalScoreBetween(Integer value1, Integer value2) {
+            addCriterion("accumulative_total_score between", value1, value2, "accumulativeTotalScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccumulativeTotalScoreNotBetween(Integer value1, Integer value2) {
+            addCriterion("accumulative_total_score not between", value1, value2, "accumulativeTotalScore");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

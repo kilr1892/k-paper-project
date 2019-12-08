@@ -773,6 +773,126 @@ public class TbOrderExample {
             addCriterion("supplier_actual_number_m not between", value1, value2, "supplierActualNumberM");
             return (Criteria) this;
         }
+
+        public Criteria andEngineFactoryToSupplierScoreIsNull() {
+            addCriterion("engine_factory_to_supplier_score is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToSupplierScoreIsNotNull() {
+            addCriterion("engine_factory_to_supplier_score is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToSupplierScoreEqualTo(Integer value) {
+            addCriterion("engine_factory_to_supplier_score =", value, "engineFactoryToSupplierScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToSupplierScoreNotEqualTo(Integer value) {
+            addCriterion("engine_factory_to_supplier_score <>", value, "engineFactoryToSupplierScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToSupplierScoreGreaterThan(Integer value) {
+            addCriterion("engine_factory_to_supplier_score >", value, "engineFactoryToSupplierScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToSupplierScoreGreaterThanOrEqualTo(Integer value) {
+            addCriterion("engine_factory_to_supplier_score >=", value, "engineFactoryToSupplierScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToSupplierScoreLessThan(Integer value) {
+            addCriterion("engine_factory_to_supplier_score <", value, "engineFactoryToSupplierScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToSupplierScoreLessThanOrEqualTo(Integer value) {
+            addCriterion("engine_factory_to_supplier_score <=", value, "engineFactoryToSupplierScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToSupplierScoreIn(List<Integer> values) {
+            addCriterion("engine_factory_to_supplier_score in", values, "engineFactoryToSupplierScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToSupplierScoreNotIn(List<Integer> values) {
+            addCriterion("engine_factory_to_supplier_score not in", values, "engineFactoryToSupplierScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToSupplierScoreBetween(Integer value1, Integer value2) {
+            addCriterion("engine_factory_to_supplier_score between", value1, value2, "engineFactoryToSupplierScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToSupplierScoreNotBetween(Integer value1, Integer value2) {
+            addCriterion("engine_factory_to_supplier_score not between", value1, value2, "engineFactoryToSupplierScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierToEngineFactoryScoreIsNull() {
+            addCriterion("supplier_to_engine_factory_score is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierToEngineFactoryScoreIsNotNull() {
+            addCriterion("supplier_to_engine_factory_score is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierToEngineFactoryScoreEqualTo(Integer value) {
+            addCriterion("supplier_to_engine_factory_score =", value, "supplierToEngineFactoryScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierToEngineFactoryScoreNotEqualTo(Integer value) {
+            addCriterion("supplier_to_engine_factory_score <>", value, "supplierToEngineFactoryScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierToEngineFactoryScoreGreaterThan(Integer value) {
+            addCriterion("supplier_to_engine_factory_score >", value, "supplierToEngineFactoryScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierToEngineFactoryScoreGreaterThanOrEqualTo(Integer value) {
+            addCriterion("supplier_to_engine_factory_score >=", value, "supplierToEngineFactoryScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierToEngineFactoryScoreLessThan(Integer value) {
+            addCriterion("supplier_to_engine_factory_score <", value, "supplierToEngineFactoryScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierToEngineFactoryScoreLessThanOrEqualTo(Integer value) {
+            addCriterion("supplier_to_engine_factory_score <=", value, "supplierToEngineFactoryScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierToEngineFactoryScoreIn(List<Integer> values) {
+            addCriterion("supplier_to_engine_factory_score in", values, "supplierToEngineFactoryScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierToEngineFactoryScoreNotIn(List<Integer> values) {
+            addCriterion("supplier_to_engine_factory_score not in", values, "supplierToEngineFactoryScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierToEngineFactoryScoreBetween(Integer value1, Integer value2) {
+            addCriterion("supplier_to_engine_factory_score between", value1, value2, "supplierToEngineFactoryScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierToEngineFactoryScoreNotBetween(Integer value1, Integer value2) {
+            addCriterion("supplier_to_engine_factory_score not between", value1, value2, "supplierToEngineFactoryScore");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

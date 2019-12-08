@@ -8,6 +8,7 @@
     <result column="engine_factory_id" property="engineFactoryId" jdbcType="VARCHAR" />
     <result column="supplier_id" property="supplierId" jdbcType="VARCHAR" />
     <result column="relation_score" property="relationScore" jdbcType="DOUBLE" />
+    <result column="accumulative_total_score" property="accumulativeTotalScore" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -68,7 +69,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, experiments_number, cycle_times, engine_factory_id, supplier_id, relation_score
+    id, experiments_number, cycle_times, engine_factory_id, supplier_id, relation_score, 
+    accumulative_total_score
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.zju.kpaperproject.pojo.TbRelationMatrixExample" >
     select
@@ -102,11 +104,11 @@
   </delete>
   <insert id="insert" parameterType="cn.edu.zju.kpaperproject.pojo.TbRelationMatrix" >
     insert into tb_relation_matrix (id, experiments_number, cycle_times, 
-      engine_factory_id, supplier_id, relation_score
-      )
+      engine_factory_id, supplier_id, relation_score, 
+      accumulative_total_score)
     values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
-      #{engineFactoryId,jdbcType=VARCHAR}, #{supplierId,jdbcType=VARCHAR}, #{relationScore,jdbcType=DOUBLE}
-      )
+      #{engineFactoryId,jdbcType=VARCHAR}, #{supplierId,jdbcType=VARCHAR}, #{relationScore,jdbcType=DOUBLE}, 
+      #{accumulativeTotalScore,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbRelationMatrix" >
     insert into tb_relation_matrix
@@ -129,6 +131,9 @@
       <if test="relationScore != null" >
         relation_score,
       </if>
+      <if test="accumulativeTotalScore != null" >
+        accumulative_total_score,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -148,6 +153,9 @@
       </if>
       <if test="relationScore != null" >
         #{relationScore,jdbcType=DOUBLE},
+      </if>
+      <if test="accumulativeTotalScore != null" >
+        #{accumulativeTotalScore,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -178,6 +186,9 @@
       <if test="record.relationScore != null" >
         relation_score = #{record.relationScore,jdbcType=DOUBLE},
       </if>
+      <if test="record.accumulativeTotalScore != null" >
+        accumulative_total_score = #{record.accumulativeTotalScore,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -190,7 +201,8 @@
       cycle_times = #{record.cycleTimes,jdbcType=INTEGER},
       engine_factory_id = #{record.engineFactoryId,jdbcType=VARCHAR},
       supplier_id = #{record.supplierId,jdbcType=VARCHAR},
-      relation_score = #{record.relationScore,jdbcType=DOUBLE}
+      relation_score = #{record.relationScore,jdbcType=DOUBLE},
+      accumulative_total_score = #{record.accumulativeTotalScore,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -213,6 +225,9 @@
       <if test="relationScore != null" >
         relation_score = #{relationScore,jdbcType=DOUBLE},
       </if>
+      <if test="accumulativeTotalScore != null" >
+        accumulative_total_score = #{accumulativeTotalScore,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -222,7 +237,8 @@
       cycle_times = #{cycleTimes,jdbcType=INTEGER},
       engine_factory_id = #{engineFactoryId,jdbcType=VARCHAR},
       supplier_id = #{supplierId,jdbcType=VARCHAR},
-      relation_score = #{relationScore,jdbcType=DOUBLE}
+      relation_score = #{relationScore,jdbcType=DOUBLE},
+      accumulative_total_score = #{accumulativeTotalScore,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -21,4 +21,7 @@ server:
 mybatis:
   mapper-locations: classpath:cn/edu/zju/kpaperproject/mapper/*.xml
   type-aliases-package: cn.edu.zju.kpaperproject.pojo
-
+debug: true
+logging:
+  level:
+    cn.edu.zju.kpaperproject.mapper.TbRelationMatrixMapper: debug
