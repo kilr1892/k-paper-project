@@ -6,10 +6,7 @@ import cn.edu.zju.kpaperproject.enums.SupplierEnum;
 import cn.edu.zju.kpaperproject.mapper.*;
 import cn.edu.zju.kpaperproject.pojo.*;
 import cn.edu.zju.kpaperproject.service.InitService;
-import cn.edu.zju.kpaperproject.utils.CommonUtils;
-import cn.edu.zju.kpaperproject.utils.InitEngineFactoryUtils;
-import cn.edu.zju.kpaperproject.utils.InitRelationMatrixUtils;
-import cn.edu.zju.kpaperproject.utils.InitSupplierUtils;
+import cn.edu.zju.kpaperproject.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -43,6 +40,7 @@ public class InitServiceImpl implements InitService {
 
     @Override
     public void init(int experimentsNumber) {
+        // TODO 做个判断看是否已经初始化过了
         // 初始化 主机厂
         engineFactoryInit(experimentsNumber);
         // 初始化 供应商
@@ -53,6 +51,7 @@ public class InitServiceImpl implements InitService {
 
     /**
      * 初始化主机厂
+     *
      * @param experimentsNumber 实验次数
      */
     private void engineFactoryInit(int experimentsNumber) {
@@ -94,7 +93,12 @@ public class InitServiceImpl implements InitService {
             tbEngineFactoryDynamic.setEngineFactoryPricePL(price[NumberEnum.PRICE_LOW]);
             tbEngineFactoryDynamic.setEngineFactoryPricePU(price[NumberEnum.PRICE_UPPER]);
             // 质量
-            tbEngineFactoryDynamic.setEngineFactoryQualityQ(InitEngineFactoryUtils.initQuality());
+            int quality = InitEngineFactoryUtils.initQuality();
+            tbEngineFactoryDynamic.setEngineFactoryQualityQ(quality);
+            // 需求预测
+            tbEngineFactoryDynamic.setEngineFactoryDemandForecastD(CalculationUtils.demandForecast((NumberEnum.CYCLE_TIME_INIT)
+                    , price[NumberEnum.PRICE_LOW], price[NumberEnum.PRICE_UPPER], quality));
+            // 插入数据库
             tbEngineFactoryDynamicMapper.insertSelective(tbEngineFactoryDynamic);
         }
 
@@ -102,6 +106,7 @@ public class InitServiceImpl implements InitService {
 
     /**
      * 初始化供应商
+     *
      * @param experimentsNumber 实验次数
      */
     private void supplierInit(int experimentsNumber) {
@@ -126,6 +131,7 @@ public class InitServiceImpl implements InitService {
                 //
                 supplierInit(supplierTypeCode[i], tbSupplier, tbSupplierDynamic);
                 tbSupplierMapper.insertSelective(tbSupplier);
+                // 插入数据库
                 tbSupplierDynamicMapper.insertSelective(tbSupplierDynamic);
             }
         }
@@ -133,6 +139,7 @@ public class InitServiceImpl implements InitService {
 
     /**
      * 生成对应的数据
+     *
      * @param typeCode          供应商代码
      * @param tbSupplier        同一个TbSupplier
      * @param tbSupplierDynamic 同一个TbSupplierDynamic
@@ -172,6 +179,7 @@ public class InitServiceImpl implements InitService {
 
     /**
      * 初始化关系矩阵
+     *
      * @param experimentsNumber 实验次数
      */
     private void relationMatrixInit(int experimentsNumber) {
@@ -191,6 +199,8 @@ public class InitServiceImpl implements InitService {
             for (TbSupplier aTbSupplier : tbSuppliers) {
                 tbRelationMatrix.setSupplierId(aTbSupplier.getSupplierId());
                 tbRelationMatrix.setRelationScore(InitRelationMatrixUtils.initRelationshipStrengthScore());
+                tbRelationMatrix.setAccumulativeTotalScore(0);
+                // 插入数据库
                 tbRelationMatrixMapper.insertSelective(tbRelationMatrix);
             }
         }
@@ -199,8 +209,9 @@ public class InitServiceImpl implements InitService {
 
     /**
      * 初始化的主机厂
+     *
      * @param experimentsNumber 实验次数
-     * @return                  所有初始的主机厂
+     * @return 所有初始的主机厂
      */
     private List<TbEngineFactory> listInitEngineFactory(int experimentsNumber) {
         TbEngineFactoryExample tbEngineFactoryExample = new TbEngineFactoryExample();
@@ -208,10 +219,12 @@ public class InitServiceImpl implements InitService {
         engineFactoryExampleCriteria.andExperimentsNumberEqualTo(experimentsNumber);
         return tbEngineFactoryMapper.selectByExample(tbEngineFactoryExample);
     }
+
     /**
      * 初始化的供应商
+     *
      * @param experimentsNumber 实验次数
-     * @return                  所有初始的供应商
+     * @return 所有初始的供应商
      */
     private List<TbSupplier> listInitSupplier(int experimentsNumber) {
         TbSupplierExample tbSupplierExample = new TbSupplierExample();
