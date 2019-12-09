@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @version v1.0
  */
 @Component
-public class NumberEnum {
+public class CycleTime {
     public static final int QUALITY_STEP = 1;
     public static final int CYCLE_TIME_INIT = 0;
     public static final int POSITION_X = 0;

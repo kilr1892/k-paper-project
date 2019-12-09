@@ -5,7 +5,7 @@ import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
 import cn.edu.zju.kpaperproject.dto.SupplierTask;
 import cn.edu.zju.kpaperproject.enums.CalculationEnum;
 import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
-import cn.edu.zju.kpaperproject.enums.NumberEnum;
+import cn.edu.zju.kpaperproject.enums.CycleTime;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
 
@@ -39,9 +39,11 @@ public class CalculationUtils {
         k1 = k1 + cycleTimes * k1Step;
         k2 = k2 + cycleTimes * k2Step;
 
-        int price = RandomUtils.nextInt(priceLow, priceUpper + NumberEnum.QUALITY_STEP);
+        int price = RandomUtils.nextInt(priceLow, priceUpper + CycleTime.QUALITY_STEP);
 
-        return (int) Math.round(k1 - k2 * price / quality);
+        int demandForecast = (int) Math.round(k1 - k2 * price / quality);
+
+        return demandForecast >= 0 ? demandForecast : 0;
     }
     /**
      * 判断价格是否有交集
@@ -90,8 +92,8 @@ public class CalculationUtils {
         int absEnginePrice = calAbsEnginePrice(supplierTask);
         double tmp2 = b3slash * (tmp2Molecular) / (absEngineFactoryPrice + absEnginePrice);
 
-        // 主机厂质量 - 供应商质量
-        double tmp3 = x3slash * (engineFactoryManufacturingTask.getEngineFactoryExpectedQuality() - supplierTask.getSupplierQuality()) / 10;
+        // 供应商质量 - 主机厂质量
+        double tmp3 = x3slash * (supplierTask.getSupplierQuality() - engineFactoryManufacturingTask.getEngineFactoryExpectedQuality()) / 10;
 
         // 关系强度
         double tmp4 = y3slash * getRelationshipStrength(mapRelationshipMatrix, engineFactoryManufacturingTask, supplierTask);
@@ -127,7 +129,7 @@ public class CalculationUtils {
             int intersectionUpper = Math.min(enPriUpper, supPriUpper);
             return (intersectionUpper - intersectionLow) * 2;
         } else {
-            return supPriLow - enPriUpper;
+            return enPriUpper - supPriLow;
         }
     }
 

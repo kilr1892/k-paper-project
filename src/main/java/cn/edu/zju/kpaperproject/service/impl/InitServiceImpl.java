@@ -1,14 +1,13 @@
 package cn.edu.zju.kpaperproject.service.impl;
 
 import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
-import cn.edu.zju.kpaperproject.enums.NumberEnum;
+import cn.edu.zju.kpaperproject.enums.CycleTime;
 import cn.edu.zju.kpaperproject.enums.SupplierEnum;
 import cn.edu.zju.kpaperproject.mapper.*;
 import cn.edu.zju.kpaperproject.pojo.*;
 import cn.edu.zju.kpaperproject.service.InitService;
 import cn.edu.zju.kpaperproject.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,8 +60,8 @@ public class InitServiceImpl implements InitService {
         // 第几轮实验
         tbEngineFactory.setExperimentsNumber(experimentsNumber);
         // 0 代表初始化
-        tbEngineFactory.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
-        tbEngineFactoryDynamic.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
+        tbEngineFactory.setCycleTimes(CycleTime.CYCLE_TIME_INIT);
+        tbEngineFactoryDynamic.setCycleTimes(CycleTime.CYCLE_TIME_INIT);
 
         for (int i = 0; i < EngineFactoryEnum.engineFactoryInitSum; i++) {
             // 工厂id
@@ -70,8 +69,8 @@ public class InitServiceImpl implements InitService {
             tbEngineFactory.setEngineFactoryId(engineFactoryId);
             // 地理位置
             int[] position = InitEngineFactoryUtils.initPosition();
-            tbEngineFactory.setEngineFactoryLocationGX(position[NumberEnum.POSITION_X]);
-            tbEngineFactory.setEngineFactoryLocationGY(position[NumberEnum.POSITION_Y]);
+            tbEngineFactory.setEngineFactoryLocationGX(position[CycleTime.POSITION_X]);
+            tbEngineFactory.setEngineFactoryLocationGY(position[CycleTime.POSITION_Y]);
             // 每阶段固定成本
             tbEngineFactory.setEngineFactoryFixedCostC(InitEngineFactoryUtils.initFixedCost());
             // 存活
@@ -89,14 +88,14 @@ public class InitServiceImpl implements InitService {
             tbEngineFactoryDynamic.setEngineFactoryCapacityM(InitEngineFactoryUtils.initCapacity());
             // 价格
             int[] price = InitEngineFactoryUtils.initPrice();
-            tbEngineFactoryDynamic.setEngineFactoryPricePL(price[NumberEnum.PRICE_LOW]);
-            tbEngineFactoryDynamic.setEngineFactoryPricePU(price[NumberEnum.PRICE_UPPER]);
+            tbEngineFactoryDynamic.setEngineFactoryPricePL(price[CycleTime.PRICE_LOW]);
+            tbEngineFactoryDynamic.setEngineFactoryPricePU(price[CycleTime.PRICE_UPPER]);
             // 质量
             int quality = InitEngineFactoryUtils.initQuality();
             tbEngineFactoryDynamic.setEngineFactoryQualityQ(quality);
             // 需求预测
-            tbEngineFactoryDynamic.setEngineFactoryDemandForecastD(CalculationUtils.demandForecast((NumberEnum.CYCLE_TIME_INIT)
-                    , price[NumberEnum.PRICE_LOW], price[NumberEnum.PRICE_UPPER], quality));
+            tbEngineFactoryDynamic.setEngineFactoryDemandForecastD(CalculationUtils.demandForecast((CycleTime.CYCLE_TIME_INIT)
+                    , price[CycleTime.PRICE_LOW], price[CycleTime.PRICE_UPPER], quality));
             // 插入数据库
             tbEngineFactoryDynamicMapper.insertSelective(tbEngineFactoryDynamic);
         }
@@ -112,10 +111,10 @@ public class InitServiceImpl implements InitService {
         TbSupplier tbSupplier = new TbSupplier();
         tbSupplier.setExperimentsNumber(experimentsNumber);
         // 0
-        tbSupplier.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
+        tbSupplier.setCycleTimes(CycleTime.CYCLE_TIME_INIT);
         TbSupplierDynamic tbSupplierDynamic = new TbSupplierDynamic();
         // 0
-        tbSupplierDynamic.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
+        tbSupplierDynamic.setCycleTimes(CycleTime.CYCLE_TIME_INIT);
 
         int[] supplierTypeSum = {SupplierEnum.supplierInit210Sum, SupplierEnum.supplierInit220Sum, SupplierEnum.supplierInit230Sum
                 , SupplierEnum.supplierInit240Sum, SupplierEnum.supplierInit250Sum};
@@ -148,15 +147,15 @@ public class InitServiceImpl implements InitService {
         tbSupplier.setSupplierId(supplierId);
         // 地理位置
         int[] position = InitSupplierUtils.initPosition();
-        tbSupplier.setSupplierLocationGX(position[NumberEnum.POSITION_X]);
-        tbSupplier.setSupplierLocationGY(position[NumberEnum.POSITION_Y]);
+        tbSupplier.setSupplierLocationGX(position[CycleTime.POSITION_X]);
+        tbSupplier.setSupplierLocationGY(position[CycleTime.POSITION_Y]);
         // 供应商代码
         tbSupplier.setSupplierType(InitSupplierUtils.initType(typeCode));
         // 每阶段固定成本
         tbSupplier.setSupplierFixedCostC(InitSupplierUtils.initFixedCost());
         tbSupplier.setSupplierAlive(true);
         // 动态数据----------------
-        tbSupplierDynamic.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
+        tbSupplierDynamic.setCycleTimes(CycleTime.CYCLE_TIME_INIT);
         // 供应商id
         tbSupplierDynamic.setSupplierId(supplierId);
         // 初始总资产
@@ -167,8 +166,8 @@ public class InitServiceImpl implements InitService {
         tbSupplierDynamic.setSupplierCapacityM(InitSupplierUtils.initCapacity());
         // 价格
         int[] price = InitSupplierUtils.initPrice();
-        tbSupplierDynamic.setSupplierPricePL(price[NumberEnum.PRICE_LOW]);
-        tbSupplierDynamic.setSupplierPricePU(price[NumberEnum.PRICE_UPPER]);
+        tbSupplierDynamic.setSupplierPricePL(price[CycleTime.PRICE_LOW]);
+        tbSupplierDynamic.setSupplierPricePU(price[CycleTime.PRICE_UPPER]);
         // 质量
         tbSupplierDynamic.setSupplierQualityQs(InitSupplierUtils.initQuality());
         tbSupplierDynamic.setSupplierServiceAlive(true);
@@ -191,7 +190,7 @@ public class InitServiceImpl implements InitService {
         // 填充用的
         TbRelationMatrix tbRelationMatrix = new TbRelationMatrix();
         tbRelationMatrix.setExperimentsNumber(experimentsNumber);
-        tbRelationMatrix.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
+        tbRelationMatrix.setCycleTimes(CycleTime.CYCLE_TIME_INIT);
         for (TbEngineFactory aTbEngineFactory : tbEngineFactories) {
             String engineFactoryId = aTbEngineFactory.getEngineFactoryId();
             tbRelationMatrix.setEngineFactoryId(engineFactoryId);
