@@ -14,7 +14,12 @@ import java.util.LinkedHashMap;
  */
 public interface ProcessTaskService {
 
-    /** 粗匹配方法 */
+    /**
+     * 粗匹配方法
+     * @param listListEngineFactoryTasks    主机厂分解任务集合(按)
+     * @param listListSupplierTask          供应商能提供的服务集合
+     * @return                              主机任务(key)对应匹配上的服务集合(value)
+     */
     LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>
     roughMatching(ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTasks, ArrayList<ArrayList<SupplierTask>> listListSupplierTask);
 

@@ -5,10 +5,7 @@ import cn.edu.zju.kpaperproject.dto.SupplierTask;
 import cn.edu.zju.kpaperproject.enums.NumberEnum;
 import cn.edu.zju.kpaperproject.enums.SupplierEnum;
 import cn.edu.zju.kpaperproject.enums.TaskDecompositionEnum;
-import cn.edu.zju.kpaperproject.mapper.TbEngineFactoryDynamicMapper;
-import cn.edu.zju.kpaperproject.mapper.TbEngineFactoryMapper;
-import cn.edu.zju.kpaperproject.mapper.TbSupplierDynamicMapper;
-import cn.edu.zju.kpaperproject.mapper.TbSupplierMapper;
+import cn.edu.zju.kpaperproject.mapper.*;
 import cn.edu.zju.kpaperproject.pojo.*;
 import cn.edu.zju.kpaperproject.service.StartTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +32,37 @@ public class StartTaskServiceImpl implements StartTaskService {
     @Autowired
     private TbSupplierDynamicMapper tbSupplierDynamicMapper;
 
+    @Autowired
+    private TbRelationMatrixMapper tbRelationMatrixMapper;
+
+    /**
+     * 生成主机厂与供应商之间的关系矩阵
+     * key   = 主机厂id + 供应商id
+     * value = 两者关系强度
+     *
+     * @param experimentsNumber 实验次数
+     * @param cycleTime         循环次数
+     * @return                  循环次数 - 1 时(最新的)关系矩阵
+     */
+    @Override
+    public Map<String, Double> genMapRelationshipMatrix(int experimentsNumber, int cycleTime) {
+        Map<String, Double> mapRes = new HashMap<>(1000);
+
+        // 查询所有的可用的关系数据
+        TbRelationMatrixExample tbRelationMatrixExample = new TbRelationMatrixExample();
+        TbRelationMatrixExample.Criteria criteria = tbRelationMatrixExample.createCriteria();
+        criteria.andExperimentsNumberEqualTo(experimentsNumber);
+        criteria.andCycleTimesEqualTo(cycleTime - 1);
+        criteria.andRelationMatrixAliveEqualTo(true);
+        List<TbRelationMatrix> tbRelationMatrices = tbRelationMatrixMapper.selectByExample(tbRelationMatrixExample);
+
+        for (TbRelationMatrix aRelationMatrix : tbRelationMatrices) {
+            mapRes.put(aRelationMatrix.getMapKey(), aRelationMatrix.getRelationScore());
+        }
+
+        return mapRes;
+    }
+
     /**
      * 供应商提供的服务
      * 如出价/质量/产能等
@@ -45,7 +73,7 @@ public class StartTaskServiceImpl implements StartTaskService {
      * @return 返回值中每个元素代表提供某类型服务供应商集合
      */
     @Override
-    public ArrayList<ArrayList<SupplierTask>> genSupplierTask(int cycleTime) {
+    public ArrayList<ArrayList<SupplierTask>> genSupplierTask(int experimentsNumber, int cycleTime) {
         // 返回值, 索引0~4 就是210~205的集合
         ArrayList<ArrayList<SupplierTask>> res = new ArrayList<>(5);
         int resSize = 5;
@@ -56,6 +84,7 @@ public class StartTaskServiceImpl implements StartTaskService {
         // 查询出所有活着的供应商
         TbSupplierExample tbSupplierExample = new TbSupplierExample();
         TbSupplierExample.Criteria tbSupplierExampleCriteria = tbSupplierExample.createCriteria();
+        tbSupplierExampleCriteria.andExperimentsNumberEqualTo(experimentsNumber);
         tbSupplierExampleCriteria.andSupplierAliveEqualTo(true);
         List<TbSupplier> suppliers = tbSupplierMapper.selectByExample(tbSupplierExample);
 
@@ -114,19 +143,20 @@ public class StartTaskServiceImpl implements StartTaskService {
 
     /**
      * 生成主机厂分解任务
-     *
+     * <p>
      * 返回值按信誉度从高到底排, 信誉度相同就按210任务出价从高到底排
      *
      * @param cycleTime 循环的次数, 从1开始
      * @return 返回值中每个元素代表一个主机厂分解的任务集
      */
     @Override
-    public ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(int cycleTime) {
+    public ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(int experimentsNumber, int cycleTime) {
+
         // 返回值, 排序
         ArrayList<ArrayList<EngineFactoryManufacturingTask>> res = new ArrayList<>();
 
         // 找出所有存活的主机厂
-        List<TbEngineFactory> tbEngineFactories = getListEngineFactoryWithAlive();
+        List<TbEngineFactory> tbEngineFactories = getListEngineFactoryWithAlive(experimentsNumber);
         // 服务代码数组
         int[] supplierTypeCodes = SupplierEnum.getSupplierTypeCodes();
 
@@ -183,10 +213,16 @@ public class StartTaskServiceImpl implements StartTaskService {
 
     }
 
-    private List<TbEngineFactory> getListEngineFactoryWithAlive() {
+    /**
+     * 获取所有存活的主机厂
+     * @param experimentsNumber 第几次实验
+     * @return                  主机厂静态数据集合
+     */
+    private List<TbEngineFactory> getListEngineFactoryWithAlive(int experimentsNumber) {
         TbEngineFactoryExample tbEngineFactoryExample = new TbEngineFactoryExample();
         TbEngineFactoryExample.Criteria criteria = tbEngineFactoryExample.createCriteria();
         criteria.andEngineFactoryAliveEqualTo(true);
+        criteria.andExperimentsNumberEqualTo(experimentsNumber);
         return tbEngineFactoryMapper.selectByExample(tbEngineFactoryExample);
     }
 

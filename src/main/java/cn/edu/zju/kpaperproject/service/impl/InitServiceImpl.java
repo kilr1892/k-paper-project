@@ -56,7 +56,6 @@ public class InitServiceImpl implements InitService {
      */
     private void engineFactoryInit(int experimentsNumber) {
         // TODO 要判断下是否已经实验过了
-        // TODO 以后要改为批量插入数据库...
         TbEngineFactory tbEngineFactory = new TbEngineFactory();
         TbEngineFactoryDynamic tbEngineFactoryDynamic = new TbEngineFactoryDynamic();
         // 第几轮实验
@@ -110,7 +109,6 @@ public class InitServiceImpl implements InitService {
      * @param experimentsNumber 实验次数
      */
     private void supplierInit(int experimentsNumber) {
-        // TODO 以后要改为批量插入数据库...
         TbSupplier tbSupplier = new TbSupplier();
         tbSupplier.setExperimentsNumber(experimentsNumber);
         // 0
@@ -195,11 +193,15 @@ public class InitServiceImpl implements InitService {
         tbRelationMatrix.setExperimentsNumber(experimentsNumber);
         tbRelationMatrix.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
         for (TbEngineFactory aTbEngineFactory : tbEngineFactories) {
-            tbRelationMatrix.setEngineFactoryId(aTbEngineFactory.getEngineFactoryId());
+            String engineFactoryId = aTbEngineFactory.getEngineFactoryId();
+            tbRelationMatrix.setEngineFactoryId(engineFactoryId);
             for (TbSupplier aTbSupplier : tbSuppliers) {
-                tbRelationMatrix.setSupplierId(aTbSupplier.getSupplierId());
+                String supplierId = aTbSupplier.getSupplierId();
+                tbRelationMatrix.setSupplierId(supplierId);
                 tbRelationMatrix.setRelationScore(InitRelationMatrixUtils.initRelationshipStrengthScore());
+                tbRelationMatrix.setMapKey(engineFactoryId + supplierId);
                 tbRelationMatrix.setAccumulativeTotalScore(0);
+                tbRelationMatrix.setRelationMatrixAlive(true);
                 // 插入数据库
                 tbRelationMatrixMapper.insertSelective(tbRelationMatrix);
             }

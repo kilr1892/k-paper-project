@@ -66,7 +66,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                     // 任务期望质量<=服务质量
                     if (aEngineFactoryManufacturingTask.getEngineFactoryExpectedQuality() <= aSupplierTask.getSupplierQuality()) {
                         // 两者期望价格有交集 或者 主机厂的价格下限大于供应商的价格上限
-                        if (CalculationUtils.whetherPriceIntersection(aEngineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice(), aSupplierTask.getSupplierPriceRange())
+                        if (CalculationUtils.whetherPriceIntersection(aEngineFactoryManufacturingTask, aSupplierTask)
                                 || aEngineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice()[0] >= aSupplierTask.getSupplierPriceRange()[1]) {
                             // 任务要求产量<=服务产能
                             if (aEngineFactoryManufacturingTask.getEngineFactoryNeedServiceNumber() <= aSupplierTask.getSupplierCapacity()) {
@@ -82,7 +82,38 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         }
         return mapRes;
     }
+
     /** 精匹配方法 */
+    public void exactMatching(LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>> mapEngineFactoryTaskVsSupplierTask) {
+        // 用size分3种情况
+        // case 0 之后再做
+        // case 1 直接算最后的价格
+        // case >2 算关系强度
+        for (EngineFactoryManufacturingTask aEngineFactoryManufacturingTask : mapEngineFactoryTaskVsSupplierTask.keySet()) {
+            ArrayList<SupplierTask> supplierTasks = mapEngineFactoryTaskVsSupplierTask.get(aEngineFactoryManufacturingTask);
+            switch (supplierTasks.size()) {
+                case 0:
+                    // TODO 之后补全需要调用的  有点问题的, 我感觉吧, 不该有0之后在说吧
+                    break;
+                case 1:
+                    // TODO 计算成交量
+                    break;
+                default:
+                    // 循环
+                    for (SupplierTask supplierTask : supplierTasks) {
+                        // TODO 算关系强度
+                        // TODO 计算成交量
+                    }
+                    break;
+            }
+
+            // TODO 返回值为一个list
+
+        }
+
+
+    }
+
     /** 未匹配方法 */
     /** 重新匹配方法 */
 

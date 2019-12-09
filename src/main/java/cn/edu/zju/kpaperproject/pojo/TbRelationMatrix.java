@@ -11,9 +11,13 @@ public class TbRelationMatrix {
 
     private String supplierId;
 
+    private String mapKey;
+
     private Double relationScore;
 
     private Integer accumulativeTotalScore;
+
+    private Boolean relationMatrixAlive;
 
     public Integer getId() {
         return id;
@@ -55,6 +59,14 @@ public class TbRelationMatrix {
         this.supplierId = supplierId == null ? null : supplierId.trim();
     }
 
+    public String getMapKey() {
+        return mapKey;
+    }
+
+    public void setMapKey(String mapKey) {
+        this.mapKey = mapKey == null ? null : mapKey.trim();
+    }
+
     public Double getRelationScore() {
         return relationScore;
     }
@@ -69,5 +81,13 @@ public class TbRelationMatrix {
 
     public void setAccumulativeTotalScore(Integer accumulativeTotalScore) {
         this.accumulativeTotalScore = accumulativeTotalScore;
+    }
+
+    public Boolean getRelationMatrixAlive() {
+        return relationMatrixAlive;
+    }
+
+    public void setRelationMatrixAlive(Boolean relationMatrixAlive) {
+        this.relationMatrixAlive = relationMatrixAlive;
     }
 }

@@ -30,17 +30,17 @@ public class TestController {
     public String test() {
 //        startTaskService.startTask(1);
 
-        ArrayList<ArrayList<EngineFactoryManufacturingTask>> engineFactoryTaskDecomposition = startTaskService.genEngineFactoryTaskDecomposition(1);
-        ArrayList<ArrayList<SupplierTask>> supplierTask = startTaskService.genSupplierTask(1);
-        LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>> engineFactoryManufacturingTaskArrayListLinkedHashMap = processTaskService.roughMatching(engineFactoryTaskDecomposition, supplierTask);
+//        ArrayList<ArrayList<EngineFactoryManufacturingTask>> engineFactoryTaskDecomposition = startTaskService.genEngineFactoryTaskDecomposition(1);
+//        ArrayList<ArrayList<SupplierTask>> supplierTask = startTaskService.genSupplierTask(1);
+//        LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>> engineFactoryManufacturingTaskArrayListLinkedHashMap = processTaskService.roughMatching(engineFactoryTaskDecomposition, supplierTask);
 
-        Set<EngineFactoryManufacturingTask> engineFactoryManufacturingTasks = engineFactoryManufacturingTaskArrayListLinkedHashMap.keySet();
-
-        for (EngineFactoryManufacturingTask engineFactoryManufacturingTask : engineFactoryManufacturingTasks) {
-            System.out.println(engineFactoryManufacturingTask);
-        }
-
-        System.out.println();
+//        Set<EngineFactoryManufacturingTask> engineFactoryManufacturingTasks = engineFactoryManufacturingTaskArrayListLinkedHashMap.keySet();
+//
+//        for (EngineFactoryManufacturingTask engineFactoryManufacturingTask : engineFactoryManufacturingTasks) {
+//            System.out.println(engineFactoryManufacturingTask);
+//        }
+//
+//        System.out.println();
 
         return "success";
     }

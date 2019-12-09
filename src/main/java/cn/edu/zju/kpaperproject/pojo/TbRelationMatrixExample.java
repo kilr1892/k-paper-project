@@ -424,6 +424,76 @@ public class TbRelationMatrixExample {
             return (Criteria) this;
         }
 
+        public Criteria andMapKeyIsNull() {
+            addCriterion("map_key is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyIsNotNull() {
+            addCriterion("map_key is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyEqualTo(String value) {
+            addCriterion("map_key =", value, "mapKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyNotEqualTo(String value) {
+            addCriterion("map_key <>", value, "mapKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyGreaterThan(String value) {
+            addCriterion("map_key >", value, "mapKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyGreaterThanOrEqualTo(String value) {
+            addCriterion("map_key >=", value, "mapKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyLessThan(String value) {
+            addCriterion("map_key <", value, "mapKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyLessThanOrEqualTo(String value) {
+            addCriterion("map_key <=", value, "mapKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyLike(String value) {
+            addCriterion("map_key like", value, "mapKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyNotLike(String value) {
+            addCriterion("map_key not like", value, "mapKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyIn(List<String> values) {
+            addCriterion("map_key in", values, "mapKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyNotIn(List<String> values) {
+            addCriterion("map_key not in", values, "mapKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyBetween(String value1, String value2) {
+            addCriterion("map_key between", value1, value2, "mapKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapKeyNotBetween(String value1, String value2) {
+            addCriterion("map_key not between", value1, value2, "mapKey");
+            return (Criteria) this;
+        }
+
         public Criteria andRelationScoreIsNull() {
             addCriterion("relation_score is null");
             return (Criteria) this;
@@ -541,6 +611,66 @@ public class TbRelationMatrixExample {
 
         public Criteria andAccumulativeTotalScoreNotBetween(Integer value1, Integer value2) {
             addCriterion("accumulative_total_score not between", value1, value2, "accumulativeTotalScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationMatrixAliveIsNull() {
+            addCriterion("relation_matrix_alive is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationMatrixAliveIsNotNull() {
+            addCriterion("relation_matrix_alive is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationMatrixAliveEqualTo(Boolean value) {
+            addCriterion("relation_matrix_alive =", value, "relationMatrixAlive");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationMatrixAliveNotEqualTo(Boolean value) {
+            addCriterion("relation_matrix_alive <>", value, "relationMatrixAlive");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationMatrixAliveGreaterThan(Boolean value) {
+            addCriterion("relation_matrix_alive >", value, "relationMatrixAlive");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationMatrixAliveGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("relation_matrix_alive >=", value, "relationMatrixAlive");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationMatrixAliveLessThan(Boolean value) {
+            addCriterion("relation_matrix_alive <", value, "relationMatrixAlive");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationMatrixAliveLessThanOrEqualTo(Boolean value) {
+            addCriterion("relation_matrix_alive <=", value, "relationMatrixAlive");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationMatrixAliveIn(List<Boolean> values) {
+            addCriterion("relation_matrix_alive in", values, "relationMatrixAlive");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationMatrixAliveNotIn(List<Boolean> values) {
+            addCriterion("relation_matrix_alive not in", values, "relationMatrixAlive");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationMatrixAliveBetween(Boolean value1, Boolean value2) {
+            addCriterion("relation_matrix_alive between", value1, value2, "relationMatrixAlive");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationMatrixAliveNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("relation_matrix_alive not between", value1, value2, "relationMatrixAlive");
             return (Criteria) this;
         }
     }
