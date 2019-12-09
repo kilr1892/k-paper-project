@@ -15,8 +15,10 @@ public interface StartTaskService {
     /**
      * 生成主机厂分解任务
      *
-     * @param cycleTime     循环的次数, 从1开始
-     * @return              返回值中每个元素代表一个主机厂分解的任务集
+     * 返回值按信誉度从高到底排, 信誉度相同就按210任务出价从高到底排
+     *
+     * @param cycleTime 循环的次数, 从1开始
+     * @return 返回值中每个元素代表一个主机厂分解的任务集
      */
     ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(int cycleTime);
     /**

@@ -3,6 +3,7 @@ package cn.edu.zju.kpaperproject.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 主机厂制造任务分解模型
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class EngineFactoryManufacturingTask {
     /** 主机厂id */
     private String engineFactoryId;
@@ -35,5 +37,22 @@ public class EngineFactoryManufacturingTask {
         this.engineFactoryLocationXY = engineFactoryLocationXY;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        EngineFactoryManufacturingTask that = (EngineFactoryManufacturingTask) o;
+
+        if (taskType != that.taskType) return false;
+        return engineFactoryId.equals(that.engineFactoryId);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = engineFactoryId.hashCode();
+        result = 31 * result + taskType;
+        return result;
+    }
 }

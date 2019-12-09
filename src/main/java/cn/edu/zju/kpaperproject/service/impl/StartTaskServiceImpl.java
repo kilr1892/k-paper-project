@@ -115,13 +115,14 @@ public class StartTaskServiceImpl implements StartTaskService {
     /**
      * 生成主机厂分解任务
      *
+     * 返回值按信誉度从高到底排, 信誉度相同就按210任务出价从高到底排
+     *
      * @param cycleTime 循环的次数, 从1开始
      * @return 返回值中每个元素代表一个主机厂分解的任务集
      */
     @Override
     public ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(int cycleTime) {
-        // TODO 感觉可以用TreeSet, 但不知道如何使用
-        // 返回值, 是要排序的!!
+        // 返回值, 排序
         ArrayList<ArrayList<EngineFactoryManufacturingTask>> res = new ArrayList<>();
 
         // 找出所有存活的主机厂

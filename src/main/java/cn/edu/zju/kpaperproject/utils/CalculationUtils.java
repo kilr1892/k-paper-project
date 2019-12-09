@@ -38,5 +38,21 @@ public class CalculationUtils {
         return (int)Math.round(k1 - k2 * price / quality);
     }
 
+    /**
+     * 判断价格是否有交集
+     * @param engineFactoryPriceRange   主机厂价格区间
+     * @param supplierPriceRange        供应商价格区间
+     * @return                          是否有交集
+     */
+    public static boolean whetherPriceIntersection(int[] engineFactoryPriceRange, int[] supplierPriceRange) {
+        int enPriLow = engineFactoryPriceRange[0];
+        int enPriUpper = engineFactoryPriceRange[1];
+        int supPriLow = supplierPriceRange[0];
+        int supPriUpper = supplierPriceRange[1];
+
+        // 主机厂最小值>供应商最大值 或 供应商最小值>主机厂最大值
+        return enPriLow <= supPriUpper && supPriLow <= enPriUpper;
+    }
+
 
 }
