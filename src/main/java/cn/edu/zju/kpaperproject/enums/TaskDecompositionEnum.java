@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * .
+ * 任务分解相关枚举类
  *
  * @author RichardLee
  * @version v1.0

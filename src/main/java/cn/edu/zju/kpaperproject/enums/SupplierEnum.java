@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * .
+ * 供应商相关枚举类
  *
  * @author RichardLee
  * @version v1.0

@@ -1,15 +1,12 @@
 package cn.edu.zju.kpaperproject;
 
 import cn.edu.zju.kpaperproject.service.InitService;
-import cn.edu.zju.kpaperproject.service.OrderService;
-import cn.edu.zju.kpaperproject.service.impl.OrderServiceImpl;
+import cn.edu.zju.kpaperproject.service.impl.TaskServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -19,7 +16,7 @@ public class KPaperProjectApplicationTests {
     InitService initService;
 
     @Autowired
-    OrderServiceImpl orderService;
+    TaskServiceImpl orderService;
 
     @Test
     public void initTest() {

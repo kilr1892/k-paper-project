@@ -1,18 +1,18 @@
 package cn.edu.zju.kpaperproject.service.impl;
 
 import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
+import cn.edu.zju.kpaperproject.dto.SupplierTask;
 import cn.edu.zju.kpaperproject.enums.NumberEnum;
 import cn.edu.zju.kpaperproject.enums.SupplierEnum;
 import cn.edu.zju.kpaperproject.enums.TaskDecompositionEnum;
 import cn.edu.zju.kpaperproject.mapper.TbEngineFactoryDynamicMapper;
 import cn.edu.zju.kpaperproject.mapper.TbEngineFactoryMapper;
 import cn.edu.zju.kpaperproject.pojo.*;
-import cn.edu.zju.kpaperproject.service.OrderService;
+import cn.edu.zju.kpaperproject.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * .
@@ -21,7 +21,7 @@ import java.util.List;
  * @version v1.0
  */
 @Service
-public class OrderServiceImpl implements OrderService {
+public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TbEngineFactoryMapper tbEngineFactoryMapper;
@@ -29,31 +29,58 @@ public class OrderServiceImpl implements OrderService {
     private TbEngineFactoryDynamicMapper tbEngineFactoryDynamicMapper;
 
     /**
-     * 生成主机厂任务
+     * 任务开始的相关内容获取
+     *
+     * @param cycleTime 循环次数, 从1开始
+     */
+    @Override
+    public void startTask(int cycleTime) {
+        // 获取初始主机厂分解任务
+        ArrayList<ArrayList<EngineFactoryManufacturingTask>> engineFactoryTaskDecomposition = genEngineFactoryTaskDecomposition(cycleTime);
+        // 获取各供应商任务
+        ArrayList<SupplierTask> supplierTasks = genSupplierTask(cycleTime);
+    }
+
+    private ArrayList<SupplierTask> genSupplierTask(int cycleTime) {
+
+        return null;
+    }
+
+    /**
+     * 生成主机厂分解任务
      *
      * @return 每个主机厂的任务
      */
-    @Override
-    public ArrayList<EngineFactoryManufacturingTask> genTask(int cycleTimes) {
-        ArrayList<EngineFactoryManufacturingTask> listEngineFactoryManufacturingTask = new ArrayList<>();
+    private ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(int cycleTimes) {
+        // TODO 感觉可以用TreeSet, 但不知道如何使用
+        // 返回值, 是要排序的!!
+        ArrayList<ArrayList<EngineFactoryManufacturingTask>> res = new ArrayList<>();
+
         // 找出所有存活的主机厂
         List<TbEngineFactory> tbEngineFactories = getListEngineFactoryWithAlive();
         // 服务代码数组
         int[] supplierTypeCodes = SupplierEnum.getSupplierTypeCodes();
 
         for (TbEngineFactory aEngineFactory : tbEngineFactories) {
+            // 这个是每个主机厂的集合
+            ArrayList<EngineFactoryManufacturingTask> listEngineFactoryManufacturingTask = new ArrayList<>();
+
+            // 主机厂静态数据aEngineFactory
+            // 主机厂id
             String engineFactoryId = aEngineFactory.getEngineFactoryId();
             // 获取主机厂动态数据模型
             TbEngineFactoryDynamic engineFactoryDynamic = getEngineFactoryDynamicWithCycleTimeAndEngineFactoryId(cycleTimes, engineFactoryId);
+            // 信誉度
+            Double engineFactoryCredit = engineFactoryDynamic.getEngineFactoryCreditH();
             // 成品数量预测
             int qi = genEngineFactoryPlannedCapacity(cycleTimes, engineFactoryId);
 
             for (int i = 0; i < supplierTypeCodes.length; i++) {
                 // 任务分解模型实例
-                EngineFactoryManufacturingTask engineFactoryManufacturingTask = new EngineFactoryManufacturingTask();
+                // 主机id + 信誉度 + 地理位置
+                EngineFactoryManufacturingTask engineFactoryManufacturingTask = new EngineFactoryManufacturingTask(
+                        engineFactoryId, engineFactoryCredit, new int[]{aEngineFactory.getEngineFactoryLocationGX(), aEngineFactory.getEngineFactoryLocationGY()});
 
-                // 主机厂id
-                engineFactoryManufacturingTask.setEngineFactoryId(engineFactoryId);
                 // 任务类型
                 engineFactoryManufacturingTask.setTaskType(supplierTypeCodes[i]);
                 // 服务需求量
@@ -64,10 +91,25 @@ public class OrderServiceImpl implements OrderService {
                 // 期望质量
                 engineFactoryManufacturingTask.setEngineFactoryExpectedQuality(genEngineFactoryQuality(engineFactoryDynamic));
 
+                // listEngineFactoryManufacturingTask包含5个子任务
                 listEngineFactoryManufacturingTask.add(engineFactoryManufacturingTask);
             }
+            // 每个主机厂加入res中
+            res.add(listEngineFactoryManufacturingTask);
         }
-        return listEngineFactoryManufacturingTask;
+        // 返回值排序
+        res.sort((o1, o2) -> {
+            double diff = o2.get(0).getEngineFactoryCredit() - o1.get(0).getEngineFactoryCredit();
+            if (diff != 0) {
+                // 先按信誉度排
+                return diff > 0 ? 1 : -1;
+            } else {
+                // 信誉度相等, 按出价高的排
+                // 这里的出价高指的是210的出价
+                return o2.get(0).getEngineFactory2ServiceOfferPrice()[1] - o1.get(0).getEngineFactory2ServiceOfferPrice()[1];
+            }
+        });
+        return res;
 
     }
 
@@ -152,6 +194,6 @@ public class OrderServiceImpl implements OrderService {
      */
     private int genEngineFactoryQuality(TbEngineFactoryDynamic tbEngineFactoryDynamic) {
         int engineFactoryQuality = tbEngineFactoryDynamic.getEngineFactoryQualityQ();
-        return engineFactoryQuality >= NumberEnum.QUALITY_UPPER ? NumberEnum.QUALITY_UPPER : engineFactoryQuality + NumberEnum.NUMBER_1;
+        return engineFactoryQuality >= NumberEnum.QUALITY_UPPER ? NumberEnum.QUALITY_UPPER : engineFactoryQuality + NumberEnum.QUALITY_STEP;
     }
 }

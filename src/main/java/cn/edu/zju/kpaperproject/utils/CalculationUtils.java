@@ -33,7 +33,7 @@ public class CalculationUtils {
         k1 = k1 + cycleTimes * k1Step;
         k2 = k2 + cycleTimes  * k2Step;
 
-        int price = RandomUtils.nextInt(priceLow, priceUpper + NumberEnum.NUMBER_1);
+        int price = RandomUtils.nextInt(priceLow, priceUpper + NumberEnum.QUALITY_STEP);
 
         return (int)Math.round(k1 - k2 * price / quality);
     }

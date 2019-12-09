@@ -1,7 +1,7 @@
 package cn.edu.zju.kpaperproject.service;
 
 /**
- * .
+ * 实验初始化服务
  *
  * @author RichardLee
  * @version v1.0

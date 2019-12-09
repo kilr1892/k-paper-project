@@ -1,7 +1,7 @@
 package cn.edu.zju.kpaperproject.controller;
 
 import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
-import cn.edu.zju.kpaperproject.service.OrderService;
+import cn.edu.zju.kpaperproject.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +18,12 @@ import java.util.ArrayList;
 public class TestController {
 
     @Autowired
-    OrderService orderService;
+    TaskService taskService;
 
 
     @GetMapping("/test")
     public String test() {
-        ArrayList<EngineFactoryManufacturingTask> engineFactoryManufacturingTaskArrayList = orderService.genTask(1);
+        taskService.startTask(1);
 
         System.out.println();
 

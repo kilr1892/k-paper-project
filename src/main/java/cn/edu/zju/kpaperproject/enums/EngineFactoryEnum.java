@@ -5,7 +5,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
- * .
+ * 工厂相关枚举类
  *
  * @author RichardLee
  * @version v1.0
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 @PropertySource("classpath:/config/experiments.properties")
 public class EngineFactoryEnum {
     public static int engineFactoryInitSum;
-
 
     public static int engineFactoryLocationLow;
 
