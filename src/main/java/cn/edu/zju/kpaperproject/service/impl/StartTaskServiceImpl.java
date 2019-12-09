@@ -25,8 +25,6 @@ import java.util.*;
 @Service
 public class StartTaskServiceImpl implements StartTaskService {
 
-    // TODO 打算再按照供应商task和主机厂task分成两个service  还不一定
-
     @Autowired
     private TbEngineFactoryMapper tbEngineFactoryMapper;
     @Autowired
@@ -38,21 +36,16 @@ public class StartTaskServiceImpl implements StartTaskService {
     private TbSupplierDynamicMapper tbSupplierDynamicMapper;
 
     /**
-     * 任务开始的相关内容获取
+     * 供应商提供的服务
+     * 如出价/质量/产能等
+     * <p>
+     * 返回值索引0~4就是能提供任务类型210~250的各个供应商服务
      *
-     * @param cycleTime 循环次数, 从1开始
+     * @param cycleTime 循环的次数, 从1开始
+     * @return 返回值中每个元素代表提供某类型服务供应商集合
      */
     @Override
-
-    public void startTask(int cycleTime) {
-        // 获取初始主机厂分解任务
-        ArrayList<ArrayList<EngineFactoryManufacturingTask>> engineFactoryTaskDecomposition = genEngineFactoryTaskDecomposition(cycleTime);
-        // 获取各供应商任务
-        ArrayList<ArrayList<SupplierTask>> arrayLists = genSupplierTask(cycleTime);
-        System.out.println();
-    }
-
-    private ArrayList<ArrayList<SupplierTask>> genSupplierTask(int cycleTime) {
+    public ArrayList<ArrayList<SupplierTask>> genSupplierTask(int cycleTime) {
         // 返回值, 索引0~4 就是210~205的集合
         ArrayList<ArrayList<SupplierTask>> res = new ArrayList<>(5);
         int resSize = 5;
@@ -122,9 +115,11 @@ public class StartTaskServiceImpl implements StartTaskService {
     /**
      * 生成主机厂分解任务
      *
-     * @return list中每个元素代表一个主机厂分解的任务集
+     * @param cycleTime 循环的次数, 从1开始
+     * @return 返回值中每个元素代表一个主机厂分解的任务集
      */
-    private ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(int cycleTimes) {
+    @Override
+    public ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(int cycleTime) {
         // TODO 感觉可以用TreeSet, 但不知道如何使用
         // 返回值, 是要排序的!!
         ArrayList<ArrayList<EngineFactoryManufacturingTask>> res = new ArrayList<>();
@@ -143,11 +138,11 @@ public class StartTaskServiceImpl implements StartTaskService {
             // 主机厂id
             String engineFactoryId = aEngineFactory.getEngineFactoryId();
             // 获取主机厂动态数据模型
-            TbEngineFactoryDynamic engineFactoryDynamic = getEngineFactoryDynamicWithCycleTimeAndEngineFactoryId(cycleTimes, engineFactoryId);
+            TbEngineFactoryDynamic engineFactoryDynamic = getEngineFactoryDynamicWithCycleTimeAndEngineFactoryId(cycleTime, engineFactoryId);
             // 信誉度
             Double engineFactoryCredit = engineFactoryDynamic.getEngineFactoryCreditH();
             // 成品数量预测
-            int qi = genEngineFactoryPlannedCapacity(cycleTimes, engineFactoryId);
+            int qi = genEngineFactoryPlannedCapacity(cycleTime, engineFactoryId);
 
             for (int i = 0; i < supplierTypeCodes.length; i++) {
                 // 任务分解模型实例

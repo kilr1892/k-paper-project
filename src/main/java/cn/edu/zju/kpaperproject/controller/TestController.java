@@ -20,7 +20,7 @@ public class TestController {
 
     @GetMapping("/test")
     public String test() {
-        startTaskService.startTask(1);
+//        startTaskService.startTask(1);
 
         System.out.println();
 
