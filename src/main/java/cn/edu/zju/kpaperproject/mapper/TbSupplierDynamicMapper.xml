@@ -3,7 +3,6 @@
 <mapper namespace="cn.edu.zju.kpaperproject.mapper.TbSupplierDynamicMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.zju.kpaperproject.pojo.TbSupplierDynamic" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="experiments_number" property="experimentsNumber" jdbcType="INTEGER" />
     <result column="cycle_times" property="cycleTimes" jdbcType="INTEGER" />
     <result column="supplier_id" property="supplierId" jdbcType="VARCHAR" />
     <result column="supplier_total_assets_p" property="supplierTotalAssetsP" jdbcType="INTEGER" />
@@ -73,9 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, experiments_number, cycle_times, supplier_id, supplier_total_assets_p, supplier_credit_a, 
-    supplier_capacity_m, supplier_price_p_l, supplier_price_p_u, supplier_quality_qs, 
-    supplier_service_alive
+    id, cycle_times, supplier_id, supplier_total_assets_p, supplier_credit_a, supplier_capacity_m, 
+    supplier_price_p_l, supplier_price_p_u, supplier_quality_qs, supplier_service_alive
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplierDynamicExample" >
     select
@@ -108,23 +106,20 @@
     </if>
   </delete>
   <insert id="insert" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplierDynamic" >
-    insert into tb_supplier_dynamic (id, experiments_number, cycle_times, 
-      supplier_id, supplier_total_assets_p, supplier_credit_a, 
-      supplier_capacity_m, supplier_price_p_l, supplier_price_p_u, 
-      supplier_quality_qs, supplier_service_alive)
-    values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
-      #{supplierId,jdbcType=VARCHAR}, #{supplierTotalAssetsP,jdbcType=INTEGER}, #{supplierCreditA,jdbcType=DOUBLE}, 
-      #{supplierCapacityM,jdbcType=INTEGER}, #{supplierPricePL,jdbcType=INTEGER}, #{supplierPricePU,jdbcType=INTEGER}, 
-      #{supplierQualityQs,jdbcType=INTEGER}, #{supplierServiceAlive,jdbcType=BIT})
+    insert into tb_supplier_dynamic (id, cycle_times, supplier_id, 
+      supplier_total_assets_p, supplier_credit_a, supplier_capacity_m, 
+      supplier_price_p_l, supplier_price_p_u, supplier_quality_qs, 
+      supplier_service_alive)
+    values (#{id,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, #{supplierId,jdbcType=VARCHAR}, 
+      #{supplierTotalAssetsP,jdbcType=INTEGER}, #{supplierCreditA,jdbcType=DOUBLE}, #{supplierCapacityM,jdbcType=INTEGER}, 
+      #{supplierPricePL,jdbcType=INTEGER}, #{supplierPricePU,jdbcType=INTEGER}, #{supplierQualityQs,jdbcType=INTEGER}, 
+      #{supplierServiceAlive,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplierDynamic" >
     insert into tb_supplier_dynamic
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
-      </if>
-      <if test="experimentsNumber != null" >
-        experiments_number,
       </if>
       <if test="cycleTimes != null" >
         cycle_times,
@@ -157,9 +152,6 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
-      </if>
-      <if test="experimentsNumber != null" >
-        #{experimentsNumber,jdbcType=INTEGER},
       </if>
       <if test="cycleTimes != null" >
         #{cycleTimes,jdbcType=INTEGER},
@@ -202,9 +194,6 @@
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.experimentsNumber != null" >
-        experiments_number = #{record.experimentsNumber,jdbcType=INTEGER},
-      </if>
       <if test="record.cycleTimes != null" >
         cycle_times = #{record.cycleTimes,jdbcType=INTEGER},
       </if>
@@ -240,7 +229,6 @@
   <update id="updateByExample" parameterType="map" >
     update tb_supplier_dynamic
     set id = #{record.id,jdbcType=INTEGER},
-      experiments_number = #{record.experimentsNumber,jdbcType=INTEGER},
       cycle_times = #{record.cycleTimes,jdbcType=INTEGER},
       supplier_id = #{record.supplierId,jdbcType=VARCHAR},
       supplier_total_assets_p = #{record.supplierTotalAssetsP,jdbcType=INTEGER},
@@ -257,9 +245,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplierDynamic" >
     update tb_supplier_dynamic
     <set >
-      <if test="experimentsNumber != null" >
-        experiments_number = #{experimentsNumber,jdbcType=INTEGER},
-      </if>
       <if test="cycleTimes != null" >
         cycle_times = #{cycleTimes,jdbcType=INTEGER},
       </if>
@@ -292,8 +277,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplierDynamic" >
     update tb_supplier_dynamic
-    set experiments_number = #{experimentsNumber,jdbcType=INTEGER},
-      cycle_times = #{cycleTimes,jdbcType=INTEGER},
+    set cycle_times = #{cycleTimes,jdbcType=INTEGER},
       supplier_id = #{supplierId,jdbcType=VARCHAR},
       supplier_total_assets_p = #{supplierTotalAssetsP,jdbcType=INTEGER},
       supplier_credit_a = #{supplierCreditA,jdbcType=DOUBLE},

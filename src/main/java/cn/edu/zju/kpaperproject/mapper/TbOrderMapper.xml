@@ -7,11 +7,11 @@
     <result column="cycle_times" property="cycleTimes" jdbcType="INTEGER" />
     <result column="engine_factory_id" property="engineFactoryId" jdbcType="VARCHAR" />
     <result column="supplier_id" property="supplierId" jdbcType="VARCHAR" />
-    <result column="engine_to_supplier_ap" property="engineToSupplierAp" jdbcType="VARCHAR" />
-    <result column="supplier_engine_to_ap" property="supplierEngineToAp" jdbcType="VARCHAR" />
-    <result column="supplier_actual_price_p" property="supplierActualPriceP" jdbcType="VARCHAR" />
-    <result column="supplier_actual_quality_qs" property="supplierActualQualityQs" jdbcType="VARCHAR" />
-    <result column="supplier_actual_number_m" property="supplierActualNumberM" jdbcType="VARCHAR" />
+    <result column="engine_to_supplier_ap" property="engineToSupplierAp" jdbcType="DOUBLE" />
+    <result column="supplier_engine_to_ap" property="supplierEngineToAp" jdbcType="DOUBLE" />
+    <result column="supplier_actual_price_p" property="supplierActualPriceP" jdbcType="INTEGER" />
+    <result column="supplier_actual_quality_qs" property="supplierActualQualityQs" jdbcType="INTEGER" />
+    <result column="supplier_actual_number_m" property="supplierActualNumberM" jdbcType="INTEGER" />
     <result column="engine_factory_to_supplier_score" property="engineFactoryToSupplierScore" jdbcType="INTEGER" />
     <result column="supplier_to_engine_factory_score" property="supplierToEngineFactoryScore" jdbcType="INTEGER" />
   </resultMap>
@@ -116,9 +116,9 @@
       engine_factory_to_supplier_score, supplier_to_engine_factory_score
       )
     values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
-      #{engineFactoryId,jdbcType=VARCHAR}, #{supplierId,jdbcType=VARCHAR}, #{engineToSupplierAp,jdbcType=VARCHAR}, 
-      #{supplierEngineToAp,jdbcType=VARCHAR}, #{supplierActualPriceP,jdbcType=VARCHAR}, 
-      #{supplierActualQualityQs,jdbcType=VARCHAR}, #{supplierActualNumberM,jdbcType=VARCHAR}, 
+      #{engineFactoryId,jdbcType=VARCHAR}, #{supplierId,jdbcType=VARCHAR}, #{engineToSupplierAp,jdbcType=DOUBLE}, 
+      #{supplierEngineToAp,jdbcType=DOUBLE}, #{supplierActualPriceP,jdbcType=INTEGER}, 
+      #{supplierActualQualityQs,jdbcType=INTEGER}, #{supplierActualNumberM,jdbcType=INTEGER}, 
       #{engineFactoryToSupplierScore,jdbcType=INTEGER}, #{supplierToEngineFactoryScore,jdbcType=INTEGER}
       )
   </insert>
@@ -179,19 +179,19 @@
         #{supplierId,jdbcType=VARCHAR},
       </if>
       <if test="engineToSupplierAp != null" >
-        #{engineToSupplierAp,jdbcType=VARCHAR},
+        #{engineToSupplierAp,jdbcType=DOUBLE},
       </if>
       <if test="supplierEngineToAp != null" >
-        #{supplierEngineToAp,jdbcType=VARCHAR},
+        #{supplierEngineToAp,jdbcType=DOUBLE},
       </if>
       <if test="supplierActualPriceP != null" >
-        #{supplierActualPriceP,jdbcType=VARCHAR},
+        #{supplierActualPriceP,jdbcType=INTEGER},
       </if>
       <if test="supplierActualQualityQs != null" >
-        #{supplierActualQualityQs,jdbcType=VARCHAR},
+        #{supplierActualQualityQs,jdbcType=INTEGER},
       </if>
       <if test="supplierActualNumberM != null" >
-        #{supplierActualNumberM,jdbcType=VARCHAR},
+        #{supplierActualNumberM,jdbcType=INTEGER},
       </if>
       <if test="engineFactoryToSupplierScore != null" >
         #{engineFactoryToSupplierScore,jdbcType=INTEGER},
@@ -226,19 +226,19 @@
         supplier_id = #{record.supplierId,jdbcType=VARCHAR},
       </if>
       <if test="record.engineToSupplierAp != null" >
-        engine_to_supplier_ap = #{record.engineToSupplierAp,jdbcType=VARCHAR},
+        engine_to_supplier_ap = #{record.engineToSupplierAp,jdbcType=DOUBLE},
       </if>
       <if test="record.supplierEngineToAp != null" >
-        supplier_engine_to_ap = #{record.supplierEngineToAp,jdbcType=VARCHAR},
+        supplier_engine_to_ap = #{record.supplierEngineToAp,jdbcType=DOUBLE},
       </if>
       <if test="record.supplierActualPriceP != null" >
-        supplier_actual_price_p = #{record.supplierActualPriceP,jdbcType=VARCHAR},
+        supplier_actual_price_p = #{record.supplierActualPriceP,jdbcType=INTEGER},
       </if>
       <if test="record.supplierActualQualityQs != null" >
-        supplier_actual_quality_qs = #{record.supplierActualQualityQs,jdbcType=VARCHAR},
+        supplier_actual_quality_qs = #{record.supplierActualQualityQs,jdbcType=INTEGER},
       </if>
       <if test="record.supplierActualNumberM != null" >
-        supplier_actual_number_m = #{record.supplierActualNumberM,jdbcType=VARCHAR},
+        supplier_actual_number_m = #{record.supplierActualNumberM,jdbcType=INTEGER},
       </if>
       <if test="record.engineFactoryToSupplierScore != null" >
         engine_factory_to_supplier_score = #{record.engineFactoryToSupplierScore,jdbcType=INTEGER},
@@ -258,11 +258,11 @@
       cycle_times = #{record.cycleTimes,jdbcType=INTEGER},
       engine_factory_id = #{record.engineFactoryId,jdbcType=VARCHAR},
       supplier_id = #{record.supplierId,jdbcType=VARCHAR},
-      engine_to_supplier_ap = #{record.engineToSupplierAp,jdbcType=VARCHAR},
-      supplier_engine_to_ap = #{record.supplierEngineToAp,jdbcType=VARCHAR},
-      supplier_actual_price_p = #{record.supplierActualPriceP,jdbcType=VARCHAR},
-      supplier_actual_quality_qs = #{record.supplierActualQualityQs,jdbcType=VARCHAR},
-      supplier_actual_number_m = #{record.supplierActualNumberM,jdbcType=VARCHAR},
+      engine_to_supplier_ap = #{record.engineToSupplierAp,jdbcType=DOUBLE},
+      supplier_engine_to_ap = #{record.supplierEngineToAp,jdbcType=DOUBLE},
+      supplier_actual_price_p = #{record.supplierActualPriceP,jdbcType=INTEGER},
+      supplier_actual_quality_qs = #{record.supplierActualQualityQs,jdbcType=INTEGER},
+      supplier_actual_number_m = #{record.supplierActualNumberM,jdbcType=INTEGER},
       engine_factory_to_supplier_score = #{record.engineFactoryToSupplierScore,jdbcType=INTEGER},
       supplier_to_engine_factory_score = #{record.supplierToEngineFactoryScore,jdbcType=INTEGER}
     <if test="_parameter != null" >
@@ -285,19 +285,19 @@
         supplier_id = #{supplierId,jdbcType=VARCHAR},
       </if>
       <if test="engineToSupplierAp != null" >
-        engine_to_supplier_ap = #{engineToSupplierAp,jdbcType=VARCHAR},
+        engine_to_supplier_ap = #{engineToSupplierAp,jdbcType=DOUBLE},
       </if>
       <if test="supplierEngineToAp != null" >
-        supplier_engine_to_ap = #{supplierEngineToAp,jdbcType=VARCHAR},
+        supplier_engine_to_ap = #{supplierEngineToAp,jdbcType=DOUBLE},
       </if>
       <if test="supplierActualPriceP != null" >
-        supplier_actual_price_p = #{supplierActualPriceP,jdbcType=VARCHAR},
+        supplier_actual_price_p = #{supplierActualPriceP,jdbcType=INTEGER},
       </if>
       <if test="supplierActualQualityQs != null" >
-        supplier_actual_quality_qs = #{supplierActualQualityQs,jdbcType=VARCHAR},
+        supplier_actual_quality_qs = #{supplierActualQualityQs,jdbcType=INTEGER},
       </if>
       <if test="supplierActualNumberM != null" >
-        supplier_actual_number_m = #{supplierActualNumberM,jdbcType=VARCHAR},
+        supplier_actual_number_m = #{supplierActualNumberM,jdbcType=INTEGER},
       </if>
       <if test="engineFactoryToSupplierScore != null" >
         engine_factory_to_supplier_score = #{engineFactoryToSupplierScore,jdbcType=INTEGER},
@@ -314,11 +314,11 @@
       cycle_times = #{cycleTimes,jdbcType=INTEGER},
       engine_factory_id = #{engineFactoryId,jdbcType=VARCHAR},
       supplier_id = #{supplierId,jdbcType=VARCHAR},
-      engine_to_supplier_ap = #{engineToSupplierAp,jdbcType=VARCHAR},
-      supplier_engine_to_ap = #{supplierEngineToAp,jdbcType=VARCHAR},
-      supplier_actual_price_p = #{supplierActualPriceP,jdbcType=VARCHAR},
-      supplier_actual_quality_qs = #{supplierActualQualityQs,jdbcType=VARCHAR},
-      supplier_actual_number_m = #{supplierActualNumberM,jdbcType=VARCHAR},
+      engine_to_supplier_ap = #{engineToSupplierAp,jdbcType=DOUBLE},
+      supplier_engine_to_ap = #{supplierEngineToAp,jdbcType=DOUBLE},
+      supplier_actual_price_p = #{supplierActualPriceP,jdbcType=INTEGER},
+      supplier_actual_quality_qs = #{supplierActualQualityQs,jdbcType=INTEGER},
+      supplier_actual_number_m = #{supplierActualNumberM,jdbcType=INTEGER},
       engine_factory_to_supplier_score = #{engineFactoryToSupplierScore,jdbcType=INTEGER},
       supplier_to_engine_factory_score = #{supplierToEngineFactoryScore,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}

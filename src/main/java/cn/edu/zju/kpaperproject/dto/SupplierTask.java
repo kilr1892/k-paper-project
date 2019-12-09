@@ -10,9 +10,9 @@ import lombok.Setter;
  * @author RichardLee
  * @version v1.0
  */
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 public class SupplierTask {
     /** 供应商id */
     private String supplierId;
@@ -25,4 +25,5 @@ public class SupplierTask {
     /** 服务产能 */
     private int supplierCapacity;
     /** 位置坐标 */
+    private int[] supplierLocationXY;
 }

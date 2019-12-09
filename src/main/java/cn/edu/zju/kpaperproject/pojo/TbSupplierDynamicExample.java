@@ -164,66 +164,6 @@ public class TbSupplierDynamicExample {
             return (Criteria) this;
         }
 
-        public Criteria andExperimentsNumberIsNull() {
-            addCriterion("experiments_number is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andExperimentsNumberIsNotNull() {
-            addCriterion("experiments_number is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andExperimentsNumberEqualTo(Integer value) {
-            addCriterion("experiments_number =", value, "experimentsNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andExperimentsNumberNotEqualTo(Integer value) {
-            addCriterion("experiments_number <>", value, "experimentsNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andExperimentsNumberGreaterThan(Integer value) {
-            addCriterion("experiments_number >", value, "experimentsNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andExperimentsNumberGreaterThanOrEqualTo(Integer value) {
-            addCriterion("experiments_number >=", value, "experimentsNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andExperimentsNumberLessThan(Integer value) {
-            addCriterion("experiments_number <", value, "experimentsNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andExperimentsNumberLessThanOrEqualTo(Integer value) {
-            addCriterion("experiments_number <=", value, "experimentsNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andExperimentsNumberIn(List<Integer> values) {
-            addCriterion("experiments_number in", values, "experimentsNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andExperimentsNumberNotIn(List<Integer> values) {
-            addCriterion("experiments_number not in", values, "experimentsNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andExperimentsNumberBetween(Integer value1, Integer value2) {
-            addCriterion("experiments_number between", value1, value2, "experimentsNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andExperimentsNumberNotBetween(Integer value1, Integer value2) {
-            addCriterion("experiments_number not between", value1, value2, "experimentsNumber");
-            return (Criteria) this;
-        }
-
         public Criteria andCycleTimesIsNull() {
             addCriterion("cycle_times is null");
             return (Criteria) this;

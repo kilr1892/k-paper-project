@@ -11,15 +11,15 @@ public class TbOrder {
 
     private String supplierId;
 
-    private String engineToSupplierAp;
+    private Double engineToSupplierAp;
 
-    private String supplierEngineToAp;
+    private Double supplierEngineToAp;
 
-    private String supplierActualPriceP;
+    private Integer supplierActualPriceP;
 
-    private String supplierActualQualityQs;
+    private Integer supplierActualQualityQs;
 
-    private String supplierActualNumberM;
+    private Integer supplierActualNumberM;
 
     private Integer engineFactoryToSupplierScore;
 
@@ -65,44 +65,44 @@ public class TbOrder {
         this.supplierId = supplierId == null ? null : supplierId.trim();
     }
 
-    public String getEngineToSupplierAp() {
+    public Double getEngineToSupplierAp() {
         return engineToSupplierAp;
     }
 
-    public void setEngineToSupplierAp(String engineToSupplierAp) {
-        this.engineToSupplierAp = engineToSupplierAp == null ? null : engineToSupplierAp.trim();
+    public void setEngineToSupplierAp(Double engineToSupplierAp) {
+        this.engineToSupplierAp = engineToSupplierAp;
     }
 
-    public String getSupplierEngineToAp() {
+    public Double getSupplierEngineToAp() {
         return supplierEngineToAp;
     }
 
-    public void setSupplierEngineToAp(String supplierEngineToAp) {
-        this.supplierEngineToAp = supplierEngineToAp == null ? null : supplierEngineToAp.trim();
+    public void setSupplierEngineToAp(Double supplierEngineToAp) {
+        this.supplierEngineToAp = supplierEngineToAp;
     }
 
-    public String getSupplierActualPriceP() {
+    public Integer getSupplierActualPriceP() {
         return supplierActualPriceP;
     }
 
-    public void setSupplierActualPriceP(String supplierActualPriceP) {
-        this.supplierActualPriceP = supplierActualPriceP == null ? null : supplierActualPriceP.trim();
+    public void setSupplierActualPriceP(Integer supplierActualPriceP) {
+        this.supplierActualPriceP = supplierActualPriceP;
     }
 
-    public String getSupplierActualQualityQs() {
+    public Integer getSupplierActualQualityQs() {
         return supplierActualQualityQs;
     }
 
-    public void setSupplierActualQualityQs(String supplierActualQualityQs) {
-        this.supplierActualQualityQs = supplierActualQualityQs == null ? null : supplierActualQualityQs.trim();
+    public void setSupplierActualQualityQs(Integer supplierActualQualityQs) {
+        this.supplierActualQualityQs = supplierActualQualityQs;
     }
 
-    public String getSupplierActualNumberM() {
+    public Integer getSupplierActualNumberM() {
         return supplierActualNumberM;
     }
 
-    public void setSupplierActualNumberM(String supplierActualNumberM) {
-        this.supplierActualNumberM = supplierActualNumberM == null ? null : supplierActualNumberM.trim();
+    public void setSupplierActualNumberM(Integer supplierActualNumberM) {
+        this.supplierActualNumberM = supplierActualNumberM;
     }
 
     public Integer getEngineFactoryToSupplierScore() {

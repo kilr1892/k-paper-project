@@ -1,12 +1,9 @@
 package cn.edu.zju.kpaperproject.controller;
 
-import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
-import cn.edu.zju.kpaperproject.service.TaskService;
+import cn.edu.zju.kpaperproject.service.StartTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
 
 /**
  * .
@@ -18,12 +15,12 @@ import java.util.ArrayList;
 public class TestController {
 
     @Autowired
-    TaskService taskService;
+    StartTaskService startTaskService;
 
 
     @GetMapping("/test")
     public String test() {
-        taskService.startTask(1);
+        startTaskService.startTask(1);
 
         System.out.println();
 

@@ -7,8 +7,10 @@ import cn.edu.zju.kpaperproject.enums.SupplierEnum;
 import cn.edu.zju.kpaperproject.enums.TaskDecompositionEnum;
 import cn.edu.zju.kpaperproject.mapper.TbEngineFactoryDynamicMapper;
 import cn.edu.zju.kpaperproject.mapper.TbEngineFactoryMapper;
+import cn.edu.zju.kpaperproject.mapper.TbSupplierDynamicMapper;
+import cn.edu.zju.kpaperproject.mapper.TbSupplierMapper;
 import cn.edu.zju.kpaperproject.pojo.*;
-import cn.edu.zju.kpaperproject.service.TaskService;
+import cn.edu.zju.kpaperproject.service.StartTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +23,19 @@ import java.util.*;
  * @version v1.0
  */
 @Service
-public class TaskServiceImpl implements TaskService {
+public class StartTaskServiceImpl implements StartTaskService {
+
+    // TODO 打算再按照供应商task和主机厂task分成两个service  还不一定
 
     @Autowired
     private TbEngineFactoryMapper tbEngineFactoryMapper;
     @Autowired
     private TbEngineFactoryDynamicMapper tbEngineFactoryDynamicMapper;
+
+    @Autowired
+    private TbSupplierMapper tbSupplierMapper;
+    @Autowired
+    private TbSupplierDynamicMapper tbSupplierDynamicMapper;
 
     /**
      * 任务开始的相关内容获取
@@ -34,22 +43,86 @@ public class TaskServiceImpl implements TaskService {
      * @param cycleTime 循环次数, 从1开始
      */
     @Override
+
     public void startTask(int cycleTime) {
         // 获取初始主机厂分解任务
         ArrayList<ArrayList<EngineFactoryManufacturingTask>> engineFactoryTaskDecomposition = genEngineFactoryTaskDecomposition(cycleTime);
         // 获取各供应商任务
-        ArrayList<SupplierTask> supplierTasks = genSupplierTask(cycleTime);
+        ArrayList<ArrayList<SupplierTask>> arrayLists = genSupplierTask(cycleTime);
+        System.out.println();
     }
 
-    private ArrayList<SupplierTask> genSupplierTask(int cycleTime) {
+    private ArrayList<ArrayList<SupplierTask>> genSupplierTask(int cycleTime) {
+        // 返回值, 索引0~4 就是210~205的集合
+        ArrayList<ArrayList<SupplierTask>> res = new ArrayList<>(5);
+        int resSize = 5;
+        for (int i = 0; i < resSize; i++) {
+            res.add(new ArrayList<>());
+        }
 
-        return null;
+        // 查询出所有活着的供应商
+        TbSupplierExample tbSupplierExample = new TbSupplierExample();
+        TbSupplierExample.Criteria tbSupplierExampleCriteria = tbSupplierExample.createCriteria();
+        tbSupplierExampleCriteria.andSupplierAliveEqualTo(true);
+        List<TbSupplier> suppliers = tbSupplierMapper.selectByExample(tbSupplierExample);
+
+        for (TbSupplier aSupplier : suppliers) {
+            // 供应商id
+            String supplierId = aSupplier.getSupplierId();
+
+            // 获取供应商动态数据
+            TbSupplierDynamicExample tbSupplierDynamicExample = new TbSupplierDynamicExample();
+            TbSupplierDynamicExample.Criteria criteria = tbSupplierDynamicExample.createCriteria();
+            // 都是用上一个阶段的数值
+            criteria.andCycleTimesEqualTo(cycleTime - 1);
+            criteria.andSupplierIdEqualTo(supplierId);
+            TbSupplierDynamic tbSupplierDynamic = tbSupplierDynamicMapper.selectByExample(tbSupplierDynamicExample).get(0);
+
+            // ___需要存起来的供应商任务模型
+            SupplierTask supplierTask = new SupplierTask();
+            // 供应商id
+            supplierTask.setSupplierId(supplierId);
+            // 服务类型
+            int supplierType = aSupplier.getSupplierType();
+            supplierTask.setSupplierType(supplierType);
+            // 服务质量
+            supplierTask.setSupplierQuality(tbSupplierDynamic.getSupplierQualityQs());
+            // 服务价格
+            supplierTask.setSupplierPriceRange(new int[]{tbSupplierDynamic.getSupplierPricePL(), tbSupplierDynamic.getSupplierPricePU()});
+            // 服务产能
+            supplierTask.setSupplierCapacity(tbSupplierDynamic.getSupplierCapacityM());
+            // 地理位置
+            supplierTask.setSupplierLocationXY(new int[]{aSupplier.getSupplierLocationGX(), aSupplier.getSupplierLocationGY()});
+
+            // 选择对应点的集合存入供应商任务模型
+            switch (supplierType) {
+                case 210:
+                    res.get(0).add(supplierTask);
+                    break;
+                case 220:
+                    res.get(1).add(supplierTask);
+                    break;
+                case 230:
+                    res.get(2).add(supplierTask);
+                    break;
+                case 240:
+                    res.get(3).add(supplierTask);
+                    break;
+                case 250:
+                    res.get(4).add(supplierTask);
+                    break;
+                default:
+                    throw new RuntimeException("供应商类型错误");
+            }
+        }
+
+        return res;
     }
 
     /**
      * 生成主机厂分解任务
      *
-     * @return 每个主机厂的任务
+     * @return list中每个元素代表一个主机厂分解的任务集
      */
     private ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(int cycleTimes) {
         // TODO 感觉可以用TreeSet, 但不知道如何使用
@@ -62,10 +135,11 @@ public class TaskServiceImpl implements TaskService {
         int[] supplierTypeCodes = SupplierEnum.getSupplierTypeCodes();
 
         for (TbEngineFactory aEngineFactory : tbEngineFactories) {
+            // 主机厂静态数据aEngineFactory
+
             // 这个是每个主机厂的集合
             ArrayList<EngineFactoryManufacturingTask> listEngineFactoryManufacturingTask = new ArrayList<>();
 
-            // 主机厂静态数据aEngineFactory
             // 主机厂id
             String engineFactoryId = aEngineFactory.getEngineFactoryId();
             // 获取主机厂动态数据模型

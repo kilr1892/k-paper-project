@@ -434,62 +434,52 @@ public class TbOrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andEngineToSupplierApEqualTo(String value) {
+        public Criteria andEngineToSupplierApEqualTo(Double value) {
             addCriterion("engine_to_supplier_ap =", value, "engineToSupplierAp");
             return (Criteria) this;
         }
 
-        public Criteria andEngineToSupplierApNotEqualTo(String value) {
+        public Criteria andEngineToSupplierApNotEqualTo(Double value) {
             addCriterion("engine_to_supplier_ap <>", value, "engineToSupplierAp");
             return (Criteria) this;
         }
 
-        public Criteria andEngineToSupplierApGreaterThan(String value) {
+        public Criteria andEngineToSupplierApGreaterThan(Double value) {
             addCriterion("engine_to_supplier_ap >", value, "engineToSupplierAp");
             return (Criteria) this;
         }
 
-        public Criteria andEngineToSupplierApGreaterThanOrEqualTo(String value) {
+        public Criteria andEngineToSupplierApGreaterThanOrEqualTo(Double value) {
             addCriterion("engine_to_supplier_ap >=", value, "engineToSupplierAp");
             return (Criteria) this;
         }
 
-        public Criteria andEngineToSupplierApLessThan(String value) {
+        public Criteria andEngineToSupplierApLessThan(Double value) {
             addCriterion("engine_to_supplier_ap <", value, "engineToSupplierAp");
             return (Criteria) this;
         }
 
-        public Criteria andEngineToSupplierApLessThanOrEqualTo(String value) {
+        public Criteria andEngineToSupplierApLessThanOrEqualTo(Double value) {
             addCriterion("engine_to_supplier_ap <=", value, "engineToSupplierAp");
             return (Criteria) this;
         }
 
-        public Criteria andEngineToSupplierApLike(String value) {
-            addCriterion("engine_to_supplier_ap like", value, "engineToSupplierAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineToSupplierApNotLike(String value) {
-            addCriterion("engine_to_supplier_ap not like", value, "engineToSupplierAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineToSupplierApIn(List<String> values) {
+        public Criteria andEngineToSupplierApIn(List<Double> values) {
             addCriterion("engine_to_supplier_ap in", values, "engineToSupplierAp");
             return (Criteria) this;
         }
 
-        public Criteria andEngineToSupplierApNotIn(List<String> values) {
+        public Criteria andEngineToSupplierApNotIn(List<Double> values) {
             addCriterion("engine_to_supplier_ap not in", values, "engineToSupplierAp");
             return (Criteria) this;
         }
 
-        public Criteria andEngineToSupplierApBetween(String value1, String value2) {
+        public Criteria andEngineToSupplierApBetween(Double value1, Double value2) {
             addCriterion("engine_to_supplier_ap between", value1, value2, "engineToSupplierAp");
             return (Criteria) this;
         }
 
-        public Criteria andEngineToSupplierApNotBetween(String value1, String value2) {
+        public Criteria andEngineToSupplierApNotBetween(Double value1, Double value2) {
             addCriterion("engine_to_supplier_ap not between", value1, value2, "engineToSupplierAp");
             return (Criteria) this;
         }
@@ -504,62 +494,52 @@ public class TbOrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andSupplierEngineToApEqualTo(String value) {
+        public Criteria andSupplierEngineToApEqualTo(Double value) {
             addCriterion("supplier_engine_to_ap =", value, "supplierEngineToAp");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierEngineToApNotEqualTo(String value) {
+        public Criteria andSupplierEngineToApNotEqualTo(Double value) {
             addCriterion("supplier_engine_to_ap <>", value, "supplierEngineToAp");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierEngineToApGreaterThan(String value) {
+        public Criteria andSupplierEngineToApGreaterThan(Double value) {
             addCriterion("supplier_engine_to_ap >", value, "supplierEngineToAp");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierEngineToApGreaterThanOrEqualTo(String value) {
+        public Criteria andSupplierEngineToApGreaterThanOrEqualTo(Double value) {
             addCriterion("supplier_engine_to_ap >=", value, "supplierEngineToAp");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierEngineToApLessThan(String value) {
+        public Criteria andSupplierEngineToApLessThan(Double value) {
             addCriterion("supplier_engine_to_ap <", value, "supplierEngineToAp");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierEngineToApLessThanOrEqualTo(String value) {
+        public Criteria andSupplierEngineToApLessThanOrEqualTo(Double value) {
             addCriterion("supplier_engine_to_ap <=", value, "supplierEngineToAp");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierEngineToApLike(String value) {
-            addCriterion("supplier_engine_to_ap like", value, "supplierEngineToAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierEngineToApNotLike(String value) {
-            addCriterion("supplier_engine_to_ap not like", value, "supplierEngineToAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierEngineToApIn(List<String> values) {
+        public Criteria andSupplierEngineToApIn(List<Double> values) {
             addCriterion("supplier_engine_to_ap in", values, "supplierEngineToAp");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierEngineToApNotIn(List<String> values) {
+        public Criteria andSupplierEngineToApNotIn(List<Double> values) {
             addCriterion("supplier_engine_to_ap not in", values, "supplierEngineToAp");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierEngineToApBetween(String value1, String value2) {
+        public Criteria andSupplierEngineToApBetween(Double value1, Double value2) {
             addCriterion("supplier_engine_to_ap between", value1, value2, "supplierEngineToAp");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierEngineToApNotBetween(String value1, String value2) {
+        public Criteria andSupplierEngineToApNotBetween(Double value1, Double value2) {
             addCriterion("supplier_engine_to_ap not between", value1, value2, "supplierEngineToAp");
             return (Criteria) this;
         }
@@ -574,62 +554,52 @@ public class TbOrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualPricePEqualTo(String value) {
+        public Criteria andSupplierActualPricePEqualTo(Integer value) {
             addCriterion("supplier_actual_price_p =", value, "supplierActualPriceP");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualPricePNotEqualTo(String value) {
+        public Criteria andSupplierActualPricePNotEqualTo(Integer value) {
             addCriterion("supplier_actual_price_p <>", value, "supplierActualPriceP");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualPricePGreaterThan(String value) {
+        public Criteria andSupplierActualPricePGreaterThan(Integer value) {
             addCriterion("supplier_actual_price_p >", value, "supplierActualPriceP");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualPricePGreaterThanOrEqualTo(String value) {
+        public Criteria andSupplierActualPricePGreaterThanOrEqualTo(Integer value) {
             addCriterion("supplier_actual_price_p >=", value, "supplierActualPriceP");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualPricePLessThan(String value) {
+        public Criteria andSupplierActualPricePLessThan(Integer value) {
             addCriterion("supplier_actual_price_p <", value, "supplierActualPriceP");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualPricePLessThanOrEqualTo(String value) {
+        public Criteria andSupplierActualPricePLessThanOrEqualTo(Integer value) {
             addCriterion("supplier_actual_price_p <=", value, "supplierActualPriceP");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualPricePLike(String value) {
-            addCriterion("supplier_actual_price_p like", value, "supplierActualPriceP");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualPricePNotLike(String value) {
-            addCriterion("supplier_actual_price_p not like", value, "supplierActualPriceP");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualPricePIn(List<String> values) {
+        public Criteria andSupplierActualPricePIn(List<Integer> values) {
             addCriterion("supplier_actual_price_p in", values, "supplierActualPriceP");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualPricePNotIn(List<String> values) {
+        public Criteria andSupplierActualPricePNotIn(List<Integer> values) {
             addCriterion("supplier_actual_price_p not in", values, "supplierActualPriceP");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualPricePBetween(String value1, String value2) {
+        public Criteria andSupplierActualPricePBetween(Integer value1, Integer value2) {
             addCriterion("supplier_actual_price_p between", value1, value2, "supplierActualPriceP");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualPricePNotBetween(String value1, String value2) {
+        public Criteria andSupplierActualPricePNotBetween(Integer value1, Integer value2) {
             addCriterion("supplier_actual_price_p not between", value1, value2, "supplierActualPriceP");
             return (Criteria) this;
         }
@@ -644,62 +614,52 @@ public class TbOrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualQualityQsEqualTo(String value) {
+        public Criteria andSupplierActualQualityQsEqualTo(Integer value) {
             addCriterion("supplier_actual_quality_qs =", value, "supplierActualQualityQs");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualQualityQsNotEqualTo(String value) {
+        public Criteria andSupplierActualQualityQsNotEqualTo(Integer value) {
             addCriterion("supplier_actual_quality_qs <>", value, "supplierActualQualityQs");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualQualityQsGreaterThan(String value) {
+        public Criteria andSupplierActualQualityQsGreaterThan(Integer value) {
             addCriterion("supplier_actual_quality_qs >", value, "supplierActualQualityQs");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualQualityQsGreaterThanOrEqualTo(String value) {
+        public Criteria andSupplierActualQualityQsGreaterThanOrEqualTo(Integer value) {
             addCriterion("supplier_actual_quality_qs >=", value, "supplierActualQualityQs");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualQualityQsLessThan(String value) {
+        public Criteria andSupplierActualQualityQsLessThan(Integer value) {
             addCriterion("supplier_actual_quality_qs <", value, "supplierActualQualityQs");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualQualityQsLessThanOrEqualTo(String value) {
+        public Criteria andSupplierActualQualityQsLessThanOrEqualTo(Integer value) {
             addCriterion("supplier_actual_quality_qs <=", value, "supplierActualQualityQs");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualQualityQsLike(String value) {
-            addCriterion("supplier_actual_quality_qs like", value, "supplierActualQualityQs");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualQualityQsNotLike(String value) {
-            addCriterion("supplier_actual_quality_qs not like", value, "supplierActualQualityQs");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualQualityQsIn(List<String> values) {
+        public Criteria andSupplierActualQualityQsIn(List<Integer> values) {
             addCriterion("supplier_actual_quality_qs in", values, "supplierActualQualityQs");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualQualityQsNotIn(List<String> values) {
+        public Criteria andSupplierActualQualityQsNotIn(List<Integer> values) {
             addCriterion("supplier_actual_quality_qs not in", values, "supplierActualQualityQs");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualQualityQsBetween(String value1, String value2) {
+        public Criteria andSupplierActualQualityQsBetween(Integer value1, Integer value2) {
             addCriterion("supplier_actual_quality_qs between", value1, value2, "supplierActualQualityQs");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualQualityQsNotBetween(String value1, String value2) {
+        public Criteria andSupplierActualQualityQsNotBetween(Integer value1, Integer value2) {
             addCriterion("supplier_actual_quality_qs not between", value1, value2, "supplierActualQualityQs");
             return (Criteria) this;
         }
@@ -714,62 +674,52 @@ public class TbOrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualNumberMEqualTo(String value) {
+        public Criteria andSupplierActualNumberMEqualTo(Integer value) {
             addCriterion("supplier_actual_number_m =", value, "supplierActualNumberM");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualNumberMNotEqualTo(String value) {
+        public Criteria andSupplierActualNumberMNotEqualTo(Integer value) {
             addCriterion("supplier_actual_number_m <>", value, "supplierActualNumberM");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualNumberMGreaterThan(String value) {
+        public Criteria andSupplierActualNumberMGreaterThan(Integer value) {
             addCriterion("supplier_actual_number_m >", value, "supplierActualNumberM");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualNumberMGreaterThanOrEqualTo(String value) {
+        public Criteria andSupplierActualNumberMGreaterThanOrEqualTo(Integer value) {
             addCriterion("supplier_actual_number_m >=", value, "supplierActualNumberM");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualNumberMLessThan(String value) {
+        public Criteria andSupplierActualNumberMLessThan(Integer value) {
             addCriterion("supplier_actual_number_m <", value, "supplierActualNumberM");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualNumberMLessThanOrEqualTo(String value) {
+        public Criteria andSupplierActualNumberMLessThanOrEqualTo(Integer value) {
             addCriterion("supplier_actual_number_m <=", value, "supplierActualNumberM");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualNumberMLike(String value) {
-            addCriterion("supplier_actual_number_m like", value, "supplierActualNumberM");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualNumberMNotLike(String value) {
-            addCriterion("supplier_actual_number_m not like", value, "supplierActualNumberM");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualNumberMIn(List<String> values) {
+        public Criteria andSupplierActualNumberMIn(List<Integer> values) {
             addCriterion("supplier_actual_number_m in", values, "supplierActualNumberM");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualNumberMNotIn(List<String> values) {
+        public Criteria andSupplierActualNumberMNotIn(List<Integer> values) {
             addCriterion("supplier_actual_number_m not in", values, "supplierActualNumberM");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualNumberMBetween(String value1, String value2) {
+        public Criteria andSupplierActualNumberMBetween(Integer value1, Integer value2) {
             addCriterion("supplier_actual_number_m between", value1, value2, "supplierActualNumberM");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualNumberMNotBetween(String value1, String value2) {
+        public Criteria andSupplierActualNumberMNotBetween(Integer value1, Integer value2) {
             addCriterion("supplier_actual_number_m not between", value1, value2, "supplierActualNumberM");
             return (Criteria) this;
         }

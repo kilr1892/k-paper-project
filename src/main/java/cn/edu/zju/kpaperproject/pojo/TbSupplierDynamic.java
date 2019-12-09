@@ -3,8 +3,6 @@ package cn.edu.zju.kpaperproject.pojo;
 public class TbSupplierDynamic {
     private Integer id;
 
-    private Integer experimentsNumber;
-
     private Integer cycleTimes;
 
     private String supplierId;
@@ -29,14 +27,6 @@ public class TbSupplierDynamic {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getExperimentsNumber() {
-        return experimentsNumber;
-    }
-
-    public void setExperimentsNumber(Integer experimentsNumber) {
-        this.experimentsNumber = experimentsNumber;
     }
 
     public Integer getCycleTimes() {
