@@ -69,8 +69,9 @@ public class StartTaskServiceImpl implements StartTaskService {
      * <p>
      * 返回值索引0~4就是能提供任务类型210~250的各个供应商服务
      *
-     * @param cycleTime 循环的次数, 从1开始
-     * @return 返回值中每个元素代表提供某类型服务供应商集合
+     * @param experimentsNumber 实验次数
+     * @param cycleTime         循环的次数, 从1开始
+     * @return                  返回值中每个元素代表提供某类型服务供应商集合
      */
     @Override
     public ArrayList<ArrayList<SupplierTask>> genSupplierTask(int experimentsNumber, int cycleTime) {
@@ -146,8 +147,9 @@ public class StartTaskServiceImpl implements StartTaskService {
      * <p>
      * 返回值按信誉度从高到底排, 信誉度相同就按210任务出价从高到底排
      *
-     * @param cycleTime 循环的次数, 从1开始
-     * @return 返回值中每个元素代表一个主机厂分解的任务集
+     * @param experimentsNumber 实验次数
+     * @param cycleTime         循环的次数, 从1开始
+     * @return                  返回值中每个元素代表一个主机厂分解的任务集
      */
     @Override
     public ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(int experimentsNumber, int cycleTime) {

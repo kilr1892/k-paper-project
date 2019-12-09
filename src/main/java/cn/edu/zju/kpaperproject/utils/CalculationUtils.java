@@ -9,6 +9,8 @@ import cn.edu.zju.kpaperproject.enums.NumberEnum;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  * 与计算相关.
  *
@@ -70,7 +72,7 @@ public class CalculationUtils {
     }
 
     /** 计算关系强度 */
-    public static void calRelationshipStrength(EngineFactoryManufacturingTask aEngineFactoryManufacturingTask, SupplierTask supplierTask) {
+    public static double calRelationshipStrength(EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask, Map<String, Double> mapRelationshipMatrix) {
 
         double a3slash = CalculationEnum.weightFactorA3slash;
         double b3slash = CalculationEnum.weightFactorB3slash;
@@ -78,22 +80,31 @@ public class CalculationUtils {
         double y3slash = CalculationEnum.weightFactorY3slash;
 
         // 两地距离
-        double distance = calDistance(aEngineFactoryManufacturingTask, supplierTask);
+        double distance = calDistance(engineFactoryManufacturingTask, supplierTask);
         double tmp1 = a3slash / (1 + distance);
 
         // 交集长度(分子)
-        int tmp2Molecular = calTmp2Molecular(aEngineFactoryManufacturingTask, supplierTask);
+        int tmp2Molecular = calTmp2Molecular(engineFactoryManufacturingTask, supplierTask);
         // 价格长度
-        int absEngineFactoryPrice = calAbsEnginePrice(aEngineFactoryManufacturingTask);
+        int absEngineFactoryPrice = calAbsEnginePrice(engineFactoryManufacturingTask);
         int absEnginePrice = calAbsEnginePrice(supplierTask);
         double tmp2 = b3slash * (tmp2Molecular) / (absEngineFactoryPrice + absEnginePrice);
 
         // 主机厂质量 - 供应商质量
-        double tmp3 = x3slash * (aEngineFactoryManufacturingTask.getEngineFactoryExpectedQuality() - supplierTask.getSupplierQuality()) / 10;
+        double tmp3 = x3slash * (engineFactoryManufacturingTask.getEngineFactoryExpectedQuality() - supplierTask.getSupplierQuality()) / 10;
 
         // 关系强度
-        double tmp4 = y3slash * getRelationshipStrength();
+        double tmp4 = y3slash * getRelationshipStrength(mapRelationshipMatrix, engineFactoryManufacturingTask, supplierTask);
+
+        return tmp1 + tmp2 + tmp3 + tmp4;
+
     }
+
+    private static double getRelationshipStrength(Map<String, Double> mapRelationshipMatrix, EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask) {
+        String key = engineFactoryManufacturingTask.getEngineFactoryId() + supplierTask.getSupplierId();
+        return mapRelationshipMatrix.get(key);
+    }
+
 
     /**
      * 计算关系强度第二个加法项的分子值
