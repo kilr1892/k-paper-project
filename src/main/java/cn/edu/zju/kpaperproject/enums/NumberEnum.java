@@ -17,4 +17,5 @@ public class NumberEnum {
     public static final int POSITION_Y = 1;
     public static final int PRICE_LOW = 0;
     public static final int PRICE_UPPER = 1;
+    public static final int QUALITY_UPPER = 10;
 }

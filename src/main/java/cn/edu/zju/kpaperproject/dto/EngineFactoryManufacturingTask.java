@@ -9,8 +9,11 @@ import lombok.Setter;
  * @author RichardLee
  * @version v1.0
  */
-@Getter @Setter
+@Getter
+@Setter
 public class EngineFactoryManufacturingTask {
+    /** 主机厂id */
+    private String engineFactoryId;
     /** 任务类型 */
     private int taskType;
     /** 零件需求 */

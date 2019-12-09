@@ -20,7 +20,9 @@ public class TaskDecompositionEnum {
     public static double taskDecompositionEjc250;
     public static double taskDecompositionXiq;
 
-    public static double[] taskDecompositionEjcs = {taskDecompositionEjc210, taskDecompositionEjc220, taskDecompositionEjc230, taskDecompositionEjc240, taskDecompositionEjc250};
+    public static double[] getTaskDecompositionEjcs() {
+        return new double[]{taskDecompositionEjc210, taskDecompositionEjc220, taskDecompositionEjc230, taskDecompositionEjc240, taskDecompositionEjc250};
+    }
 
     @Value("${experiments.taskDecomposition.ejd}")
     public void setTaskDecompositionDjd(int taskDecompositionEjd) {
@@ -61,4 +63,6 @@ public class TaskDecompositionEnum {
     public void setTaskDecompositionXiq(double taskDecompositionXiq) {
         TaskDecompositionEnum.taskDecompositionXiq = taskDecompositionXiq;
     }
+
+
 }

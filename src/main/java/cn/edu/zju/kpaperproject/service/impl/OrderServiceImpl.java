@@ -30,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 生成主机厂任务
+     *
      * @return 每个主机厂的任务
      */
     @Override
@@ -38,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
         // 找出所有存活的主机厂
         List<TbEngineFactory> tbEngineFactories = getListEngineFactoryWithAlive();
         // 服务代码数组
-        int[] supplierTypeCodes = SupplierEnum.supplierTypeCodes;
+        int[] supplierTypeCodes = SupplierEnum.getSupplierTypeCodes();
 
         for (TbEngineFactory aEngineFactory : tbEngineFactories) {
             String engineFactoryId = aEngineFactory.getEngineFactoryId();
@@ -47,19 +48,21 @@ public class OrderServiceImpl implements OrderService {
             // 成品数量预测
             int qi = genEngineFactoryPlannedCapacity(cycleTimes, engineFactoryId);
 
-            EngineFactoryManufacturingTask engineFactoryManufacturingTask = new EngineFactoryManufacturingTask();
             for (int i = 0; i < supplierTypeCodes.length; i++) {
+                // 任务分解模型实例
+                EngineFactoryManufacturingTask engineFactoryManufacturingTask = new EngineFactoryManufacturingTask();
+
+                // 主机厂id
+                engineFactoryManufacturingTask.setEngineFactoryId(engineFactoryId);
                 // 任务类型
                 engineFactoryManufacturingTask.setTaskType(supplierTypeCodes[i]);
                 // 服务需求量
                 engineFactoryManufacturingTask.setEngineFactoryNeedServiceNumber(qi);
-
                 // 期望价格区间
                 int[] engineFactory2ServiceOfferPrice = genEngineFactory2ServiceOfferPrice(engineFactoryDynamic, i);
                 engineFactoryManufacturingTask.setEngineFactory2ServiceOfferPrice(engineFactory2ServiceOfferPrice);
                 // 期望质量
-                int engineFactoryQuality = engineFactoryDynamic.getEngineFactoryQualityQ() + NumberEnum.NUMBER_1;
-                engineFactoryManufacturingTask.setEngineFactoryExpectedQuality(engineFactoryQuality);
+                engineFactoryManufacturingTask.setEngineFactoryExpectedQuality(genEngineFactoryQuality(engineFactoryDynamic));
 
                 listEngineFactoryManufacturingTask.add(engineFactoryManufacturingTask);
             }
@@ -96,13 +99,14 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 计算各服务期望的价格区间
-     * @param tbEngineFactoryDynamic    主机厂动态数据模型
-     * @param codeType                  服务代码序号,0 代表210....4代表250
-     * @return                          价格区间
+     *
+     * @param tbEngineFactoryDynamic 主机厂动态数据模型
+     * @param codeType               服务代码序号,0 代表210....4代表250
+     * @return 价格区间
      */
-    private int[] genEngineFactory2ServiceOfferPrice(TbEngineFactoryDynamic tbEngineFactoryDynamic,int codeType) {
+    private int[] genEngineFactory2ServiceOfferPrice(TbEngineFactoryDynamic tbEngineFactoryDynamic, int codeType) {
         int[] res = new int[2];
-        double[] taskDecompositionEjcs = TaskDecompositionEnum.taskDecompositionEjcs;
+        double[] taskDecompositionEjcs = TaskDecompositionEnum.getTaskDecompositionEjcs();
 
         int[] priceRange = getEngineFactoryExceptPriceRange(tbEngineFactoryDynamic);
 
@@ -115,8 +119,9 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 获取主机厂的期待整机售价
-     * @param tbEngineFactoryDynamic    主机厂动态数据模型
-     * @return                          期待售价价格范围
+     *
+     * @param tbEngineFactoryDynamic 主机厂动态数据模型
+     * @return 期待售价价格范围
      */
     private int[] getEngineFactoryExceptPriceRange(TbEngineFactoryDynamic tbEngineFactoryDynamic) {
 
@@ -125,9 +130,10 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 通过循环次数和id, 获取主机厂动态数据模型
-     * @param cycleTime         循环次数(从1开始)
-     * @param engineFactoryId   主机厂id
-     * @return                  主机厂动态数据模型
+     *
+     * @param cycleTime       循环次数(从1开始)
+     * @param engineFactoryId 主机厂id
+     * @return 主机厂动态数据模型
      */
     private TbEngineFactoryDynamic getEngineFactoryDynamicWithCycleTimeAndEngineFactoryId(int cycleTime, String engineFactoryId) {
         TbEngineFactoryDynamicExample tbEngineFactoryDynamicExample = new TbEngineFactoryDynamicExample();
@@ -136,5 +142,16 @@ public class OrderServiceImpl implements OrderService {
         criteria.andCycleTimesEqualTo(cycleTime - 1);
         criteria.andEngineFactoryIdEqualTo(engineFactoryId);
         return tbEngineFactoryDynamicMapper.selectByExample(tbEngineFactoryDynamicExample).get(0);
+    }
+
+    /**
+     * 计算任务期望质量
+     *
+     * @param tbEngineFactoryDynamic 主机厂动态数据模型
+     * @return 分解任务期望质量
+     */
+    private int genEngineFactoryQuality(TbEngineFactoryDynamic tbEngineFactoryDynamic) {
+        int engineFactoryQuality = tbEngineFactoryDynamic.getEngineFactoryQualityQ();
+        return engineFactoryQuality >= NumberEnum.QUALITY_UPPER ? NumberEnum.QUALITY_UPPER : engineFactoryQuality + NumberEnum.NUMBER_1;
     }
 }

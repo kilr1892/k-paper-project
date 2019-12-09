@@ -44,8 +44,11 @@ public class SupplierEnum {
     public static int supplierInitQualityLow;
     public static int supplierInitQualityUpper;
 
-    public static int[] supplierTypeCodes = {SupplierEnum.supplierType210, SupplierEnum.supplierType220, SupplierEnum.supplierType230
-            , SupplierEnum.supplierType240, SupplierEnum.supplierType250};
+
+    public static int[] getSupplierTypeCodes() {
+        return new int[]{SupplierEnum.supplierType210, SupplierEnum.supplierType220, SupplierEnum.supplierType230
+                , SupplierEnum.supplierType240, SupplierEnum.supplierType250};
+    }
 
     @Value("${experiments.supplier.init210Sum}")
     public void setSupplierInit210Sum(int supplierInit210Sum) {
