@@ -36,11 +36,11 @@ public class TestController {
 //        initService.init(expNum);
         ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTaskDecomposition = startTaskService.genEngineFactoryTaskDecomposition(expNum, cycleTime);
         ArrayList<ArrayList<SupplierTask>> listListSupplierTask = startTaskService.genSupplierTask(expNum, cycleTime);
-        Map<String, Double> mapRelationshipMatrix = startTaskService.genMapRelationshipMatrix(expNum, cycleTime);
+        Map<String, Double> mapRelationshipMatrix = startTaskService.getMapRelationshipMatrix(expNum, cycleTime);
 
         ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> linkedHashMaps = processTaskService.roughMatching(listListEngineFactoryTaskDecomposition, listListSupplierTask);
 
-        processTaskService.exactMatching(linkedHashMaps, listListSupplierTask);
+        processTaskService.exactMatching(linkedHashMaps, listListSupplierTask, mapRelationshipMatrix);
 
         System.out.println();
 

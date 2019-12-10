@@ -81,7 +81,7 @@ public class CalculationUtils {
      * @param mapRelationshipMatrix             双方关系强度矩阵
      * @return                                  匹配度
      */
-    public static double calRelationshipStrength(EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask, Map<String, Double> mapRelationshipMatrix) {
+    public static double calMatchingDegree(EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask, Map<String, Double> mapRelationshipMatrix) {
 
         double a3slash = CalculationEnum.weightFactorA3slash;
         double b3slash = CalculationEnum.weightFactorB3slash;

@@ -11,7 +11,10 @@ import cn.edu.zju.kpaperproject.service.StartTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * .
@@ -36,7 +39,7 @@ public class StartTaskServiceImpl implements StartTaskService {
     private TbRelationMatrixMapper tbRelationMatrixMapper;
 
     /**
-     * 生成主机厂与供应商之间的关系矩阵
+     * 获得主机厂与供应商之间的关系矩阵
      * key   = 主机厂id + 供应商id
      * value = 两者关系强度
      *
@@ -45,7 +48,7 @@ public class StartTaskServiceImpl implements StartTaskService {
      * @return                  循环次数 - 1 时(最新的)关系矩阵
      */
     @Override
-    public Map<String, Double> genMapRelationshipMatrix(int experimentsNumber, int cycleTime) {
+    public Map<String, Double> getMapRelationshipMatrix(int experimentsNumber, int cycleTime) {
         Map<String, Double> mapRes = new HashMap<>(1000);
 
         // 查询所有的可用的关系数据
