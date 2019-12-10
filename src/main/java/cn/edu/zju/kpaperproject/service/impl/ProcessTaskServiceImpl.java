@@ -8,7 +8,9 @@ import cn.edu.zju.kpaperproject.service.ProcessTaskService;
 import cn.edu.zju.kpaperproject.utils.CalculationUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * .
@@ -71,52 +73,20 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
     }
 
     /** 精匹配方法 */
+    @Override
     public void exactMatching
     (ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> listLinkedHashMapEngineTaskMatchingSupplierTask, ArrayList<ArrayList<SupplierTask>> listListSupplierTask) {
         if (listLinkedHashMapEngineTaskMatchingSupplierTask == null || listLinkedHashMapEngineTaskMatchingSupplierTask.size() == 0) {
             throw new RuntimeException("粗匹配无一个数据");
         }
 
-        // # 第一阶段, 补全为空的, 过滤没用的集合
-        for (int i = 0; i < listLinkedHashMapEngineTaskMatchingSupplierTask.size(); i++) {
-            // 取出一个厂
-            LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>> mapEngineFactoryTaskVsSupplierTask = listLinkedHashMapEngineTaskMatchingSupplierTask.get(i);
-            // 遍历工厂的每个任务
-            for (Map.Entry<EngineFactoryManufacturingTask, ArrayList<SupplierTask>> entry : mapEngineFactoryTaskVsSupplierTask.entrySet()) {
-                // 取出一个任务
-                EngineFactoryManufacturingTask aEngineFactoryManufacturingTask = entry.getKey();
-                // 任务粗匹配的集合
-                ArrayList<SupplierTask> supplierTasks = entry.getValue();
-                if (supplierTasks == null || supplierTasks.size() == 0) {
-                    // 一个都没匹配上的, 再次匹配
-                    ArrayList<SupplierTask> listNewMatchingSupplierTask = reGenListMatchingSupplierTask(aEngineFactoryManufacturingTask, listListSupplierTask);
-                    // 匹配到了至少一个, 补全map集合
-                    if (listListSupplierTask != null && listListSupplierTask.size() != 0) {
-                        mapEngineFactoryTaskVsSupplierTask.put(aEngineFactoryManufacturingTask, listNewMatchingSupplierTask);
-                    }
-                }
-            }
-        }
-
-        // 过滤还为0的厂: 整个主机厂都拿掉
-        // TODO 假设能删除成功了, 不成功就new一个list放进去
-        Iterator<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> iterator = listLinkedHashMapEngineTaskMatchingSupplierTask.iterator();
-        deleteHave0EngineFactory:
-        while (iterator.hasNext()) {
-            LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>> mapEngineFactory = iterator.next();
-            for (Map.Entry<EngineFactoryManufacturingTask, ArrayList<SupplierTask>> entry : mapEngineFactory.entrySet()) {
-                ArrayList<SupplierTask> listSupplierTask = entry.getValue();
-                if (listSupplierTask == null || listSupplierTask.size() == 0) {
-                    iterator.remove();
-                    break deleteHave0EngineFactory;
-                }
-            }
-        }
+        // # 第一阶段, size为0的重匹配, 过滤真的匹配不上的主机厂
+        exactMatchingPart1(listLinkedHashMapEngineTaskMatchingSupplierTask, listListSupplierTask);
 
         // # 第二阶段, 按size的情况来计算
         listMapMatchingTask:
         for (int i = 0; i < listLinkedHashMapEngineTaskMatchingSupplierTask.size(); i++) {
-            // TODO 这里准备个新的集合, 再过滤一次, 把有为0的过滤掉
+            // TODO 假设过滤成功了
 
             // 取出主机厂的任务匹配集
             LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>> mapEngineFactory = listLinkedHashMapEngineTaskMatchingSupplierTask.get(i);
@@ -146,6 +116,50 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         // TODO 返回值为一个list
 
 
+    }
+
+    /**
+     * 精确匹配的阶段1
+     * 没匹配上的重新匹配, 之后过滤到没有匹配上的厂子
+     *
+     * @param listLinkedHashMapEngineTaskMatchingSupplierTask   粗匹配的主机厂 - 供应商任务集
+     * @param listListSupplierTask                              供应商服务集(按服务类型分)
+     */
+    private void exactMatchingPart1(ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> listLinkedHashMapEngineTaskMatchingSupplierTask, ArrayList<ArrayList<SupplierTask>> listListSupplierTask) {
+        // 重匹配
+        for (int i = 0; i < listLinkedHashMapEngineTaskMatchingSupplierTask.size(); i++) {
+            // 取出一个厂
+            LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>> mapEngineFactoryTaskVsSupplierTask = listLinkedHashMapEngineTaskMatchingSupplierTask.get(i);
+            // 遍历工厂的每个任务
+            for (Map.Entry<EngineFactoryManufacturingTask, ArrayList<SupplierTask>> entry : mapEngineFactoryTaskVsSupplierTask.entrySet()) {
+                // 取出一个任务
+                EngineFactoryManufacturingTask aEngineFactoryManufacturingTask = entry.getKey();
+                // 任务粗匹配的集合
+                ArrayList<SupplierTask> supplierTasks = entry.getValue();
+                if (supplierTasks == null || supplierTasks.size() == 0) {
+                    // 一个都没匹配上的, 再次匹配
+                    ArrayList<SupplierTask> listNewMatchingSupplierTask = reGenListMatchingSupplierTask(aEngineFactoryManufacturingTask, listListSupplierTask);
+                    // 匹配到了至少一个, 补全map集合
+                    if (listListSupplierTask != null && listListSupplierTask.size() != 0) {
+                        mapEngineFactoryTaskVsSupplierTask.put(aEngineFactoryManufacturingTask, listNewMatchingSupplierTask);
+                    }
+                }
+            }
+        }
+
+        // 过滤还为0的厂: 整个主机厂都拿掉
+        deleteHave0EngineFactory:
+        for (int i = 0; i < listLinkedHashMapEngineTaskMatchingSupplierTask.size(); i++) {
+            LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>> mapEngineFactory = listLinkedHashMapEngineTaskMatchingSupplierTask.get(i);
+            for (Map.Entry<EngineFactoryManufacturingTask, ArrayList<SupplierTask>> entry : mapEngineFactory.entrySet()) {
+                ArrayList<SupplierTask> listSupplierTask = entry.getValue();
+                if (listSupplierTask == null || listSupplierTask.size() == 0) {
+                    listLinkedHashMapEngineTaskMatchingSupplierTask.remove(i);
+                    i--;
+                    continue deleteHave0EngineFactory;
+                }
+            }
+        }
     }
 
     /** 用于重新匹配任务 */

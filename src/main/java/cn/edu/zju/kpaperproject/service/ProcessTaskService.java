@@ -26,6 +26,8 @@ public interface ProcessTaskService {
 
 
     /** 精匹配方法 */
-    /** 未匹配方法 */
+    void exactMatching
+    (ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> listLinkedHashMapEngineTaskMatchingSupplierTask, ArrayList<ArrayList<SupplierTask>> listListSupplierTask);
+        /** 未匹配方法 */
     /** 重新匹配方法 */
 }
