@@ -45,11 +45,12 @@ public class CalculationUtils {
 
         return demandForecast >= 0 ? demandForecast : 0;
     }
+
     /**
      * 判断价格是否有交集
      *
-     * @param aEngineFactoryManufacturingTask   主机厂价格区间
-     * @param aSupplierTask                     供应商价格区间
+     * @param aEngineFactoryManufacturingTask 主机厂价格区间
+     * @param aSupplierTask                   供应商价格区间
      * @return 是否有交集
      */
     public static boolean whetherPriceIntersection(EngineFactoryManufacturingTask aEngineFactoryManufacturingTask, SupplierTask aSupplierTask) {
@@ -76,10 +77,10 @@ public class CalculationUtils {
     /**
      * 计算精匹配中双方匹配度
      *
-     * @param engineFactoryManufacturingTask    主机厂的任务
-     * @param supplierTask                      供应商提供的服务
-     * @param mapRelationshipMatrix             双方关系强度矩阵
-     * @return                                  匹配度
+     * @param engineFactoryManufacturingTask 主机厂的任务
+     * @param supplierTask                   供应商提供的服务
+     * @param mapRelationshipMatrix          双方关系强度矩阵
+     * @return 匹配度
      */
     public static double calMatchingDegree(EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask, Map<String, Double> mapRelationshipMatrix) {
 
@@ -112,10 +113,10 @@ public class CalculationUtils {
     /**
      * 获取双方关系强度
      *
-     * @param mapRelationshipMatrix             关系强度Map
-     * @param engineFactoryManufacturingTask    主机厂任务
-     * @param supplierTask                      供应商任务
-     * @return                                  关系强度值
+     * @param mapRelationshipMatrix          关系强度Map
+     * @param engineFactoryManufacturingTask 主机厂任务
+     * @param supplierTask                   供应商任务
+     * @return 关系强度值
      */
     private static double getRelationshipStrength(Map<String, Double> mapRelationshipMatrix, EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask) {
         String key = engineFactoryManufacturingTask.getEngineFactoryId() + supplierTask.getSupplierId();
@@ -125,9 +126,10 @@ public class CalculationUtils {
 
     /**
      * 计算关系强度第二个加法项的分子值
-     * @param aEngineFactoryManufacturingTask   主机厂任务分解
-     * @param supplierTask                      供应商服务
-     * @return                                  第二个加法项的分子值
+     *
+     * @param aEngineFactoryManufacturingTask 主机厂任务分解
+     * @param supplierTask                    供应商服务
+     * @return 第二个加法项的分子值
      */
     private static int calTmp2Molecular(EngineFactoryManufacturingTask aEngineFactoryManufacturingTask, SupplierTask supplierTask) {
         int[] engineFactoryPriceRange = aEngineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice();
@@ -151,8 +153,8 @@ public class CalculationUtils {
     /**
      * 计算价格的长度
      *
-     * @param object    主机厂任务或供应商服务
-     * @return          价格长度
+     * @param object 主机厂任务或供应商服务
+     * @return 价格长度
      */
     private static int calAbsEnginePrice(Object object) {
         int[] priceRange = new int[2];
@@ -187,4 +189,38 @@ public class CalculationUtils {
         return Math.sqrt(powX + powY);
     }
 
+    /**
+     * 获取订单价格
+     *
+     * @param engineFactoryManufacturingTask    主机厂任务
+     * @param supplierTask                      匹配上的唯一服务
+     * @param flag                              是否有交集
+     * @return                                  订单价格
+     */
+    public static int genTransactionContractOrderPrice(EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask, boolean flag) {
+        int[] engineFactory2ServiceOfferPrice = engineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice();
+        int engineFactory2ServiceOfferPriceLow = engineFactory2ServiceOfferPrice[NumberEnum.PRICE_LOW_ARRAY_INDEX];
+        int engineFactory2ServiceOfferPriceUpper = engineFactory2ServiceOfferPrice[NumberEnum.PRICE_UPPER_ARRAY_INDEX];
+
+        int[] supplierPriceRange = supplierTask.getSupplierPriceRange();
+        int supplierPriceLow = supplierPriceRange[NumberEnum.PRICE_LOW_ARRAY_INDEX];
+        int supplierPriceUpper = supplierPriceRange[NumberEnum.PRICE_UPPER_ARRAY_INDEX];
+
+        int minPrice;
+        int maxPrice;
+        if (flag) {
+            // 有交集
+            // 双方low的高价
+            minPrice = Math.max(engineFactory2ServiceOfferPriceLow, supplierPriceLow);
+            // 双方upper的低价
+            maxPrice = Math.min(engineFactory2ServiceOfferPriceUpper, supplierPriceUpper);
+        } else {
+            // 无交集
+            // low的最低价
+            minPrice = Math.min(engineFactory2ServiceOfferPriceUpper, supplierPriceUpper);
+            // upper的最高价
+            maxPrice = Math.max(engineFactory2ServiceOfferPriceLow, supplierPriceLow);
+        }
+        return RandomUtils.nextInt(minPrice, maxPrice + 1);
+    }
 }

@@ -2,6 +2,7 @@ package cn.edu.zju.kpaperproject.service.impl;
 
 import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
 import cn.edu.zju.kpaperproject.dto.SupplierTask;
+import cn.edu.zju.kpaperproject.dto.TransactionContract;
 import cn.edu.zju.kpaperproject.enums.CalculationEnum;
 import cn.edu.zju.kpaperproject.enums.NumberEnum;
 import cn.edu.zju.kpaperproject.service.ProcessTaskService;
@@ -75,7 +76,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 
     /** 精匹配方法 */
     @Override
-    public void
+    public ArrayList<TransactionContract>
     exactMatching(ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> listLinkedHashMapEngineTaskMatchingSupplierTask
             , ArrayList<ArrayList<SupplierTask>> listListSupplierTask
             , Map<String, Double> mapRelationshipMatrix) {
@@ -87,20 +88,57 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         exactMatchingPart1(listLinkedHashMapEngineTaskMatchingSupplierTask, listListSupplierTask);
 
         // # 第二阶段, 按size的情况来计算, 生成一个最终匹配上的矩阵, 之后再计算成交量
-        // 生成一个最终匹配上的矩阵
+        // 生成一个最终匹配上的一对一
         ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, SupplierTask>> finalMatchEngineTaskVsSupplierTask
                 = getFinalMatchEngineTaskVsSupplierTask(listLinkedHashMapEngineTaskMatchingSupplierTask, mapRelationshipMatrix);
+
         // 再获取 任务类型/主机厂需求量/价格/质量, 这个作为精匹配的返回值
 
+        // 暂时不分厂做集合
+        ArrayList<TransactionContract> listRes = new ArrayList<>();
         // TODO 返回 值为一个list
-        // TODO 在list中需要再过滤一遍结果
+        for (LinkedHashMap<EngineFactoryManufacturingTask, SupplierTask> map : finalMatchEngineTaskVsSupplierTask) {
+            for (Map.Entry<EngineFactoryManufacturingTask, SupplierTask> entry : map.entrySet()) {
+                EngineFactoryManufacturingTask engineFactoryManufacturingTask = entry.getKey();
+                SupplierTask supplierTask = entry.getValue();
+                // ____需要存的交易契约模型
+                TransactionContract transactionContract = new TransactionContract();
+                transactionContract.setEngineFactoryId(engineFactoryManufacturingTask.getEngineFactoryId());
+                transactionContract.setSupplierId(supplierTask.getSupplierId());
+                transactionContract.setTaskType(engineFactoryManufacturingTask.getTaskType());
+                transactionContract.setEngineFactoryNeedServiceNumber(engineFactoryManufacturingTask.getEngineFactoryNeedServiceNumber());
+                transactionContract.setOrderPrice(genTransactionContractOrderPrice(engineFactoryManufacturingTask,supplierTask));
+                transactionContract.setOrderQuality(supplierTask.getSupplierQuality());
 
+                listRes.add(transactionContract);
+            }
+        }
+        return listRes;
+    }
+
+    /**
+     * 获取订单价格
+     *
+     * @param engineFactoryManufacturingTask    主机厂任务
+     * @param supplierTask                      唯一匹配供应商服务
+     * @return                                  订单价格
+     */
+    private int genTransactionContractOrderPrice(EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask) {
+        int res;
+        if (CalculationUtils.whetherPriceIntersection(engineFactoryManufacturingTask, supplierTask)) {
+            // 价格有交集, 在交集上取
+            res = CalculationUtils.genTransactionContractOrderPrice(engineFactoryManufacturingTask, supplierTask, true);
+        } else {
+            // 无交集, 在并集上取
+            res = CalculationUtils.genTransactionContractOrderPrice(engineFactoryManufacturingTask, supplierTask, false);
+        }
+        return res;
     }
 
     /**
      * 最终的唯一匹配结果
      * 会对供应商进行剩余产能计算, 若剩余产能不足, 则匹配不上
-     * 一旦有一个任务匹配不上, 整个主机厂的任务会被抹去
+     * 一旦有一个任务匹配不上, 整个主机厂的任务会被抹去(过滤主机厂)
      * 
      * list中每个元素(有序map)代表一个厂所有任务以及对应的唯一服务
      *
