@@ -26,4 +26,7 @@ public class SupplierTask {
     private int supplierCapacity;
     /** 位置坐标 */
     private int[] supplierLocationXY;
+    /** 剩余产能 */
+    private int supplierRestCapacity;
+
 }

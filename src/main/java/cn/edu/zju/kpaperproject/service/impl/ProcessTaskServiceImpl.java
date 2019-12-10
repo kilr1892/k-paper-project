@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * .
+ * 任务处理相关的服务
  *
  * @author RichardLee
  * @version v1.0
@@ -75,8 +75,8 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 
     /** 精匹配方法 */
     @Override
-    public void exactMatching
-    (ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> listLinkedHashMapEngineTaskMatchingSupplierTask
+    public void
+    exactMatching(ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> listLinkedHashMapEngineTaskMatchingSupplierTask
             , ArrayList<ArrayList<SupplierTask>> listListSupplierTask
             , Map<String, Double> mapRelationshipMatrix) {
 
@@ -92,7 +92,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                 = getFinalMatchEngineTaskVsSupplierTask(listLinkedHashMapEngineTaskMatchingSupplierTask, mapRelationshipMatrix);
         // 再获取 任务类型/主机厂需求量/价格/质量, 这个作为精匹配的返回值
 
-        // TODO 返回值为一个list
+        // TODO 返回 值为一个list
 
     }
 
