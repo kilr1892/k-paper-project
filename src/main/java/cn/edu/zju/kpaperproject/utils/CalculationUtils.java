@@ -217,9 +217,9 @@ public class CalculationUtils {
         } else {
             // 无交集
             // low的最低价
-            minPrice = Math.min(engineFactory2ServiceOfferPriceUpper, supplierPriceUpper);
+            minPrice = Math.min(engineFactory2ServiceOfferPriceLow, supplierPriceLow);
             // upper的最高价
-            maxPrice = Math.max(engineFactory2ServiceOfferPriceLow, supplierPriceLow);
+            maxPrice = Math.max(engineFactory2ServiceOfferPriceUpper, supplierPriceUpper);
         }
         return RandomUtils.nextInt(minPrice, maxPrice + 1);
     }

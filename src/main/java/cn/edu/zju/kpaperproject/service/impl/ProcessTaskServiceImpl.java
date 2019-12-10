@@ -74,7 +74,14 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         return resList;
     }
 
-    /** 精匹配方法 */
+    /**
+     * 精匹配方法
+     *
+     * @param listLinkedHashMapEngineTaskMatchingSupplierTask   粗匹配结果
+     * @param listListSupplierTask                              供应商能提供的服务集合(外list是按服务类型分的)
+     * @param mapRelationshipMatrix                             双方关系强度Map
+     * @return                                                  交易契约集合
+     */
     @Override
     public ArrayList<TransactionContract>
     exactMatching(ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> listLinkedHashMapEngineTaskMatchingSupplierTask
@@ -95,8 +102,18 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         // 再获取 任务类型/主机厂需求量/价格/质量, 这个作为精匹配的返回值
 
         // 暂时不分厂做集合
+        ArrayList<TransactionContract> listRes = genTransactionContracts(finalMatchEngineTaskVsSupplierTask);
+        return listRes;
+    }
+
+    /**
+     * 生成交易契约
+     *
+     * @param finalMatchEngineTaskVsSupplierTask    精匹配第二阶段匹配的结果
+     * @return                                      交易契约集合
+     */
+    private ArrayList<TransactionContract> genTransactionContracts(ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, SupplierTask>> finalMatchEngineTaskVsSupplierTask) {
         ArrayList<TransactionContract> listRes = new ArrayList<>();
-        // TODO 返回 值为一个list
         for (LinkedHashMap<EngineFactoryManufacturingTask, SupplierTask> map : finalMatchEngineTaskVsSupplierTask) {
             for (Map.Entry<EngineFactoryManufacturingTask, SupplierTask> entry : map.entrySet()) {
                 EngineFactoryManufacturingTask engineFactoryManufacturingTask = entry.getKey();
@@ -197,7 +214,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                         // 没匹配上, 把之前的任务数量回滚
                         rollbackSupplierRestCapacity(mapEngineFactoryTaskVsSupplierTask);
                         // 之后的任务不匹配, 且整个主机厂不会加入集合中
-                        break startTraverseEngineTasks;
+                        continue startTraverseEngineTasks;
                     }
                 } else {
                     // 主机厂任务数量匹配到的服务 > 1
@@ -234,7 +251,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                     if (!flag) {
                         rollbackSupplierRestCapacity(mapEngineFactoryTaskVsSupplierTask);
                         // 没匹配上了
-                        break startTraverseEngineTasks;
+                        continue startTraverseEngineTasks;
                     }
                 }
             }
@@ -374,10 +391,6 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         }
         return listRes;
     }
-
-    /** 未匹配方法 */
-    /** 重新匹配方法 */
-
 
     /**
      * 通过type值得到服务集合中对应的服务集合

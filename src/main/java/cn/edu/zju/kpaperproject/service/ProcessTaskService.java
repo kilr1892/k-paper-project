@@ -39,6 +39,4 @@ public interface ProcessTaskService {
             , ArrayList<ArrayList<SupplierTask>> listListSupplierTask
             , Map<String, Double> mapRelationshipMatrix);
 
-    /** 未匹配方法 */
-    /** 重新匹配方法 */
 }
