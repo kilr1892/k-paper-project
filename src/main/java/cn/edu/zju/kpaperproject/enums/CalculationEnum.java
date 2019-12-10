@@ -20,8 +20,8 @@ public class CalculationEnum {
     public static double relationshipStrengthInitUpper;
     public static int relationshipStrengthA2Slash;
     public static int relationshipStrengthNi;
-    public static double relationshipStrengthRq;
-    public static double relationshipStrengthRc;
+    public static int unassignedTaskRq;
+    public static double unassignedTaskRc;
     public static double apLm1;
     public static double apLm2;
     public static double apLm3;
@@ -71,12 +71,12 @@ public class CalculationEnum {
         CalculationEnum.relationshipStrengthNi = relationshipStrengthNi;
     }
     @Value("${experiments.unassignedTask.rq}")
-    public void setRelationshipStrengthRq(double relationshipStrengthRq) {
-        CalculationEnum.relationshipStrengthRq = relationshipStrengthRq;
+    public void setRelationshipStrengthRq(int unassignedTaskRq) {
+        CalculationEnum.unassignedTaskRq = unassignedTaskRq;
     }
     @Value("${experiments.unassignedTask.rc}")
-    public void setRelationshipStrengthRc(double relationshipStrengthRc) {
-        CalculationEnum.relationshipStrengthRc = relationshipStrengthRc;
+    public void setRelationshipStrengthRc(double unassignedTaskRc) {
+        CalculationEnum.unassignedTaskRc = unassignedTaskRc;
     }
     @Value("${experiments.ap.lm1}")
     public void setApLm1(double apLm1) {

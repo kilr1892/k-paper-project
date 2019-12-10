@@ -2,7 +2,7 @@ package cn.edu.zju.kpaperproject.service.impl;
 
 import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
 import cn.edu.zju.kpaperproject.dto.SupplierTask;
-import cn.edu.zju.kpaperproject.enums.CycleTime;
+import cn.edu.zju.kpaperproject.enums.NumberEnum;
 import cn.edu.zju.kpaperproject.enums.SupplierEnum;
 import cn.edu.zju.kpaperproject.enums.TaskDecompositionEnum;
 import cn.edu.zju.kpaperproject.mapper.*;
@@ -302,6 +302,6 @@ public class StartTaskServiceImpl implements StartTaskService {
      */
     private int genEngineFactoryQuality(TbEngineFactoryDynamic tbEngineFactoryDynamic) {
         int engineFactoryQuality = tbEngineFactoryDynamic.getEngineFactoryQualityQ();
-        return engineFactoryQuality >= CycleTime.QUALITY_UPPER ? CycleTime.QUALITY_UPPER : engineFactoryQuality + CycleTime.QUALITY_STEP;
+        return engineFactoryQuality >= NumberEnum.QUALITY_UPPER_LIMIT ? NumberEnum.QUALITY_UPPER_LIMIT : engineFactoryQuality + NumberEnum.QUALITY_STEP;
     }
 }
