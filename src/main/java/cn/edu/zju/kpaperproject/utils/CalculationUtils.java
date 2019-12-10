@@ -73,7 +73,14 @@ public class CalculationUtils {
         return enPriLow <= supPriUpper && supPriLow <= enPriUpper;
     }
 
-    /** 计算关系强度 */
+    /**
+     * 计算精匹配中双方匹配度
+     *
+     * @param engineFactoryManufacturingTask    主机厂的任务
+     * @param supplierTask                      供应商提供的服务
+     * @param mapRelationshipMatrix             双方关系强度矩阵
+     * @return                                  匹配度
+     */
     public static double calRelationshipStrength(EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask, Map<String, Double> mapRelationshipMatrix) {
 
         double a3slash = CalculationEnum.weightFactorA3slash;
@@ -102,6 +109,14 @@ public class CalculationUtils {
 
     }
 
+    /**
+     * 获取双方关系强度
+     *
+     * @param mapRelationshipMatrix             关系强度Map
+     * @param engineFactoryManufacturingTask    主机厂任务
+     * @param supplierTask                      供应商任务
+     * @return                                  关系强度值
+     */
     private static double getRelationshipStrength(Map<String, Double> mapRelationshipMatrix, EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask) {
         String key = engineFactoryManufacturingTask.getEngineFactoryId() + supplierTask.getSupplierId();
         return mapRelationshipMatrix.get(key);
