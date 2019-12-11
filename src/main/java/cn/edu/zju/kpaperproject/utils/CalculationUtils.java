@@ -190,6 +190,27 @@ public class CalculationUtils {
     }
 
     /**
+     * 计算两地距离
+     * 直接使用两地坐标
+     *
+     * @param engineFactoryLocationXY   主机厂位置坐标
+     * @param supplierLocationXY        供应商位置坐标
+     * @return 两地间的距离
+     */
+    private static double calDistance(int[] engineFactoryLocationXY, int[] supplierLocationXY) {
+
+        int engineX = engineFactoryLocationXY[0];
+        int engineY = engineFactoryLocationXY[1];
+        int supplierX = supplierLocationXY[0];
+        int supplierY = supplierLocationXY[1];
+        double powX = Math.pow((engineX - supplierX), 2);
+        double powY = Math.pow((engineY - supplierY), 2);
+        return Math.sqrt(powX + powY);
+    }
+
+
+
+    /**
      * 获取订单价格
      *
      * @param engineFactoryManufacturingTask    主机厂任务

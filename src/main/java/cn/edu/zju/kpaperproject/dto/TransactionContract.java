@@ -16,10 +16,14 @@ public class TransactionContract {
     private String engineFactoryId;
     /** 主机厂信誉度 */
     private double engineFactoryCredit;
+    /** 主机厂位置坐标 */
+    private int[] engineFactoryLocationXY;
     /** 供应商id */
     private String supplierId;
     /** 供应商信誉度 */
     private double supplierCredit;
+    /** 供应商位置坐标 */
+    private int[] supplierLocationXY;
     /** 任务类型 */
     private int taskType;
     /** 主机厂任务需求量 */

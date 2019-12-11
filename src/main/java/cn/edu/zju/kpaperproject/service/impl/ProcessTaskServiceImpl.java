@@ -49,8 +49,10 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             double engineFactoryCredit = aTransactionContract.getEngineFactoryCredit();
             double supplierCredit = aTransactionContract.getSupplierCredit();
             double[] newCredit = getNewCredit(engineFactoryCredit, supplierCredit, evaluationScore);
-            // 计算关系强度
+            // 计算新的关系强度
             double newRelationshipStrength = getNewRelationshipStrength(aTransactionContract, whetherPerformContract, evaluationScore, mapRelationshipMatrix2WithTbRelationMatrix);
+            // 计算利润
+            int[] profit = getProfit();
             // TODO 如何存这些数据, 是否需要放入数据库更新
         }
     }
@@ -375,8 +377,10 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                 TransactionContract transactionContract = new TransactionContract();
                 transactionContract.setEngineFactoryId(engineFactoryManufacturingTask.getEngineFactoryId());
                 transactionContract.setEngineFactoryCredit(engineFactoryManufacturingTask.getEngineFactoryCredit());
+                transactionContract.setEngineFactoryLocationXY(engineFactoryManufacturingTask.getEngineFactoryLocationXY());
                 transactionContract.setSupplierId(supplierTask.getSupplierId());
                 transactionContract.setSupplierCredit(supplierTask.getSupplierCredit());
+                transactionContract.setSupplierLocationXY(supplierTask.getSupplierLocationXY());
                 transactionContract.setTaskType(engineFactoryManufacturingTask.getTaskType());
                 transactionContract.setEngineFactoryNeedServiceNumber(engineFactoryManufacturingTask.getEngineFactoryNeedServiceNumber());
                 transactionContract.setOrderPrice(genTransactionContractOrderPrice(engineFactoryManufacturingTask, supplierTask));
