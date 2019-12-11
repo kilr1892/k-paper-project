@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -38,9 +37,11 @@ public class TestController {
         ArrayList<ArrayList<SupplierTask>> listListSupplierTask = startTaskService.genSupplierTask(expNum, cycleTime);
         Map<String, Double> mapRelationshipMatrix = startTaskService.getMapRelationshipMatrix(expNum, cycleTime);
 
-        ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> linkedHashMaps = processTaskService.roughMatching(listListEngineFactoryTaskDecomposition, listListSupplierTask);
+//        ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> linkedHashMaps = processTaskService.roughMatching(listListEngineFactoryTaskDecomposition, listListSupplierTask);
+//
+//        processTaskService.exactMatching(linkedHashMaps, listListSupplierTask, mapRelationshipMatrix);
 
-        processTaskService.exactMatching(linkedHashMaps, listListSupplierTask, mapRelationshipMatrix);
+        processTaskService.getTransactionContracts(listListEngineFactoryTaskDecomposition, listListSupplierTask, mapRelationshipMatrix);
 
         System.out.println();
 

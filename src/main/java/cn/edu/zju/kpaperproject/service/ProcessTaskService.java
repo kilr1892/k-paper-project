@@ -5,7 +5,6 @@ import cn.edu.zju.kpaperproject.dto.SupplierTask;
 import cn.edu.zju.kpaperproject.dto.TransactionContract;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -15,27 +14,15 @@ import java.util.Map;
  * @version v1.0
  */
 public interface ProcessTaskService {
-
     /**
-     * 粗匹配方法
-     *
-     * @param listListEngineFactoryTasks 主机厂分解任务集合(按信誉排的)
-     * @param listListSupplierTask       供应商能提供的服务集合
-     * @return list中每个元素代表一个主机厂的粗匹配任务集
+     * 获取交易契约
+     * @param listListEngineFactoryTasks    按主机厂分的任务集合, 每个元素是一个主机厂集合(集合内元素是该主机厂的任务集)
+     * @param listListSupplierTask          按任务分开后的供应商服务集合
+     * @param mapRelationshipMatrix         关系强度
+     * @return                              匹配上的主机厂与供应商的交易契约
      */
-    ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> roughMatching(ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTasks
-            , ArrayList<ArrayList<SupplierTask>> listListSupplierTask);
-
-
-    /**
-     * 精匹配方法
-     *
-     * @param listLinkedHashMapEngineTaskMatchingSupplierTask   粗匹配结果
-     * @param listListSupplierTask                              供应商能提供的服务集合(外list是按服务类型分的)
-     * @param mapRelationshipMatrix                             双方关系强度Map
-     * @return                                                  交易契约集合
-     */
-    ArrayList<TransactionContract> exactMatching(ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> listLinkedHashMapEngineTaskMatchingSupplierTask
+    ArrayList<TransactionContract> getTransactionContracts(
+            ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTasks
             , ArrayList<ArrayList<SupplierTask>> listListSupplierTask
             , Map<String, Double> mapRelationshipMatrix);
 
