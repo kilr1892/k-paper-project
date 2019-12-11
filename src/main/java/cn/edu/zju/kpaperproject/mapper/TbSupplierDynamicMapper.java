@@ -2,9 +2,12 @@ package cn.edu.zju.kpaperproject.mapper;
 
 import cn.edu.zju.kpaperproject.pojo.TbSupplierDynamic;
 import cn.edu.zju.kpaperproject.pojo.TbSupplierDynamicExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
 public interface TbSupplierDynamicMapper {
     int countByExample(TbSupplierDynamicExample example);
 

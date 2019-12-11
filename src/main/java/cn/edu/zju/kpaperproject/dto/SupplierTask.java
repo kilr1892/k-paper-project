@@ -18,6 +18,8 @@ public class SupplierTask {
     private String supplierId;
     /** 任务id */
     private int supplierType;
+    /** 供应商信誉度 */
+    private double supplierCredit;
     /** 服务质量 */
     private int supplierQuality;
     /** 价格区间 */

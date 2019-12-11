@@ -21,10 +21,48 @@ import java.util.TreeMap;
  * @version v1.0
  */
 @Service
-public class ProcessTaskServiceImpl implements ProcessTaskService
-{
+public class ProcessTaskServiceImpl implements ProcessTaskService {
 
-    // 返回值就是一个主机厂对应的一对一匹配上的任务服务map
+    /** 交易结算 */
+    public void getTransactionSettlement(
+            ArrayList<TransactionContract> listTransactionContracts
+            , Map<String, Double> mapRelationshipMatrix) {
+
+        // 主机厂和供应商的履约概率
+        double engineFactoryPerformanceProbability;
+        double supplierPerformanceProbability;
+        for (TransactionContract aTransactionContract : listTransactionContracts) {
+            // 每次循环是每个交易契约
+
+            // 计算双方履约概率
+            engineFactoryPerformanceProbability = getPerformanceProbability(aTransactionContract, mapRelationshipMatrix);
+            // 计算是否履约
+            // 计算实际交易数量
+            // 计算双方评分
+
+        }
+    }
+
+    /**
+     * 算履约概率的
+     * @param transactionContract
+     * @param mapRelationshipMatrix
+     * @return
+     */
+    private double getPerformanceProbability(TransactionContract transactionContract, Map<String, Double> mapRelationshipMatrix) {
+        transactionContract.
+
+    }
+
+
+    //-----------------------------------交易契约相关------------------------------------------
+    /**
+     * 获取交易契约
+     * @param listListEngineFactoryTasks    按主机厂分的任务集合, 每个元素是一个主机厂集合(集合内元素是该主机厂的任务集)
+     * @param listListSupplierTask          按任务分开后的供应商服务集合
+     * @param mapRelationshipMatrix         关系强度
+     * @return                              匹配上的主机厂与供应商的交易契约
+     */
     @Override
     public ArrayList<TransactionContract> getTransactionContracts(
             ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTasks
@@ -149,9 +187,10 @@ public class ProcessTaskServiceImpl implements ProcessTaskService
 
     /**
      * 粗匹配(服务剩余产能)
-     * @param engineFactoryManufacturingTask    主机厂任务
-     * @param supplierTasks                     对应的所有服务集合
-     * @return                                  匹配结果集合(0, 1, >1)
+     *
+     * @param engineFactoryManufacturingTask 主机厂任务
+     * @param supplierTasks                  对应的所有服务集合
+     * @return 匹配结果集合(0, 1, > 1)
      */
     private ArrayList<SupplierTask> roughMatching(EngineFactoryManufacturingTask engineFactoryManufacturingTask, ArrayList<SupplierTask> supplierTasks) {
         ArrayList<SupplierTask> listMatchingSupplierTasks = new ArrayList<>();
@@ -176,9 +215,9 @@ public class ProcessTaskServiceImpl implements ProcessTaskService
     /**
      * 获取订单价格
      *
-     * @param engineFactoryManufacturingTask    主机厂任务
-     * @param supplierTask                      唯一匹配供应商服务
-     * @return                                  订单价格
+     * @param engineFactoryManufacturingTask 主机厂任务
+     * @param supplierTask                   唯一匹配供应商服务
+     * @return 订单价格
      */
     private int genTransactionContractOrderPrice(EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask) {
         int res;
@@ -195,8 +234,8 @@ public class ProcessTaskServiceImpl implements ProcessTaskService
     /**
      * 生成交易契约
      *
-     * @param listMapEngineFactoryTaskVsSupplierTask    精匹配第二阶段匹配的结果
-     * @return                                      交易契约集合
+     * @param listMapEngineFactoryTaskVsSupplierTask 精匹配第二阶段匹配的结果
+     * @return 交易契约集合
      */
     private ArrayList<TransactionContract> genTransactionContracts(ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, SupplierTask>> listMapEngineFactoryTaskVsSupplierTask) {
         ArrayList<TransactionContract> listRes = new ArrayList<>();
@@ -207,10 +246,12 @@ public class ProcessTaskServiceImpl implements ProcessTaskService
                 // ____需要存的交易契约模型
                 TransactionContract transactionContract = new TransactionContract();
                 transactionContract.setEngineFactoryId(engineFactoryManufacturingTask.getEngineFactoryId());
+                transactionContract.setEngineFactoryCredit(engineFactoryManufacturingTask.getEngineFactoryCredit());
                 transactionContract.setSupplierId(supplierTask.getSupplierId());
+                transactionContract.setSupplierCredit(supplierTask.getSupplierCredit());
                 transactionContract.setTaskType(engineFactoryManufacturingTask.getTaskType());
                 transactionContract.setEngineFactoryNeedServiceNumber(engineFactoryManufacturingTask.getEngineFactoryNeedServiceNumber());
-                transactionContract.setOrderPrice(genTransactionContractOrderPrice(engineFactoryManufacturingTask,supplierTask));
+                transactionContract.setOrderPrice(genTransactionContractOrderPrice(engineFactoryManufacturingTask, supplierTask));
                 transactionContract.setOrderQuality(supplierTask.getSupplierQuality());
 
                 listRes.add(transactionContract);
@@ -332,4 +373,6 @@ public class ProcessTaskServiceImpl implements ProcessTaskService
         }
         return supplierTasks;
     }
+    //-----------------------------------交易契约相关------------------------------------------
+
 }

@@ -14,8 +14,12 @@ import lombok.Setter;
 public class TransactionContract {
     /** 主机厂id */
     private String engineFactoryId;
+    /** 主机厂信誉度 */
+    private double engineFactoryCredit;
     /** 供应商id */
     private String supplierId;
+    /** 供应商信誉度 */
+    private double supplierCredit;
     /** 任务类型 */
     private int taskType;
     /** 主机厂任务需求量 */
