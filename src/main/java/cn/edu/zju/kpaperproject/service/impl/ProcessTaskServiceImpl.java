@@ -52,9 +52,51 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // 计算新的关系强度
             double newRelationshipStrength = getNewRelationshipStrength(aTransactionContract, whetherPerformContract, evaluationScore, mapRelationshipMatrix2WithTbRelationMatrix);
             // 计算利润
-            int[] profit = getProfit();
+            int[] profit = getProfit(aTransactionContract, whetherPerformContract, actualTransactionsNumber);
+
+
             // TODO 如何存这些数据, 是否需要放入数据库更新
         }
+    }
+
+    /**
+     * 计算双方利润
+     *
+     * @param transactionContract      交易契约
+     * @param whetherPerformContract   是否履约数组
+     * @param actualTransactionsNumber 实际交易数量
+     * @return 0: 主机厂利润, 1: 供应商利润
+     */
+    private int[] getProfit(TransactionContract transactionContract, boolean[] whetherPerformContract, int actualTransactionsNumber) {
+        boolean engineIsPerformContract = whetherPerformContract[0];
+        boolean supplierIsPerformContract = whetherPerformContract[1];
+        // 公式里绝对值的部分(只有绝对值)
+        int absJKI = 0;
+        int absIJK = 0;
+        if ((engineIsPerformContract && supplierIsPerformContract) || (!engineIsPerformContract && !supplierIsPerformContract)) {
+            // 1 1 或 0 0
+            absJKI = 0;
+            absIJK = 0;
+        } else if (engineIsPerformContract && !supplierIsPerformContract) {
+            // 1 0
+            absJKI = 2;
+            absIJK = -2;
+        } else if (!engineIsPerformContract && supplierIsPerformContract) {
+            // 0 1
+            absJKI = -2;
+            absIJK = 2;
+        }
+        // 合同价
+        int orderPrice = transactionContract.getOrderPrice();
+        // 合同数量
+        int engineFactoryNeedServiceNumber = transactionContract.getEngineFactoryNeedServiceNumber();
+
+        int[] res = new int[2];
+        res[0] = absJKI * orderPrice * engineFactoryNeedServiceNumber + (absIJK - 1) * orderPrice * actualTransactionsNumber;
+        // 两地距离
+        int distance = (int) Math.round(CalculationUtils.calDistance(transactionContract.getEngineFactoryLocationXY(), transactionContract.getSupplierLocationXY()));
+        res[1] = absIJK * engineFactoryNeedServiceNumber + (1 + absJKI) * orderPrice * actualTransactionsNumber - distance * CalculationEnum.freight;
+        return res;
     }
 
     /**

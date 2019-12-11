@@ -197,7 +197,7 @@ public class CalculationUtils {
      * @param supplierLocationXY        供应商位置坐标
      * @return 两地间的距离
      */
-    private static double calDistance(int[] engineFactoryLocationXY, int[] supplierLocationXY) {
+    public static double calDistance(int[] engineFactoryLocationXY, int[] supplierLocationXY) {
 
         int engineX = engineFactoryLocationXY[0];
         int engineY = engineFactoryLocationXY[1];
