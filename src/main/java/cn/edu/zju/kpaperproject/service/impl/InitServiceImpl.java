@@ -180,7 +180,6 @@ public class InitServiceImpl implements InitService {
      * @param experimentsNumber 实验次数
      */
     private void relationMatrixInit(int experimentsNumber) {
-        // TODO 以后要改为批量插入数据库...
         // 查出所有的主机厂, 供应商
         // 主机厂
         List<TbEngineFactory> tbEngineFactories = listInitEngineFactory(experimentsNumber);
@@ -197,9 +196,12 @@ public class InitServiceImpl implements InitService {
             for (TbSupplier aTbSupplier : tbSuppliers) {
                 String supplierId = aTbSupplier.getSupplierId();
                 tbRelationMatrix.setSupplierId(supplierId);
-                tbRelationMatrix.setRelationScore(InitRelationMatrixUtils.initRelationshipStrengthScore());
                 tbRelationMatrix.setMapKey(engineFactoryId + supplierId);
+                double initRelationshipStrengthScore = InitRelationMatrixUtils.initRelationshipStrengthScore();
+                tbRelationMatrix.setRelationScore(initRelationshipStrengthScore);
+                tbRelationMatrix.setInitialRelationalDegree(initRelationshipStrengthScore);
                 tbRelationMatrix.setAccumulativeTotalScore(0);
+                tbRelationMatrix.setTransactionNumber(0);
                 tbRelationMatrix.setRelationMatrixAlive(true);
                 // 插入数据库
                 tbRelationMatrixMapper.insertSelective(tbRelationMatrix);

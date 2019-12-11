@@ -2,6 +2,7 @@ package cn.edu.zju.kpaperproject.service;
 
 import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
 import cn.edu.zju.kpaperproject.dto.SupplierTask;
+import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -20,7 +21,7 @@ public interface StartTaskService {
      *
      * @param experimentsNumber 实验次数
      * @param cycleTime         循环的次数, 从1开始
-     * @return                  返回值中每个元素代表一个主机厂分解的任务集
+     * @return 返回值中每个元素代表一个主机厂分解的任务集
      */
     ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(int experimentsNumber, int cycleTime);
 
@@ -32,7 +33,7 @@ public interface StartTaskService {
      *
      * @param experimentsNumber 实验次数
      * @param cycleTime         循环的次数, 从1开始
-     * @return                  返回值中每个元素代表提供某类型服务供应商集合
+     * @return 返回值中每个元素代表提供某类型服务供应商集合
      */
     ArrayList<ArrayList<SupplierTask>> genSupplierTask(int experimentsNumber, int cycleTime);
 
@@ -43,8 +44,18 @@ public interface StartTaskService {
      *
      * @param experimentsNumber 实验次数
      * @param cycleTime         循环次数
-     * @return                  循环次数 - 1 时(最新的)关系矩阵
+     * @return 循环次数 - 1 时(最新的)关系矩阵
      */
     Map<String, Double> getMapRelationshipMatrix(int experimentsNumber, int cycleTime);
 
+    /**
+     * 获得主机厂与供应商之间的关系矩阵2
+     * key   = 主机厂id + 供应商id
+     * value = TbRelationMatrix
+     *
+     * @param experimentsNumber 实验次数
+     * @param cycleTime         循环次数
+     * @return                  循环次数 - 1 时(最新的)关系矩阵
+     */
+    Map<String, TbRelationMatrix> getMapRelationshipMatrix2WithTbRelationMatrix(int experimentsNumber, int cycleTime)
 }

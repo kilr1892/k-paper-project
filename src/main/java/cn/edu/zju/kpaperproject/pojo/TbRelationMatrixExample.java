@@ -554,6 +554,66 @@ public class TbRelationMatrixExample {
             return (Criteria) this;
         }
 
+        public Criteria andInitialRelationalDegreeIsNull() {
+            addCriterion("initial_relational_degree is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInitialRelationalDegreeIsNotNull() {
+            addCriterion("initial_relational_degree is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInitialRelationalDegreeEqualTo(Double value) {
+            addCriterion("initial_relational_degree =", value, "initialRelationalDegree");
+            return (Criteria) this;
+        }
+
+        public Criteria andInitialRelationalDegreeNotEqualTo(Double value) {
+            addCriterion("initial_relational_degree <>", value, "initialRelationalDegree");
+            return (Criteria) this;
+        }
+
+        public Criteria andInitialRelationalDegreeGreaterThan(Double value) {
+            addCriterion("initial_relational_degree >", value, "initialRelationalDegree");
+            return (Criteria) this;
+        }
+
+        public Criteria andInitialRelationalDegreeGreaterThanOrEqualTo(Double value) {
+            addCriterion("initial_relational_degree >=", value, "initialRelationalDegree");
+            return (Criteria) this;
+        }
+
+        public Criteria andInitialRelationalDegreeLessThan(Double value) {
+            addCriterion("initial_relational_degree <", value, "initialRelationalDegree");
+            return (Criteria) this;
+        }
+
+        public Criteria andInitialRelationalDegreeLessThanOrEqualTo(Double value) {
+            addCriterion("initial_relational_degree <=", value, "initialRelationalDegree");
+            return (Criteria) this;
+        }
+
+        public Criteria andInitialRelationalDegreeIn(List<Double> values) {
+            addCriterion("initial_relational_degree in", values, "initialRelationalDegree");
+            return (Criteria) this;
+        }
+
+        public Criteria andInitialRelationalDegreeNotIn(List<Double> values) {
+            addCriterion("initial_relational_degree not in", values, "initialRelationalDegree");
+            return (Criteria) this;
+        }
+
+        public Criteria andInitialRelationalDegreeBetween(Double value1, Double value2) {
+            addCriterion("initial_relational_degree between", value1, value2, "initialRelationalDegree");
+            return (Criteria) this;
+        }
+
+        public Criteria andInitialRelationalDegreeNotBetween(Double value1, Double value2) {
+            addCriterion("initial_relational_degree not between", value1, value2, "initialRelationalDegree");
+            return (Criteria) this;
+        }
+
         public Criteria andAccumulativeTotalScoreIsNull() {
             addCriterion("accumulative_total_score is null");
             return (Criteria) this;
@@ -611,6 +671,66 @@ public class TbRelationMatrixExample {
 
         public Criteria andAccumulativeTotalScoreNotBetween(Integer value1, Integer value2) {
             addCriterion("accumulative_total_score not between", value1, value2, "accumulativeTotalScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionNumberIsNull() {
+            addCriterion("transaction_number is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionNumberIsNotNull() {
+            addCriterion("transaction_number is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionNumberEqualTo(Integer value) {
+            addCriterion("transaction_number =", value, "transactionNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionNumberNotEqualTo(Integer value) {
+            addCriterion("transaction_number <>", value, "transactionNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionNumberGreaterThan(Integer value) {
+            addCriterion("transaction_number >", value, "transactionNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionNumberGreaterThanOrEqualTo(Integer value) {
+            addCriterion("transaction_number >=", value, "transactionNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionNumberLessThan(Integer value) {
+            addCriterion("transaction_number <", value, "transactionNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionNumberLessThanOrEqualTo(Integer value) {
+            addCriterion("transaction_number <=", value, "transactionNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionNumberIn(List<Integer> values) {
+            addCriterion("transaction_number in", values, "transactionNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionNumberNotIn(List<Integer> values) {
+            addCriterion("transaction_number not in", values, "transactionNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionNumberBetween(Integer value1, Integer value2) {
+            addCriterion("transaction_number between", value1, value2, "transactionNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactionNumberNotBetween(Integer value1, Integer value2) {
+            addCriterion("transaction_number not between", value1, value2, "transactionNumber");
             return (Criteria) this;
         }
 

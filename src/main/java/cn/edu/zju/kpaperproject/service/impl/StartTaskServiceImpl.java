@@ -65,7 +65,33 @@ public class StartTaskServiceImpl implements StartTaskService {
 
         return mapRes;
     }
+    /**
+     * 获得主机厂与供应商之间的关系矩阵2
+     * key   = 主机厂id + 供应商id
+     * value = TbRelationMatrix
+     *
+     * @param experimentsNumber 实验次数
+     * @param cycleTime         循环次数
+     * @return                  循环次数 - 1 时(最新的)关系矩阵
+     */
+    @Override
+    public Map<String, TbRelationMatrix> getMapRelationshipMatrix2WithTbRelationMatrix(int experimentsNumber, int cycleTime) {
+        Map<String, TbRelationMatrix> mapRes = new HashMap<>(1000);
 
+        // 查询所有的可用的关系数据
+        TbRelationMatrixExample tbRelationMatrixExample = new TbRelationMatrixExample();
+        TbRelationMatrixExample.Criteria criteria = tbRelationMatrixExample.createCriteria();
+        criteria.andExperimentsNumberEqualTo(experimentsNumber);
+        criteria.andCycleTimesEqualTo(cycleTime - 1);
+        criteria.andRelationMatrixAliveEqualTo(true);
+        List<TbRelationMatrix> tbRelationMatrices = tbRelationMatrixMapper.selectByExample(tbRelationMatrixExample);
+
+        for (TbRelationMatrix aRelationMatrix : tbRelationMatrices) {
+            mapRes.put(aRelationMatrix.getMapKey(), aRelationMatrix);
+        }
+
+        return mapRes;
+    }
     /**
      * 供应商提供的服务
      * 如出价/质量/产能等
@@ -109,6 +135,7 @@ public class StartTaskServiceImpl implements StartTaskService {
             // 供应商id
             supplierTask.setSupplierId(supplierId);
             /** 供应商信誉度 */
+//            private double supplierCredit;
             supplierTask.setSupplierCredit(tbSupplierDynamic.getSupplierCreditA());
             // 服务类型
             int supplierType = aSupplier.getSupplierType();

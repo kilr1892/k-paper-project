@@ -7,12 +7,10 @@ import cn.edu.zju.kpaperproject.enums.CalculationEnum;
 import cn.edu.zju.kpaperproject.enums.NumberEnum;
 import cn.edu.zju.kpaperproject.service.ProcessTaskService;
 import cn.edu.zju.kpaperproject.utils.CalculationUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * 任务处理相关的服务
@@ -28,6 +26,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             ArrayList<TransactionContract> listTransactionContracts
             , Map<String, Double> mapRelationshipMatrix) {
 
+        Map<String, Double> mapTmpRelationshipStrength = new HashMap<>();
         // 主机厂和供应商的履约概率
         double engineFactoryPerformanceProbability;
         double supplierPerformanceProbability;
@@ -35,33 +34,123 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // 每次循环是每个交易契约
 
             // 计算双方履约概率
-            engineFactoryPerformanceProbability = getPerformanceProbability(aTransactionContract, mapRelationshipMatrix);
+            double[] performanceProbability = getPerformanceProbability(aTransactionContract, mapRelationshipMatrix);
+            engineFactoryPerformanceProbability = performanceProbability[0];
+            supplierPerformanceProbability = performanceProbability[1];
             // 计算是否履约
+            boolean[] whetherPerformContract = getWhetherPerformContract(engineFactoryPerformanceProbability, supplierPerformanceProbability);
+            // 双方评分
+            int[] evaluationScore = getEvaluationScore(whetherPerformContract);
             // 计算实际交易数量
-            // 计算双方评分
-
+            int actualTransactionsNumber = getActualTransactionsNumber(aTransactionContract.getEngineFactoryNeedServiceNumber(), performanceProbability, whetherPerformContract);
+            // 计算信誉度
+            double engineFactoryCredit = aTransactionContract.getEngineFactoryCredit();
+            double supplierCredit = aTransactionContract.getSupplierCredit();
+            double[] newCredit = getNewCredit(engineFactoryCredit, supplierCredit, evaluationScore);
+            // 计算关系强度
+            double newRelationshipStrength = getNewRelationshipStrength();
         }
     }
 
     /**
-     * 算履约概率的
-     * @param transactionContract
-     * @param mapRelationshipMatrix
-     * @return
+     * 计算交易后双方的信誉度
+     *
+     * @param engineFactoryCredit   主机厂信誉度
+     * @param supplierCredit        供应商信誉的
+     * @param evaluationScore       双方评分数组
+     * @return                      0: 主机厂信誉度, 1: 供应商信誉度
      */
-    private double getPerformanceProbability(TransactionContract transactionContract, Map<String, Double> mapRelationshipMatrix) {
-        transactionContract.
+    private double[] getNewCredit(double engineFactoryCredit, double supplierCredit, int[] evaluationScore) {
+        double[] res = new double[2];
+        // 主机厂的信誉度
+        res[0] = supplierCredit * evaluationScore[1];
+        res[1] = engineFactoryCredit * evaluationScore[0];
+        return res;
+    }
 
+    private int getActualTransactionsNumber(int engineFactoryNeedServiceNumber, double[] performanceProbability, boolean[] whetherPerformContract) {
+        int res = engineFactoryNeedServiceNumber;
+        for (int i = 0; i < whetherPerformContract.length; i++) {
+            if (!whetherPerformContract[i]) {
+                // 违约
+                res *= performanceProbability[i];
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 计算双方互评分数
+     *
+     * @param whetherPerformContract 是否履约
+     * @return 0: 主机厂对供应商的分数, 1: 供应商对主机厂的分数
+     */
+    private int[] getEvaluationScore(boolean[] whetherPerformContract) {
+        int[] res = new int[2];
+        for (int i = 0; i < whetherPerformContract.length; i++) {
+            boolean isPerformContract = whetherPerformContract[i];
+            if (isPerformContract) {
+                res[i] = RandomUtils.nextInt(6, 11);
+            } else {
+                res[i] = RandomUtils.nextInt(1, 6);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 主机厂与供应商是否履约
+     * true 为履约, false 为违约
+     *
+     * @param engineFactoryPerformanceProbability 主机厂履约概率
+     * @param supplierPerformanceProbability      供应商履约概率
+     * @return 0: 主机厂是否履约, 1: 供应商是否履约
+     */
+    private boolean[] getWhetherPerformContract(double engineFactoryPerformanceProbability, double supplierPerformanceProbability) {
+        boolean[] res = new boolean[2];
+        double tmp = RandomUtils.nextDouble(0D, 1D);
+        // 主机厂是否履约
+        res[0] = tmp < engineFactoryPerformanceProbability ? true : false;
+        tmp = RandomUtils.nextDouble(0D, 1D);
+        // 供应商是否履约
+        res[1] = tmp < supplierPerformanceProbability ? true : false;
+        return res;
+    }
+
+    /**
+     * 算履约概率的
+     *
+     * @param transactionContract   交易契约
+     * @param mapRelationshipMatrix 关系矩阵
+     * @return 0: 主机厂履约概率, 1: 供应商履约概率
+     */
+    private double[] getPerformanceProbability(TransactionContract transactionContract, Map<String, Double> mapRelationshipMatrix) {
+        // key
+        String key = transactionContract.getEngineFactoryId() + transactionContract.getSupplierId();
+        // 信誉度
+        double engineFactoryCredit = transactionContract.getEngineFactoryCredit();
+        double supplierCredit = transactionContract.getSupplierCredit();
+        double apLm1 = CalculationEnum.apLm1;
+        double apLm2 = CalculationEnum.apLm2;
+        double apLm3 = CalculationEnum.apLm3;
+        double apLm4 = CalculationEnum.apLm4;
+        double apLm5 = CalculationEnum.apLm5;
+        double relationshipValue = mapRelationshipMatrix.get(key);
+        double engineFactoryPerformanceProbability = apLm1 * engineFactoryCredit + apLm2 * relationshipValue;
+        double supplierPerformanceProbability = apLm3 * supplierCredit + apLm4 * relationshipValue + apLm5 * RandomUtils.nextDouble(0D, 1D);
+        return new double[]{engineFactoryPerformanceProbability, supplierPerformanceProbability};
     }
 
 
     //-----------------------------------交易契约相关------------------------------------------
+
     /**
      * 获取交易契约
-     * @param listListEngineFactoryTasks    按主机厂分的任务集合, 每个元素是一个主机厂集合(集合内元素是该主机厂的任务集)
-     * @param listListSupplierTask          按任务分开后的供应商服务集合
-     * @param mapRelationshipMatrix         关系强度
-     * @return                              匹配上的主机厂与供应商的交易契约
+     *
+     * @param listListEngineFactoryTasks 按主机厂分的任务集合, 每个元素是一个主机厂集合(集合内元素是该主机厂的任务集)
+     * @param listListSupplierTask       按任务分开后的供应商服务集合
+     * @param mapRelationshipMatrix      关系强度
+     * @return 匹配上的主机厂与供应商的交易契约
      */
     @Override
     public ArrayList<TransactionContract> getTransactionContracts(

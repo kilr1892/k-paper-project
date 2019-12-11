@@ -3,11 +3,9 @@ package cn.edu.zju.kpaperproject.mapper;
 import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
 import cn.edu.zju.kpaperproject.pojo.TbRelationMatrixExample;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public interface TbRelationMatrixMapper {
     int countByExample(TbRelationMatrixExample example);
 
