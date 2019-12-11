@@ -37,6 +37,7 @@ public interface StartTaskService {
      */
     ArrayList<ArrayList<SupplierTask>> genSupplierTask(int experimentsNumber, int cycleTime);
 
+    // TODO 这个供给关系, 需要重构(如果影响性能很大的话)
     /**
      * 获得主机厂与供应商之间的关系矩阵
      * key   = 主机厂id + 供应商id
@@ -55,7 +56,7 @@ public interface StartTaskService {
      *
      * @param experimentsNumber 实验次数
      * @param cycleTime         循环次数
-     * @return                  循环次数 - 1 时(最新的)关系矩阵
+     * @return 循环次数 - 1 时(最新的)关系矩阵
      */
-    Map<String, TbRelationMatrix> getMapRelationshipMatrix2WithTbRelationMatrix(int experimentsNumber, int cycleTime)
+    Map<String, TbRelationMatrix> getMapRelationshipMatrix2WithTbRelationMatrix(int experimentsNumber, int cycleTime);
 }

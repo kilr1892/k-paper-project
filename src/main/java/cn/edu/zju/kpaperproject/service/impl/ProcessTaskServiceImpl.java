@@ -5,6 +5,7 @@ import cn.edu.zju.kpaperproject.dto.SupplierTask;
 import cn.edu.zju.kpaperproject.dto.TransactionContract;
 import cn.edu.zju.kpaperproject.enums.CalculationEnum;
 import cn.edu.zju.kpaperproject.enums.NumberEnum;
+import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
 import cn.edu.zju.kpaperproject.service.ProcessTaskService;
 import cn.edu.zju.kpaperproject.utils.CalculationUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -24,7 +25,8 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
     /** 交易结算 */
     public void getTransactionSettlement(
             ArrayList<TransactionContract> listTransactionContracts
-            , Map<String, Double> mapRelationshipMatrix) {
+            , Map<String, Double> mapRelationshipMatrix
+            , Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix) {
 
         Map<String, Double> mapTmpRelationshipStrength = new HashMap<>();
         // 主机厂和供应商的履约概率
@@ -48,8 +50,45 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             double supplierCredit = aTransactionContract.getSupplierCredit();
             double[] newCredit = getNewCredit(engineFactoryCredit, supplierCredit, evaluationScore);
             // 计算关系强度
-            double newRelationshipStrength = getNewRelationshipStrength();
+            double newRelationshipStrength = getNewRelationshipStrength(aTransactionContract, whetherPerformContract, evaluationScore, mapRelationshipMatrix2WithTbRelationMatrix);
+            // TODO 如何存这些数据, 是否需要放入数据库更新
         }
+    }
+
+    /**
+     * 计算交易后新的关系强度
+     *
+     * @param transactionContract                           交易契约
+     * @param whetherPerformContract                        是否履约
+     * @param evaluationScore                               双方评分
+     * @param mapRelationshipMatrix2WithTbRelationMatrix    关系强度
+     * @return                                              计算后的新的关系强度
+     */
+    private double getNewRelationshipStrength(TransactionContract transactionContract, boolean[] whetherPerformContract, int[] evaluationScore, Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix) {
+
+        String key = transactionContract.getEngineFactoryId() + transactionContract.getSupplierId();
+        TbRelationMatrix tbRelationMatrix = mapRelationshipMatrix2WithTbRelationMatrix.get(key);
+        // 初始关系强度
+        double initialRelationalDegree = tbRelationMatrix.getInitialRelationalDegree();
+        // 阿尔法2撇
+        int relationshipStrengthA2Slash = CalculationEnum.relationshipStrengthA2Slash;
+        // 历史累加中间变量
+        int accumulativeTotalScore = tbRelationMatrix.getAccumulativeTotalScore();
+        // 双方评分和
+        int evaluationScoreSum = evaluationScore[0] + evaluationScore[1];
+        // 计算累加的值
+        if (whetherPerformContract[0] && whetherPerformContract[1]) {
+            // 都履约为正
+            accumulativeTotalScore += evaluationScoreSum;
+        } else {
+            // 有一个不履约就为负
+            accumulativeTotalScore -= evaluationScoreSum;
+        }
+        // 交易次数
+        int transactionNumber = tbRelationMatrix.getTransactionNumber();
+
+        double res = initialRelationalDegree + relationshipStrengthA2Slash * accumulativeTotalScore / (20 * transactionNumber);
+        return res;
     }
 
     /**

@@ -2,6 +2,7 @@ package cn.edu.zju.kpaperproject.controller;
 
 import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
 import cn.edu.zju.kpaperproject.dto.SupplierTask;
+import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
 import cn.edu.zju.kpaperproject.service.InitService;
 import cn.edu.zju.kpaperproject.service.ProcessTaskService;
 import cn.edu.zju.kpaperproject.service.StartTaskService;
@@ -36,6 +37,7 @@ public class TestController {
         ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTaskDecomposition = startTaskService.genEngineFactoryTaskDecomposition(expNum, cycleTime);
         ArrayList<ArrayList<SupplierTask>> listListSupplierTask = startTaskService.genSupplierTask(expNum, cycleTime);
         Map<String, Double> mapRelationshipMatrix = startTaskService.getMapRelationshipMatrix(expNum, cycleTime);
+        Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix = startTaskService.getMapRelationshipMatrix2WithTbRelationMatrix(expNum, cycleTime);
 
 //        ArrayList<LinkedHashMap<EngineFactoryManufacturingTask, ArrayList<SupplierTask>>> linkedHashMaps = processTaskService.roughMatching(listListEngineFactoryTaskDecomposition, listListSupplierTask);
 //
