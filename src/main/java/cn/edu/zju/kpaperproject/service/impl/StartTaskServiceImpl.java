@@ -134,8 +134,7 @@ public class StartTaskServiceImpl implements StartTaskService {
             SupplierTask supplierTask = new SupplierTask();
             // 供应商id
             supplierTask.setSupplierId(supplierId);
-            /** 供应商信誉度 */
-//            private double supplierCredit;
+            // 供应商信誉度
             supplierTask.setSupplierCredit(tbSupplierDynamic.getSupplierCreditA());
             // 服务类型
             int supplierType = aSupplier.getSupplierType();

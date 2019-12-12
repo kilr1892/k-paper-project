@@ -58,6 +58,8 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // 双方id
             orderPlus.setEngineFactoryId(aTransactionContract.getEngineFactoryId());
             orderPlus.setSupplierId(aTransactionContract.getSupplierId());
+            // 主机厂初始期望价格
+            orderPlus.setEngineFactory2ServiceOfferPrice(aTransactionContract.getEngineFactory2ServiceOfferPrice());
 
             // 实验次数与循环次数
             orderPlus.setExperimentsNumber(experimentsNumber);
@@ -213,8 +215,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         int absIJK = 0;
         if ((engineIsPerformContract && supplierIsPerformContract) || (!engineIsPerformContract && !supplierIsPerformContract)) {
             // 1 1 或 0 0
-            absJKI = 0;
-            absIJK = 0;
+            // 使用默认值
         } else if (engineIsPerformContract) {
             // 1 0
             absJKI = 2;
@@ -269,8 +270,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         // 交易次数
         int transactionNumber = tbRelationMatrix.getTransactionNumber();
 
-        double res = initialRelationalDegree + relationshipStrengthA2Slash * accumulativeTotalScore / (20 * transactionNumber);
-        return res;
+        return initialRelationalDegree + relationshipStrengthA2Slash * accumulativeTotalScore / (20 * transactionNumber);
     }
 
 
@@ -316,10 +316,10 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         boolean[] res = new boolean[2];
         double tmp = RandomUtils.nextDouble(0D, 1D);
         // 主机厂是否履约
-        res[0] = tmp < engineFactoryPerformanceProbability ? true : false;
+        res[0] = tmp < engineFactoryPerformanceProbability;
         tmp = RandomUtils.nextDouble(0D, 1D);
         // 供应商是否履约
-        res[1] = tmp < supplierPerformanceProbability ? true : false;
+        res[1] = tmp < supplierPerformanceProbability;
         return res;
     }
 
@@ -550,6 +550,9 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                 transactionContract.setEngineFactoryNeedServiceNumber(engineFactoryManufacturingTask.getEngineFactoryNeedServiceNumber());
                 transactionContract.setOrderPrice(genTransactionContractOrderPrice(engineFactoryManufacturingTask, supplierTask));
                 transactionContract.setOrderQuality(supplierTask.getSupplierQuality());
+
+                // 初始期望价格
+                transactionContract.setEngineFactory2ServiceOfferPrice(engineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice());
 
                 listRes.add(transactionContract);
             }

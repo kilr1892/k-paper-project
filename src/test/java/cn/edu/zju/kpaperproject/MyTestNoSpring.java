@@ -34,4 +34,12 @@ public class MyTestNoSpring {
 
         }
     }
+
+    @Test
+    public void test2() {
+        int[] i = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+        for (int j = 0; j <i.length; j++) {
+            System.out.println("i % 5 = " + i[j] % 5);
+        }
+    }
 }

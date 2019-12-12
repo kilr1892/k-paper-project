@@ -18,6 +18,8 @@ public class TransactionContract {
     private double engineFactoryCredit;
     /** 主机厂位置坐标 */
     private int[] engineFactoryLocationXY;
+    /** 主机厂初始期望的价格 */
+    private int[] engineFactory2ServiceOfferPrice;
     /** 供应商id */
     private String supplierId;
     /** 供应商信誉度 */

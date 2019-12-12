@@ -7,4 +7,6 @@ package cn.edu.zju.kpaperproject.service;
  * @version v1.0
  */
 public interface BeforeNextTask {
+    // TODO 要需要存的存起来
+
 }
