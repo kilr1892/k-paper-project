@@ -15,6 +15,10 @@ public class TbOrder {
 
     private Double supplierEngineToAp;
 
+    private Boolean engineWhetherPerformContract;
+
+    private Boolean supplierWhetherPerformContract;
+
     private Integer supplierActualPriceP;
 
     private Integer supplierActualQualityQs;
@@ -79,6 +83,22 @@ public class TbOrder {
 
     public void setSupplierEngineToAp(Double supplierEngineToAp) {
         this.supplierEngineToAp = supplierEngineToAp;
+    }
+
+    public Boolean getEngineWhetherPerformContract() {
+        return engineWhetherPerformContract;
+    }
+
+    public void setEngineWhetherPerformContract(Boolean engineWhetherPerformContract) {
+        this.engineWhetherPerformContract = engineWhetherPerformContract;
+    }
+
+    public Boolean getSupplierWhetherPerformContract() {
+        return supplierWhetherPerformContract;
+    }
+
+    public void setSupplierWhetherPerformContract(Boolean supplierWhetherPerformContract) {
+        this.supplierWhetherPerformContract = supplierWhetherPerformContract;
     }
 
     public Integer getSupplierActualPriceP() {

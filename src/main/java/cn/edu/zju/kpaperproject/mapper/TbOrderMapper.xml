@@ -9,6 +9,8 @@
     <result column="supplier_id" property="supplierId" jdbcType="VARCHAR" />
     <result column="engine_to_supplier_ap" property="engineToSupplierAp" jdbcType="DOUBLE" />
     <result column="supplier_engine_to_ap" property="supplierEngineToAp" jdbcType="DOUBLE" />
+    <result column="engine_whether_perform_contract" property="engineWhetherPerformContract" jdbcType="BIT" />
+    <result column="supplier_whether_perform_contract" property="supplierWhetherPerformContract" jdbcType="BIT" />
     <result column="supplier_actual_price_p" property="supplierActualPriceP" jdbcType="INTEGER" />
     <result column="supplier_actual_quality_qs" property="supplierActualQualityQs" jdbcType="INTEGER" />
     <result column="supplier_actual_number_m" property="supplierActualNumberM" jdbcType="INTEGER" />
@@ -75,8 +77,9 @@
   </sql>
   <sql id="Base_Column_List" >
     id, experiments_number, cycle_times, engine_factory_id, supplier_id, engine_to_supplier_ap, 
-    supplier_engine_to_ap, supplier_actual_price_p, supplier_actual_quality_qs, supplier_actual_number_m, 
-    engine_factory_to_supplier_score, supplier_to_engine_factory_score
+    supplier_engine_to_ap, engine_whether_perform_contract, supplier_whether_perform_contract, 
+    supplier_actual_price_p, supplier_actual_quality_qs, supplier_actual_number_m, engine_factory_to_supplier_score, 
+    supplier_to_engine_factory_score
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.zju.kpaperproject.pojo.TbOrderExample" >
     select
@@ -111,13 +114,15 @@
   <insert id="insert" parameterType="cn.edu.zju.kpaperproject.pojo.TbOrder" >
     insert into tb_order (id, experiments_number, cycle_times, 
       engine_factory_id, supplier_id, engine_to_supplier_ap, 
-      supplier_engine_to_ap, supplier_actual_price_p, 
+      supplier_engine_to_ap, engine_whether_perform_contract, 
+      supplier_whether_perform_contract, supplier_actual_price_p, 
       supplier_actual_quality_qs, supplier_actual_number_m, 
       engine_factory_to_supplier_score, supplier_to_engine_factory_score
       )
     values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
       #{engineFactoryId,jdbcType=VARCHAR}, #{supplierId,jdbcType=VARCHAR}, #{engineToSupplierAp,jdbcType=DOUBLE}, 
-      #{supplierEngineToAp,jdbcType=DOUBLE}, #{supplierActualPriceP,jdbcType=INTEGER}, 
+      #{supplierEngineToAp,jdbcType=DOUBLE}, #{engineWhetherPerformContract,jdbcType=BIT}, 
+      #{supplierWhetherPerformContract,jdbcType=BIT}, #{supplierActualPriceP,jdbcType=INTEGER}, 
       #{supplierActualQualityQs,jdbcType=INTEGER}, #{supplierActualNumberM,jdbcType=INTEGER}, 
       #{engineFactoryToSupplierScore,jdbcType=INTEGER}, #{supplierToEngineFactoryScore,jdbcType=INTEGER}
       )
@@ -145,6 +150,12 @@
       </if>
       <if test="supplierEngineToAp != null" >
         supplier_engine_to_ap,
+      </if>
+      <if test="engineWhetherPerformContract != null" >
+        engine_whether_perform_contract,
+      </if>
+      <if test="supplierWhetherPerformContract != null" >
+        supplier_whether_perform_contract,
       </if>
       <if test="supplierActualPriceP != null" >
         supplier_actual_price_p,
@@ -183,6 +194,12 @@
       </if>
       <if test="supplierEngineToAp != null" >
         #{supplierEngineToAp,jdbcType=DOUBLE},
+      </if>
+      <if test="engineWhetherPerformContract != null" >
+        #{engineWhetherPerformContract,jdbcType=BIT},
+      </if>
+      <if test="supplierWhetherPerformContract != null" >
+        #{supplierWhetherPerformContract,jdbcType=BIT},
       </if>
       <if test="supplierActualPriceP != null" >
         #{supplierActualPriceP,jdbcType=INTEGER},
@@ -231,6 +248,12 @@
       <if test="record.supplierEngineToAp != null" >
         supplier_engine_to_ap = #{record.supplierEngineToAp,jdbcType=DOUBLE},
       </if>
+      <if test="record.engineWhetherPerformContract != null" >
+        engine_whether_perform_contract = #{record.engineWhetherPerformContract,jdbcType=BIT},
+      </if>
+      <if test="record.supplierWhetherPerformContract != null" >
+        supplier_whether_perform_contract = #{record.supplierWhetherPerformContract,jdbcType=BIT},
+      </if>
       <if test="record.supplierActualPriceP != null" >
         supplier_actual_price_p = #{record.supplierActualPriceP,jdbcType=INTEGER},
       </if>
@@ -260,6 +283,8 @@
       supplier_id = #{record.supplierId,jdbcType=VARCHAR},
       engine_to_supplier_ap = #{record.engineToSupplierAp,jdbcType=DOUBLE},
       supplier_engine_to_ap = #{record.supplierEngineToAp,jdbcType=DOUBLE},
+      engine_whether_perform_contract = #{record.engineWhetherPerformContract,jdbcType=BIT},
+      supplier_whether_perform_contract = #{record.supplierWhetherPerformContract,jdbcType=BIT},
       supplier_actual_price_p = #{record.supplierActualPriceP,jdbcType=INTEGER},
       supplier_actual_quality_qs = #{record.supplierActualQualityQs,jdbcType=INTEGER},
       supplier_actual_number_m = #{record.supplierActualNumberM,jdbcType=INTEGER},
@@ -290,6 +315,12 @@
       <if test="supplierEngineToAp != null" >
         supplier_engine_to_ap = #{supplierEngineToAp,jdbcType=DOUBLE},
       </if>
+      <if test="engineWhetherPerformContract != null" >
+        engine_whether_perform_contract = #{engineWhetherPerformContract,jdbcType=BIT},
+      </if>
+      <if test="supplierWhetherPerformContract != null" >
+        supplier_whether_perform_contract = #{supplierWhetherPerformContract,jdbcType=BIT},
+      </if>
       <if test="supplierActualPriceP != null" >
         supplier_actual_price_p = #{supplierActualPriceP,jdbcType=INTEGER},
       </if>
@@ -316,6 +347,8 @@
       supplier_id = #{supplierId,jdbcType=VARCHAR},
       engine_to_supplier_ap = #{engineToSupplierAp,jdbcType=DOUBLE},
       supplier_engine_to_ap = #{supplierEngineToAp,jdbcType=DOUBLE},
+      engine_whether_perform_contract = #{engineWhetherPerformContract,jdbcType=BIT},
+      supplier_whether_perform_contract = #{supplierWhetherPerformContract,jdbcType=BIT},
       supplier_actual_price_p = #{supplierActualPriceP,jdbcType=INTEGER},
       supplier_actual_quality_qs = #{supplierActualQualityQs,jdbcType=INTEGER},
       supplier_actual_number_m = #{supplierActualNumberM,jdbcType=INTEGER},

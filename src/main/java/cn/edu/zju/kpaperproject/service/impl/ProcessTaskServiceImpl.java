@@ -1,6 +1,7 @@
 package cn.edu.zju.kpaperproject.service.impl;
 
 import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
+import cn.edu.zju.kpaperproject.dto.OrderPlus;
 import cn.edu.zju.kpaperproject.dto.SupplierTask;
 import cn.edu.zju.kpaperproject.dto.TransactionContract;
 import cn.edu.zju.kpaperproject.enums.CalculationEnum;
@@ -24,39 +25,164 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 
     /** 交易结算 */
     public void getTransactionSettlement(
-            ArrayList<TransactionContract> listTransactionContracts
+            int experimentsNumber
+            , int cycleTimes
+            , ArrayList<TransactionContract> listTransactionContracts
             , Map<String, Double> mapRelationshipMatrix
             , Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix) {
 
-        Map<String, Double> mapTmpRelationshipStrength = new HashMap<>();
         // 主机厂和供应商的履约概率
         double engineFactoryPerformanceProbability;
         double supplierPerformanceProbability;
+        // 信誉度计算相关的map
+        // 主机厂的
+        Map<String, List<OrderPlus>> mapEngineFactoryCredit = new HashMap<>();
+        // 供应商的
+        Map<String, List<OrderPlus>> mapSupplierCredit = new HashMap<>();
+        // 返回值的list
+        List<OrderPlus> listRes = new ArrayList<>();
+
         for (TransactionContract aTransactionContract : listTransactionContracts) {
             // 每次循环是每个交易契约
+            OrderPlus orderPlus = new OrderPlus();
+            // 双方id
+            orderPlus.setEngineFactoryId(aTransactionContract.getEngineFactoryId());
+            orderPlus.setSupplierId(aTransactionContract.getSupplierId());
 
+            // 实验次数与循环次数
+            orderPlus.setExperimentsNumber(experimentsNumber);
+            orderPlus.setCycleTimes(cycleTimes);
             // 计算双方履约概率
             double[] performanceProbability = getPerformanceProbability(aTransactionContract, mapRelationshipMatrix);
             engineFactoryPerformanceProbability = performanceProbability[0];
             supplierPerformanceProbability = performanceProbability[1];
+            orderPlus.setEngineToSupplierAp(engineFactoryPerformanceProbability);
+            orderPlus.setSupplierEngineToAp(supplierPerformanceProbability);
+
             // 计算是否履约
             boolean[] whetherPerformContract = getWhetherPerformContract(engineFactoryPerformanceProbability, supplierPerformanceProbability);
-            // 双方评分
-            int[] evaluationScore = getEvaluationScore(whetherPerformContract);
+            orderPlus.setEngineWhetherPerformContract(whetherPerformContract[0]);
+            orderPlus.setSupplierWhetherPerformContract(whetherPerformContract[1]);
+
+            // 实际价格
+            orderPlus.setSupplierActualPriceP(aTransactionContract.getOrderPrice());
+            // 实际质量
+            orderPlus.setSupplierActualQualityQs(aTransactionContract.getOrderQuality());
             // 计算实际交易数量
             int actualTransactionsNumber = getActualTransactionsNumber(aTransactionContract.getEngineFactoryNeedServiceNumber(), performanceProbability, whetherPerformContract);
-            // 计算信誉度
-            double engineFactoryCredit = aTransactionContract.getEngineFactoryCredit();
-            double supplierCredit = aTransactionContract.getSupplierCredit();
-            double[] newCredit = getNewCredit(engineFactoryCredit, supplierCredit, evaluationScore);
+            orderPlus.setSupplierActualNumberM(actualTransactionsNumber);
+
+            // 双方评分
+            int[] evaluationScore = getEvaluationScore(whetherPerformContract);
+            orderPlus.setEngineFactoryToSupplierScore(evaluationScore[0]);
+            orderPlus.setSupplierToEngineFactoryScore(evaluationScore[1]);
+
             // 计算新的关系强度
             double newRelationshipStrength = getNewRelationshipStrength(aTransactionContract, whetherPerformContract, evaluationScore, mapRelationshipMatrix2WithTbRelationMatrix);
+            orderPlus.setRelationshipStrength(newRelationshipStrength);
+
             // 计算利润
             int[] profit = getProfit(aTransactionContract, whetherPerformContract, actualTransactionsNumber);
+            orderPlus.setEngineFactoryProfit(profit[0]);
+            orderPlus.setSupplierProfit(profit[1]);
 
-
-            // TODO 如何存这些数据, 是否需要放入数据库更新
+            listRes.add(orderPlus);
+            // 初始信誉度
+            orderPlus.setInitEngineFactoryCredit(aTransactionContract.getEngineFactoryCredit());
+            orderPlus.setInitSupplierCredit(aTransactionContract.getSupplierCredit());
+            // 计算交易后的信誉度, 放在map里先
+            addMapForCredit(orderPlus, mapEngineFactoryCredit, mapSupplierCredit);
         }
+        // 计算信誉度
+        for (OrderPlus aOrderPlus : listRes) {
+            String engineFactoryId = aOrderPlus.getEngineFactoryId();
+            String supplierId = aOrderPlus.getSupplierId();
+
+            List<OrderPlus> listEngineFactoryMatchSupplier = mapEngineFactoryCredit.get(engineFactoryId);
+            List<OrderPlus> listSupplierMatchEngineFactory = mapSupplierCredit.get(supplierId);
+
+            if (aOrderPlus.getNewEngineFactoryCredit() == 0) {
+                // 补全主机厂新的的信誉度
+                aOrderPlus.setNewEngineFactoryCredit(getNewCredit(listEngineFactoryMatchSupplier,"engine"));
+            }
+            if (aOrderPlus.getNewSupplierCredit() == 0) {
+                // 补全供应商新的信誉度
+                aOrderPlus.setNewSupplierCredit(getNewCredit(listSupplierMatchEngineFactory,"supplier"));
+            }
+        }
+
+    }
+
+    /**
+     * 计算主机厂或者供应商的信誉度
+     *
+     * @param listMatches   主机厂对应的所有供应商集合 或 供应商对应的所有主机厂集合
+     * @param type          engine supplier
+     * @return
+     */
+    private double getNewCredit(List<OrderPlus> listMatches, String type) {
+        double initCredit;
+        double sum = 0D;
+        switch (type) {
+            case "engine":
+                initCredit = listMatches.get(0).getInitEngineFactoryCredit();
+                for (OrderPlus orderPlus : listMatches) {
+                    // 主机厂的履约情况
+                    boolean supplierWhetherPerformContract = orderPlus.getEngineWhetherPerformContract();
+                    // 供应商的评分
+                    int supplierToEngineFactoryScore = orderPlus.getSupplierToEngineFactoryScore();
+                    // 供应商的信誉度
+                    double initSupplierCredit = orderPlus.getInitSupplierCredit();
+                    if (supplierWhetherPerformContract) {
+                        // 履约
+                        sum += supplierToEngineFactoryScore * initSupplierCredit;
+                    } else {
+                        // 违约
+                        sum -= supplierToEngineFactoryScore * initSupplierCredit;
+                    }
+                }
+                break;
+            case "supplier":
+                initCredit = listMatches.get(0).getInitSupplierCredit();
+                for (OrderPlus orderPlus : listMatches) {
+                    // 供应商的履约情况
+                    boolean supplierWhetherPerformContract = orderPlus.getSupplierWhetherPerformContract();
+                    // 主机厂的评分
+                    int engineFactoryToSupplierScore = orderPlus.getEngineFactoryToSupplierScore();
+                    // 主机厂的信誉度
+                    double initEngineFactoryCredit = orderPlus.getInitEngineFactoryCredit();
+                    if (supplierWhetherPerformContract) {
+                        // 履约
+                        sum += engineFactoryToSupplierScore * initEngineFactoryCredit;
+                    } else {
+                        // 违约
+                        sum -= engineFactoryToSupplierScore * initEngineFactoryCredit;
+                    }
+                }
+                break;
+            default:
+                throw new RuntimeException("no such type");
+        }
+        return initCredit + sum / (10 * listMatches.size());
+    }
+
+    /**
+     * 把信誉度计算相关的map放进来
+     *
+     * @param orderPlus                 成交结束相关的模型
+     * @param mapEngineFactoryCredit    key: 主机厂id value: 匹配上的供应商集合
+     * @param mapSupplierCredit         key: 供应商id value: 匹配上的主机厂
+     */
+    private void addMapForCredit(OrderPlus orderPlus, Map<String, List<OrderPlus>> mapEngineFactoryCredit, Map<String, List<OrderPlus>> mapSupplierCredit) {
+        // 双方id
+        String engineFactoryId = orderPlus.getEngineFactoryId();
+        String supplierId = orderPlus.getSupplierId();
+        List<OrderPlus> listEngineFactoryMatchSupplier = mapEngineFactoryCredit.get(engineFactoryId);
+        List<OrderPlus> listSupplierMatchEngineFactory = mapEngineFactoryCredit.get(supplierId);
+        listEngineFactoryMatchSupplier.add(orderPlus);
+        listSupplierMatchEngineFactory.add(orderPlus);
+        mapEngineFactoryCredit.put(engineFactoryId, listEngineFactoryMatchSupplier);
+        mapEngineFactoryCredit.put(supplierId, listSupplierMatchEngineFactory);
     }
 
     /**
@@ -77,11 +203,11 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // 1 1 或 0 0
             absJKI = 0;
             absIJK = 0;
-        } else if (engineIsPerformContract && !supplierIsPerformContract) {
+        } else if (engineIsPerformContract) {
             // 1 0
             absJKI = 2;
             absIJK = -2;
-        } else if (!engineIsPerformContract && supplierIsPerformContract) {
+        } else {
             // 0 1
             absJKI = -2;
             absIJK = 2;
@@ -135,21 +261,6 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         return res;
     }
 
-    /**
-     * 计算交易后双方的信誉度
-     *
-     * @param engineFactoryCredit   主机厂信誉度
-     * @param supplierCredit        供应商信誉的
-     * @param evaluationScore       双方评分数组
-     * @return                      0: 主机厂信誉度, 1: 供应商信誉度
-     */
-    private double[] getNewCredit(double engineFactoryCredit, double supplierCredit, int[] evaluationScore) {
-        double[] res = new double[2];
-        // 主机厂的信誉度
-        res[0] = supplierCredit * evaluationScore[1];
-        res[1] = engineFactoryCredit * evaluationScore[0];
-        return res;
-    }
 
     private int getActualTransactionsNumber(int engineFactoryNeedServiceNumber, double[] performanceProbability, boolean[] whetherPerformContract) {
         int res = engineFactoryNeedServiceNumber;

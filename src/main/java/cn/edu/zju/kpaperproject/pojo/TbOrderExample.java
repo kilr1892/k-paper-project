@@ -544,6 +544,126 @@ public class TbOrderExample {
             return (Criteria) this;
         }
 
+        public Criteria andEngineWhetherPerformContractIsNull() {
+            addCriterion("engine_whether_perform_contract is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineWhetherPerformContractIsNotNull() {
+            addCriterion("engine_whether_perform_contract is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineWhetherPerformContractEqualTo(Boolean value) {
+            addCriterion("engine_whether_perform_contract =", value, "engineWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineWhetherPerformContractNotEqualTo(Boolean value) {
+            addCriterion("engine_whether_perform_contract <>", value, "engineWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineWhetherPerformContractGreaterThan(Boolean value) {
+            addCriterion("engine_whether_perform_contract >", value, "engineWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineWhetherPerformContractGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("engine_whether_perform_contract >=", value, "engineWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineWhetherPerformContractLessThan(Boolean value) {
+            addCriterion("engine_whether_perform_contract <", value, "engineWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineWhetherPerformContractLessThanOrEqualTo(Boolean value) {
+            addCriterion("engine_whether_perform_contract <=", value, "engineWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineWhetherPerformContractIn(List<Boolean> values) {
+            addCriterion("engine_whether_perform_contract in", values, "engineWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineWhetherPerformContractNotIn(List<Boolean> values) {
+            addCriterion("engine_whether_perform_contract not in", values, "engineWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineWhetherPerformContractBetween(Boolean value1, Boolean value2) {
+            addCriterion("engine_whether_perform_contract between", value1, value2, "engineWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineWhetherPerformContractNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("engine_whether_perform_contract not between", value1, value2, "engineWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherPerformContractIsNull() {
+            addCriterion("supplier_whether_perform_contract is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherPerformContractIsNotNull() {
+            addCriterion("supplier_whether_perform_contract is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherPerformContractEqualTo(Boolean value) {
+            addCriterion("supplier_whether_perform_contract =", value, "supplierWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherPerformContractNotEqualTo(Boolean value) {
+            addCriterion("supplier_whether_perform_contract <>", value, "supplierWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherPerformContractGreaterThan(Boolean value) {
+            addCriterion("supplier_whether_perform_contract >", value, "supplierWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherPerformContractGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("supplier_whether_perform_contract >=", value, "supplierWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherPerformContractLessThan(Boolean value) {
+            addCriterion("supplier_whether_perform_contract <", value, "supplierWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherPerformContractLessThanOrEqualTo(Boolean value) {
+            addCriterion("supplier_whether_perform_contract <=", value, "supplierWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherPerformContractIn(List<Boolean> values) {
+            addCriterion("supplier_whether_perform_contract in", values, "supplierWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherPerformContractNotIn(List<Boolean> values) {
+            addCriterion("supplier_whether_perform_contract not in", values, "supplierWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherPerformContractBetween(Boolean value1, Boolean value2) {
+            addCriterion("supplier_whether_perform_contract between", value1, value2, "supplierWhetherPerformContract");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherPerformContractNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("supplier_whether_perform_contract not between", value1, value2, "supplierWhetherPerformContract");
+            return (Criteria) this;
+        }
+
         public Criteria andSupplierActualPricePIsNull() {
             addCriterion("supplier_actual_price_p is null");
             return (Criteria) this;
