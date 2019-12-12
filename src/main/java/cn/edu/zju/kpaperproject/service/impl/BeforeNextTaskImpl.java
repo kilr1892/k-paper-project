@@ -6,6 +6,7 @@ import cn.edu.zju.kpaperproject.enums.CalculationEnum;
 import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
 import cn.edu.zju.kpaperproject.service.BeforeNextTask;
 import org.apache.commons.lang3.RandomUtils;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +17,21 @@ import java.util.List;
  * @author RichardLee
  * @version v1.0
  */
+@Service
 public class BeforeNextTaskImpl implements BeforeNextTask {
 
-    // TODO 有没有循环次数, 实验次数的要求, 之后再说, 先把主要逻辑搞好
 
-    public List<EngineFactoryFinalProvision> beforeNextTask(int cycleTimes, List<OrderPlus> listOrderPlus) {
+    /**
+     * 生成最终的交货结果
+     *
+     * @param cycleTimes    实验次数
+     * @param listOrderPlus 产品订单
+     * @return              最终交货结果集合
+     */
+    @Override
+    public List<EngineFactoryFinalProvision> getListEngineFactoryFinalProvision(int cycleTimes, List<OrderPlus> listOrderPlus) {
 
         List<EngineFactoryFinalProvision> listRes = new ArrayList<>();
-        // TODO List<OrderPlus>应该是按顺序(且已经按信誉度高的开始)存的(需要测试下, 不行就改...)
 
         EngineFactoryFinalProvision engineFactoryFinalProvision = null;
 

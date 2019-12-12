@@ -1,10 +1,8 @@
 package cn.edu.zju.kpaperproject.controller;
 
-import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
-import cn.edu.zju.kpaperproject.dto.OrderPlus;
-import cn.edu.zju.kpaperproject.dto.SupplierTask;
-import cn.edu.zju.kpaperproject.dto.TransactionContract;
+import cn.edu.zju.kpaperproject.dto.*;
 import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
+import cn.edu.zju.kpaperproject.service.BeforeNextTask;
 import cn.edu.zju.kpaperproject.service.InitService;
 import cn.edu.zju.kpaperproject.service.ProcessTaskService;
 import cn.edu.zju.kpaperproject.service.StartTaskService;
@@ -31,6 +29,8 @@ public class TestController {
     StartTaskService startTaskService;
     @Autowired
     ProcessTaskService processTaskService;
+    @Autowired
+    BeforeNextTask beforeNextTask;
 
     @GetMapping("/test")
     public String test() {
@@ -42,7 +42,9 @@ public class TestController {
         Map<String, Double> mapRelationshipMatrix = startTaskService.getMapRelationshipMatrix(expNum, cycleTime);
         Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix = startTaskService.getMapRelationshipMatrix2WithTbRelationMatrix(expNum, cycleTime);
         ArrayList<TransactionContract> transactionContracts = processTaskService.getTransactionContracts(listListEngineFactoryTaskDecomposition, listListSupplierTask, mapRelationshipMatrix);
-        List<OrderPlus> transactionSettlement = processTaskService.getTransactionSettlement(expNum, cycleTime, transactionContracts, mapRelationshipMatrix, mapRelationshipMatrix2WithTbRelationMatrix);
+        List<OrderPlus> listOrderPlus = processTaskService.getTransactionSettlement(expNum, cycleTime, transactionContracts, mapRelationshipMatrix, mapRelationshipMatrix2WithTbRelationMatrix);
+        List<EngineFactoryFinalProvision> listEngineFactoryFinalProvision = beforeNextTask.getListEngineFactoryFinalProvision(cycleTime, listOrderPlus);
+
         System.out.println();
 
         return "success";

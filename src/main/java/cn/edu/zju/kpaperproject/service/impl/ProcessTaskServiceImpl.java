@@ -25,12 +25,13 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 
     /**
      * 交易结算
-     * @param experimentsNumber                             实验次数
-     * @param cycleTimes                                    循环次数
-     * @param listTransactionContracts                      交易契约集合
-     * @param mapRelationshipMatrix                         关系矩阵1
-     * @param mapRelationshipMatrix2WithTbRelationMatrix    关系矩阵2
-     * @return                                              实际交易结果集合
+     *
+     * @param experimentsNumber                          实验次数
+     * @param cycleTimes                                 循环次数
+     * @param listTransactionContracts                   交易契约集合
+     * @param mapRelationshipMatrix                      关系矩阵1
+     * @param mapRelationshipMatrix2WithTbRelationMatrix 关系矩阵2
+     * @return 实际交易结果集合
      */
     @Override
     public List<OrderPlus> getTransactionSettlement(
@@ -86,8 +87,8 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 
             // 双方评分
             int[] evaluationScore = getEvaluationScore(whetherPerformContract);
-            orderPlus.setEngineFactoryToSupplierScore(evaluationScore[0]);
-            orderPlus.setSupplierToEngineFactoryScore(evaluationScore[1]);
+            orderPlus.setEngineFactoryToSupplierScore(evaluationScore[1]);
+            orderPlus.setSupplierToEngineFactoryScore(evaluationScore[0]);
 
             // 计算新的关系强度
             double newRelationshipStrength = getNewRelationshipStrength(aTransactionContract, whetherPerformContract, evaluationScore, mapRelationshipMatrix2WithTbRelationMatrix);
@@ -115,11 +116,11 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 
             if (aOrderPlus.getNewEngineFactoryCredit() == 0) {
                 // 补全主机厂新的的信誉度
-                aOrderPlus.setNewEngineFactoryCredit(getNewCredit(listEngineFactoryMatchSupplier,"engine"));
+                aOrderPlus.setNewEngineFactoryCredit(getNewCredit(listEngineFactoryMatchSupplier, "engine"));
             }
             if (aOrderPlus.getNewSupplierCredit() == 0) {
                 // 补全供应商新的信誉度
-                aOrderPlus.setNewSupplierCredit(getNewCredit(listSupplierMatchEngineFactory,"supplier"));
+                aOrderPlus.setNewSupplierCredit(getNewCredit(listSupplierMatchEngineFactory, "supplier"));
             }
         }
 
@@ -130,8 +131,8 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
     /**
      * 计算主机厂或者供应商的信誉度
      *
-     * @param listMatches   主机厂对应的所有供应商集合 或 供应商对应的所有主机厂集合
-     * @param type          engine supplier
+     * @param listMatches 主机厂对应的所有供应商集合 或 供应商对应的所有主机厂集合
+     * @param type        engine supplier
      * @return
      */
     private double getNewCredit(List<OrderPlus> listMatches, String type) {
@@ -183,9 +184,9 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
     /**
      * 把信誉度计算相关的map放进来
      *
-     * @param orderPlus                 成交结束相关的模型
-     * @param mapEngineFactoryCredit    key: 主机厂id value: 匹配上的供应商集合
-     * @param mapSupplierCredit         key: 供应商id value: 匹配上的主机厂
+     * @param orderPlus              成交结束相关的模型
+     * @param mapEngineFactoryCredit key: 主机厂id value: 匹配上的供应商集合
+     * @param mapSupplierCredit      key: 供应商id value: 匹配上的主机厂
      */
     private void addMapForCredit(OrderPlus orderPlus, Map<String, List<OrderPlus>> mapEngineFactoryCredit, Map<String, List<OrderPlus>> mapSupplierCredit) {
         // 双方id
@@ -193,10 +194,16 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         String supplierId = orderPlus.getSupplierId();
         List<OrderPlus> listEngineFactoryMatchSupplier = mapEngineFactoryCredit.get(engineFactoryId);
         List<OrderPlus> listSupplierMatchEngineFactory = mapEngineFactoryCredit.get(supplierId);
+        if (listEngineFactoryMatchSupplier == null) {
+            listEngineFactoryMatchSupplier = new ArrayList<>();
+        }
+        if (listSupplierMatchEngineFactory == null) {
+            listSupplierMatchEngineFactory = new ArrayList<>();
+        }
         listEngineFactoryMatchSupplier.add(orderPlus);
         listSupplierMatchEngineFactory.add(orderPlus);
         mapEngineFactoryCredit.put(engineFactoryId, listEngineFactoryMatchSupplier);
-        mapEngineFactoryCredit.put(supplierId, listSupplierMatchEngineFactory);
+        mapSupplierCredit.put(supplierId, listSupplierMatchEngineFactory);
     }
 
     /**
@@ -241,11 +248,11 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
     /**
      * 计算交易后新的关系强度
      *
-     * @param transactionContract                           交易契约
-     * @param whetherPerformContract                        是否履约
-     * @param evaluationScore                               双方评分
-     * @param mapRelationshipMatrix2WithTbRelationMatrix    关系强度
-     * @return                                              计算后的新的关系强度
+     * @param transactionContract                        交易契约
+     * @param whetherPerformContract                     是否履约
+     * @param evaluationScore                            双方评分
+     * @param mapRelationshipMatrix2WithTbRelationMatrix 关系强度
+     * @return 计算后的新的关系强度
      */
     private double getNewRelationshipStrength(TransactionContract transactionContract, boolean[] whetherPerformContract, int[] evaluationScore, Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix) {
 
@@ -267,8 +274,12 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // 有一个不履约就为负
             accumulativeTotalScore -= evaluationScoreSum;
         }
-        // 交易次数
-        int transactionNumber = tbRelationMatrix.getTransactionNumber();
+        // 交易次数 =0?
+
+        int transactionNumber = tbRelationMatrix.getTransactionNumber() + 1;
+        tbRelationMatrix.setTransactionNumber(transactionNumber);
+        // TODO 什么时候把这个修改交易次数的记录加入呢
+//        TbRelationMatrix tbRelationMatrix1 = mapRelationshipMatrix2WithTbRelationMatrix.get(key);
 
         return initialRelationalDegree + relationshipStrengthA2Slash * accumulativeTotalScore / (20 * transactionNumber);
     }
@@ -489,6 +500,11 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
      */
     private ArrayList<SupplierTask> roughMatching(EngineFactoryManufacturingTask engineFactoryManufacturingTask, ArrayList<SupplierTask> supplierTasks) {
         ArrayList<SupplierTask> listMatchingSupplierTasks = new ArrayList<>();
+
+        // 需求为0就不匹配
+        if (engineFactoryManufacturingTask.getEngineFactoryNeedServiceNumber() == 0) {
+            return listMatchingSupplierTasks;
+        }
         // 遍历所有类型相等的供应商
         for (SupplierTask aSupplierTask : supplierTasks) {
             // 任务期望质量<=服务质量
@@ -596,6 +612,11 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
     private ArrayList<SupplierTask> reGenListMatchingSupplierTask(EngineFactoryManufacturingTask engineFactoryManufacturingTask, ArrayList<SupplierTask> listSupplierTask) {
         // 结果集
         ArrayList<SupplierTask> listRes = new ArrayList<>();
+
+        // 需求为0就不匹配
+        if (engineFactoryManufacturingTask.getEngineFactoryNeedServiceNumber() == 0) {
+            return listRes;
+        }
 
         // 用供应商集合
         for (SupplierTask supplierTask : listSupplierTask) {
