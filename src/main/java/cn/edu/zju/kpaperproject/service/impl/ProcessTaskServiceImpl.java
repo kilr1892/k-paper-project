@@ -23,13 +23,25 @@ import java.util.*;
 @Service
 public class ProcessTaskServiceImpl implements ProcessTaskService {
 
-    /** 交易结算 */
-    public void getTransactionSettlement(
+    /**
+     * 交易结算
+     * @param experimentsNumber                             实验次数
+     * @param cycleTimes                                    循环次数
+     * @param listTransactionContracts                      交易契约集合
+     * @param mapRelationshipMatrix                         关系矩阵1
+     * @param mapRelationshipMatrix2WithTbRelationMatrix    关系矩阵2
+     * @return                                              实际交易结果集合
+     */
+    @Override
+    public List<OrderPlus> getTransactionSettlement(
             int experimentsNumber
             , int cycleTimes
             , ArrayList<TransactionContract> listTransactionContracts
             , Map<String, Double> mapRelationshipMatrix
             , Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix) {
+
+        // 返回值的list
+        List<OrderPlus> listRes = new ArrayList<>();
 
         // 主机厂和供应商的履约概率
         double engineFactoryPerformanceProbability;
@@ -39,8 +51,6 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         Map<String, List<OrderPlus>> mapEngineFactoryCredit = new HashMap<>();
         // 供应商的
         Map<String, List<OrderPlus>> mapSupplierCredit = new HashMap<>();
-        // 返回值的list
-        List<OrderPlus> listRes = new ArrayList<>();
 
         for (TransactionContract aTransactionContract : listTransactionContracts) {
             // 每次循环是每个交易契约
@@ -111,6 +121,8 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             }
         }
 
+
+        return listRes;
     }
 
     /**
