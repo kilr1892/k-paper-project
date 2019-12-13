@@ -130,12 +130,16 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         EngineFactoryFinalProvision engineFactoryFinalProvision = null;
 
         // tmp实际成交数量
-        int actualNumber = 0;
+        int actualProductNumber = 0;
         // tmp实际价格
         int actualPrice = 0;
         int tmpPrice = 0;
         // tmp实际质量
         int actualQuality = 0;
+
+        // 市场初始需求
+        int initMarketNeedNumber = calInitMarketNeedNumber(cycleTimes);
+        int restMarketNeedNumber = initMarketNeedNumber;
         for (int i = 0; i < listOrderPlus.size(); i++) {
             OrderPlus orderPlus = listOrderPlus.get(i);
 
@@ -147,7 +151,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 // 主机厂Id
                 engineFactoryFinalProvision.setEngineFactoryId(orderPlus.getEngineFactoryId());
                 // 实际数量
-                actualNumber = orderPlus.getSupplierActualNumberM();
+                actualProductNumber = orderPlus.getSupplierActualNumberM();
                 // 最终质量
                 actualQuality = 0;
                 // 最终面向市场价格
@@ -158,7 +162,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             }
 
             // 最终产品数量
-            actualNumber = Math.min(orderPlus.getSupplierActualNumberM(), actualNumber);
+            actualProductNumber = Math.min(orderPlus.getSupplierActualNumberM(), actualProductNumber);
             // 最终面向市场价格
             tmpPrice += orderPlus.getSupplierActualPriceP();
             // 最终质量
@@ -166,7 +170,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
             if (tmp == 4) {
                 // 最终产品数量
-                engineFactoryFinalProvision.setFinalProductNumber(actualNumber);
+                engineFactoryFinalProvision.setFinalProductNumber(actualProductNumber);
                 // 最终面向市场价格
                 actualPrice = Math.min(actualPrice, tmpPrice);
 
@@ -174,17 +178,17 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 actualQuality = actualQuality / 5;
                 engineFactoryFinalProvision.setFinalMarketQuality(actualQuality);
                 // 市场需求量
-                engineFactoryFinalProvision.setMarketNeedNumber(calMarketNeedNumber(cycleTimes));
+                engineFactoryFinalProvision.setMarketNeedNumber(initMarketNeedNumber);
+
+                // 最终卖出量(实际销售额)
+                int actualSaleNumber = Math.min(actualProductNumber, restMarketNeedNumber);
+                restMarketNeedNumber -= actualSaleNumber;
+                engineFactoryFinalProvision.setActualSaleNumber(actualSaleNumber);
 
                 // 加入返回值数组中
                 listRes.add(engineFactoryFinalProvision);
             }
         }
-
-        // TODO 需要计算出每个厂的实际销售额
-        genActualSaleNumber(listRes);
-
-
         return listRes;
     }
 
@@ -194,7 +198,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
      * @param cycleTimes 循环次数
      * @return 市场需求量
      */
-    public int calMarketNeedNumber(int cycleTimes) {
+    public int calInitMarketNeedNumber(int cycleTimes) {
         int k1 = EngineFactoryEnum.engineFactoryDemandForecastInitK1;
         double k2 = EngineFactoryEnum.engineFactoryDemandForecastInitK2;
         int k1Step = EngineFactoryEnum.engineFactoryDemandForecastK1Step;
