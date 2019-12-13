@@ -2,8 +2,7 @@ package cn.edu.zju.kpaperproject.service;
 
 import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
 import cn.edu.zju.kpaperproject.dto.SupplierTask;
-import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamic;
-import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
+import cn.edu.zju.kpaperproject.pojo.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +19,18 @@ public interface StartTaskService {
      * 生成主机厂分解任务
      * <p>
      * 返回值按信誉度从高到底排, 信誉度相同就按210任务出价从高到底排
+     * (会更新主机厂动态数组)
      *
-     * @param experimentsNumber        实验次数
-     * @param cycleTime                循环的次数, 从1开始
-     * @param listEngineFactoryDynamic 存储所有存活的主机厂动态数据
-     * @return 返回值中每个元素代表一个主机厂分解的任务集
+     * @param experimentsNumber         实验次数
+     * @param cycleTime                 循环的次数, 从1开始
+     * @param listEngineFactory         主机厂静态数据集合
+     * @param listEngineFactoryDynamic  主机厂动态数据集合
+     * @return                          返回值中每个元素代表一个主机厂分解的任务集
      */
     ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(
             int experimentsNumber
             , int cycleTime
+            , List<TbEngineFactory> listEngineFactory
             , List<TbEngineFactoryDynamic> listEngineFactoryDynamic);
 
     /**
@@ -36,12 +38,16 @@ public interface StartTaskService {
      * 如出价/质量/产能等
      * <p>
      * 返回值索引0~4就是能提供任务类型210~250的各个供应商服务
+     * <p>
+     * (会更新供应商动态数组)
      *
-     * @param experimentsNumber 实验次数
-     * @param cycleTime         循环的次数, 从1开始
-     * @return 返回值中每个元素代表提供某类型服务供应商集合
+     * @param experimentsNumber     实验次数
+     * @param cycleTime             循环的次数, 从1开始
+     * @param listSuppliers         服务商静态数据
+     * @param listSupplierDynamic   服务商动态数据
+     * @return                      返回值中每个元素代表提供某类型服务供应商集合
      */
-    ArrayList<ArrayList<SupplierTask>> genSupplierTask(int experimentsNumber, int cycleTime);
+    ArrayList<ArrayList<SupplierTask>> genSupplierTask(int experimentsNumber, int cycleTime, List<TbSupplier> listSuppliers, List<TbSupplierDynamic> listSupplierDynamic);
 
     // TODO 这个供给关系, 需要重构(如果影响性能很大的话)
 

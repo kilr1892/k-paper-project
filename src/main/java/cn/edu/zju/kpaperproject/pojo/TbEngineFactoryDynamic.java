@@ -27,6 +27,8 @@ public class TbEngineFactoryDynamic {
 
     private Integer engineFactoryActualQualityAq;
 
+    private Double engineFactoryCapacityUtilization;
+
     public Integer getId() {
         return id;
     }
@@ -129,5 +131,13 @@ public class TbEngineFactoryDynamic {
 
     public void setEngineFactoryActualQualityAq(Integer engineFactoryActualQualityAq) {
         this.engineFactoryActualQualityAq = engineFactoryActualQualityAq;
+    }
+
+    public Double getEngineFactoryCapacityUtilization() {
+        return engineFactoryCapacityUtilization;
+    }
+
+    public void setEngineFactoryCapacityUtilization(Double engineFactoryCapacityUtilization) {
+        this.engineFactoryCapacityUtilization = engineFactoryCapacityUtilization;
     }
 }

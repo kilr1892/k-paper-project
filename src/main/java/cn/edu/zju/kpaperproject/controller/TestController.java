@@ -1,8 +1,7 @@
 package cn.edu.zju.kpaperproject.controller;
 
 import cn.edu.zju.kpaperproject.dto.*;
-import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamic;
-import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
+import cn.edu.zju.kpaperproject.pojo.*;
 import cn.edu.zju.kpaperproject.service.BeforeNextTask;
 import cn.edu.zju.kpaperproject.service.InitService;
 import cn.edu.zju.kpaperproject.service.ProcessTaskService;
@@ -38,15 +37,21 @@ public class TestController {
         int expNum = 0;
         int cycleTime = 1;
 //        initService.init(expNum);
+        List<TbEngineFactory> listEngineFactory = new ArrayList<>();
         List<TbEngineFactoryDynamic> listEngineFactoryDynamic = new ArrayList<>();
+        List<TbSupplier> listSuppliers = new ArrayList<>();
+        List<TbSupplierDynamic> listSupplierDynamic = new ArrayList<>();
 
-        ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTaskDecomposition = startTaskService.genEngineFactoryTaskDecomposition(expNum, cycleTime, listEngineFactoryDynamic);
-        ArrayList<ArrayList<SupplierTask>> listListSupplierTask = startTaskService.genSupplierTask(expNum, cycleTime);
+        ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTaskDecomposition = startTaskService.genEngineFactoryTaskDecomposition(expNum, cycleTime, listEngineFactory, listEngineFactoryDynamic);
+        ArrayList<ArrayList<SupplierTask>> listListSupplierTask = startTaskService.genSupplierTask(expNum, cycleTime, listSuppliers, listSupplierDynamic);
         Map<String, Double> mapRelationshipMatrix = startTaskService.getMapRelationshipMatrix(expNum, cycleTime);
         Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix = startTaskService.getMapRelationshipMatrix2WithTbRelationMatrix(expNum, cycleTime);
         ArrayList<TransactionContract> transactionContracts = processTaskService.getTransactionContracts(listListEngineFactoryTaskDecomposition, listListSupplierTask, mapRelationshipMatrix);
         List<OrderPlus> listOrderPlus = processTaskService.getTransactionSettlement(expNum, cycleTime, transactionContracts, mapRelationshipMatrix, mapRelationshipMatrix2WithTbRelationMatrix);
         List<EngineFactoryFinalProvision> listEngineFactoryFinalProvision = beforeNextTask.getListEngineFactoryFinalProvision(cycleTime, listOrderPlus);
+        beforeNextTask.beforeNextTask(listEngineFactoryFinalProvision, listOrderPlus, listEngineFactoryDynamic, listSupplierDynamic);
+
+
 
         System.out.println();
 

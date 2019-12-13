@@ -99,13 +99,18 @@ public class StartTaskServiceImpl implements StartTaskService {
      * 如出价/质量/产能等
      * <p>
      * 返回值索引0~4就是能提供任务类型210~250的各个供应商服务
+     * <p>
+     * (会更新供应商动态数组)
      *
-     * @param experimentsNumber 实验次数
-     * @param cycleTime         循环的次数, 从1开始
+     * @param experimentsNumber   实验次数
+     * @param cycleTime           循环的次数, 从1开始
+     * @param listSuppliers       服务商静态数据
+     * @param listSupplierDynamic 服务商动态数据
      * @return 返回值中每个元素代表提供某类型服务供应商集合
      */
     @Override
-    public ArrayList<ArrayList<SupplierTask>> genSupplierTask(int experimentsNumber, int cycleTime) {
+    public ArrayList<ArrayList<SupplierTask>> genSupplierTask(int experimentsNumber, int cycleTime, List<TbSupplier> listSuppliers, List<TbSupplierDynamic> listSupplierDynamic) {
+
         // 返回值, 索引0~4 就是210~205的集合
         ArrayList<ArrayList<SupplierTask>> res = new ArrayList<>(5);
         int resSize = 5;
@@ -118,9 +123,9 @@ public class StartTaskServiceImpl implements StartTaskService {
         TbSupplierExample.Criteria tbSupplierExampleCriteria = tbSupplierExample.createCriteria();
         tbSupplierExampleCriteria.andExperimentsNumberEqualTo(experimentsNumber);
         tbSupplierExampleCriteria.andSupplierAliveEqualTo(true);
-        List<TbSupplier> suppliers = tbSupplierMapper.selectByExample(tbSupplierExample);
+        listSuppliers = tbSupplierMapper.selectByExample(tbSupplierExample);
 
-        for (TbSupplier aSupplier : suppliers) {
+        for (TbSupplier aSupplier : listSuppliers) {
             // 供应商id
             String supplierId = aSupplier.getSupplierId();
 
@@ -131,6 +136,9 @@ public class StartTaskServiceImpl implements StartTaskService {
             criteria.andCycleTimesEqualTo(cycleTime - 1);
             criteria.andSupplierIdEqualTo(supplierId);
             TbSupplierDynamic tbSupplierDynamic = tbSupplierDynamicMapper.selectByExample(tbSupplierDynamicExample).get(0);
+
+            // 存入数组
+            listSupplierDynamic.add(tbSupplierDynamic);
 
             // ___需要存起来的供应商任务模型
             SupplierTask supplierTask = new SupplierTask();
@@ -181,27 +189,30 @@ public class StartTaskServiceImpl implements StartTaskService {
      * 生成主机厂分解任务
      * <p>
      * 返回值按信誉度从高到底排, 信誉度相同就按210任务出价从高到底排
+     * (会更新主机厂动态数组)
      *
      * @param experimentsNumber         实验次数
      * @param cycleTime                 循环的次数, 从1开始
-     * @param listEngineFactoryDynamic  存储所有存活的主机厂动态数据
+     * @param listEngineFactory         主机厂静态数据集合
+     * @param listEngineFactoryDynamic  主机厂动态数据集合
      * @return                          返回值中每个元素代表一个主机厂分解的任务集
      */
     @Override
     public ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(
             int experimentsNumber
             , int cycleTime
+            , List<TbEngineFactory> listEngineFactory
             , List<TbEngineFactoryDynamic> listEngineFactoryDynamic) {
 
         // 返回值, 排序
         ArrayList<ArrayList<EngineFactoryManufacturingTask>> res = new ArrayList<>();
 
         // 找出所有存活的主机厂
-        List<TbEngineFactory> tbEngineFactories = getListEngineFactoryWithAlive(experimentsNumber);
+        listEngineFactory = getListEngineFactoryWithAlive(experimentsNumber);
         // 服务代码数组
         int[] supplierTypeCodes = SupplierEnum.getSupplierTypeCodes();
 
-        for (TbEngineFactory aEngineFactory : tbEngineFactories) {
+        for (TbEngineFactory aEngineFactory : listEngineFactory) {
             // 主机厂静态数据aEngineFactory
 
             // 这个是每个主机厂的集合

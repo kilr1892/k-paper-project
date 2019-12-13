@@ -15,6 +15,7 @@
     <result column="engine_factory_actual_number_m" property="engineFactoryActualNumberM" jdbcType="INTEGER" />
     <result column="engine_factory_actual_price_ap" property="engineFactoryActualPriceAp" jdbcType="INTEGER" />
     <result column="engine_factory_actual_quality_aq" property="engineFactoryActualQualityAq" jdbcType="INTEGER" />
+    <result column="engine_factory_capacity_utilization" property="engineFactoryCapacityUtilization" jdbcType="DOUBLE" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -78,7 +79,7 @@
     id, cycle_times, engine_factory_id, engine_factory_total_assets_p, engine_factory_credit_h, 
     engine_factory_capacity_m, engine_factory_price_p_l, engine_factory_price_p_u, engine_factory_quality_q, 
     engine_factory_demand_forecast_d, engine_factory_actual_number_m, engine_factory_actual_price_ap, 
-    engine_factory_actual_quality_aq
+    engine_factory_actual_quality_aq, engine_factory_capacity_utilization
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamicExample" >
     select
@@ -116,15 +117,15 @@
       engine_factory_capacity_m, engine_factory_price_p_l, 
       engine_factory_price_p_u, engine_factory_quality_q, 
       engine_factory_demand_forecast_d, engine_factory_actual_number_m, 
-      engine_factory_actual_price_ap, engine_factory_actual_quality_aq
-      )
+      engine_factory_actual_price_ap, engine_factory_actual_quality_aq, 
+      engine_factory_capacity_utilization)
     values (#{id,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, #{engineFactoryId,jdbcType=VARCHAR}, 
       #{engineFactoryTotalAssetsP,jdbcType=INTEGER}, #{engineFactoryCreditH,jdbcType=DOUBLE}, 
       #{engineFactoryCapacityM,jdbcType=INTEGER}, #{engineFactoryPricePL,jdbcType=INTEGER}, 
       #{engineFactoryPricePU,jdbcType=INTEGER}, #{engineFactoryQualityQ,jdbcType=INTEGER}, 
       #{engineFactoryDemandForecastD,jdbcType=INTEGER}, #{engineFactoryActualNumberM,jdbcType=INTEGER}, 
-      #{engineFactoryActualPriceAp,jdbcType=INTEGER}, #{engineFactoryActualQualityAq,jdbcType=INTEGER}
-      )
+      #{engineFactoryActualPriceAp,jdbcType=INTEGER}, #{engineFactoryActualQualityAq,jdbcType=INTEGER}, 
+      #{engineFactoryCapacityUtilization,jdbcType=DOUBLE})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamic" >
     insert into tb_engine_factory_dynamic
@@ -168,6 +169,9 @@
       <if test="engineFactoryActualQualityAq != null" >
         engine_factory_actual_quality_aq,
       </if>
+      <if test="engineFactoryCapacityUtilization != null" >
+        engine_factory_capacity_utilization,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -208,6 +212,9 @@
       </if>
       <if test="engineFactoryActualQualityAq != null" >
         #{engineFactoryActualQualityAq,jdbcType=INTEGER},
+      </if>
+      <if test="engineFactoryCapacityUtilization != null" >
+        #{engineFactoryCapacityUtilization,jdbcType=DOUBLE},
       </if>
     </trim>
   </insert>
@@ -259,6 +266,9 @@
       <if test="record.engineFactoryActualQualityAq != null" >
         engine_factory_actual_quality_aq = #{record.engineFactoryActualQualityAq,jdbcType=INTEGER},
       </if>
+      <if test="record.engineFactoryCapacityUtilization != null" >
+        engine_factory_capacity_utilization = #{record.engineFactoryCapacityUtilization,jdbcType=DOUBLE},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -278,7 +288,8 @@
       engine_factory_demand_forecast_d = #{record.engineFactoryDemandForecastD,jdbcType=INTEGER},
       engine_factory_actual_number_m = #{record.engineFactoryActualNumberM,jdbcType=INTEGER},
       engine_factory_actual_price_ap = #{record.engineFactoryActualPriceAp,jdbcType=INTEGER},
-      engine_factory_actual_quality_aq = #{record.engineFactoryActualQualityAq,jdbcType=INTEGER}
+      engine_factory_actual_quality_aq = #{record.engineFactoryActualQualityAq,jdbcType=INTEGER},
+      engine_factory_capacity_utilization = #{record.engineFactoryCapacityUtilization,jdbcType=DOUBLE}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -322,6 +333,9 @@
       <if test="engineFactoryActualQualityAq != null" >
         engine_factory_actual_quality_aq = #{engineFactoryActualQualityAq,jdbcType=INTEGER},
       </if>
+      <if test="engineFactoryCapacityUtilization != null" >
+        engine_factory_capacity_utilization = #{engineFactoryCapacityUtilization,jdbcType=DOUBLE},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -338,7 +352,8 @@
       engine_factory_demand_forecast_d = #{engineFactoryDemandForecastD,jdbcType=INTEGER},
       engine_factory_actual_number_m = #{engineFactoryActualNumberM,jdbcType=INTEGER},
       engine_factory_actual_price_ap = #{engineFactoryActualPriceAp,jdbcType=INTEGER},
-      engine_factory_actual_quality_aq = #{engineFactoryActualQualityAq,jdbcType=INTEGER}
+      engine_factory_actual_quality_aq = #{engineFactoryActualQualityAq,jdbcType=INTEGER},
+      engine_factory_capacity_utilization = #{engineFactoryCapacityUtilization,jdbcType=DOUBLE}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -28,7 +28,7 @@ public class TransactionContract {
     private int[] supplierLocationXY;
     /** 任务类型 */
     private int taskType;
-    /** 主机厂任务需求量 */
+    /** 主机厂任务需求量 也是 供应商这笔订单需要提供的量 */
     private int engineFactoryNeedServiceNumber;
     /** 成交价格 */
     private int orderPrice;

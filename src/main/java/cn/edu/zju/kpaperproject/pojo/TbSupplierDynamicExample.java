@@ -654,63 +654,123 @@ public class TbSupplierDynamicExample {
             return (Criteria) this;
         }
 
-        public Criteria andSupplierServiceAliveIsNull() {
-            addCriterion("supplier_service_alive is null");
+        public Criteria andSupplierCapacityUtilizationIsNull() {
+            addCriterion("supplier_capacity_utilization is null");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierServiceAliveIsNotNull() {
-            addCriterion("supplier_service_alive is not null");
+        public Criteria andSupplierCapacityUtilizationIsNotNull() {
+            addCriterion("supplier_capacity_utilization is not null");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierServiceAliveEqualTo(Boolean value) {
-            addCriterion("supplier_service_alive =", value, "supplierServiceAlive");
+        public Criteria andSupplierCapacityUtilizationEqualTo(Double value) {
+            addCriterion("supplier_capacity_utilization =", value, "supplierCapacityUtilization");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierServiceAliveNotEqualTo(Boolean value) {
-            addCriterion("supplier_service_alive <>", value, "supplierServiceAlive");
+        public Criteria andSupplierCapacityUtilizationNotEqualTo(Double value) {
+            addCriterion("supplier_capacity_utilization <>", value, "supplierCapacityUtilization");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierServiceAliveGreaterThan(Boolean value) {
-            addCriterion("supplier_service_alive >", value, "supplierServiceAlive");
+        public Criteria andSupplierCapacityUtilizationGreaterThan(Double value) {
+            addCriterion("supplier_capacity_utilization >", value, "supplierCapacityUtilization");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierServiceAliveGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("supplier_service_alive >=", value, "supplierServiceAlive");
+        public Criteria andSupplierCapacityUtilizationGreaterThanOrEqualTo(Double value) {
+            addCriterion("supplier_capacity_utilization >=", value, "supplierCapacityUtilization");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierServiceAliveLessThan(Boolean value) {
-            addCriterion("supplier_service_alive <", value, "supplierServiceAlive");
+        public Criteria andSupplierCapacityUtilizationLessThan(Double value) {
+            addCriterion("supplier_capacity_utilization <", value, "supplierCapacityUtilization");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierServiceAliveLessThanOrEqualTo(Boolean value) {
-            addCriterion("supplier_service_alive <=", value, "supplierServiceAlive");
+        public Criteria andSupplierCapacityUtilizationLessThanOrEqualTo(Double value) {
+            addCriterion("supplier_capacity_utilization <=", value, "supplierCapacityUtilization");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierServiceAliveIn(List<Boolean> values) {
-            addCriterion("supplier_service_alive in", values, "supplierServiceAlive");
+        public Criteria andSupplierCapacityUtilizationIn(List<Double> values) {
+            addCriterion("supplier_capacity_utilization in", values, "supplierCapacityUtilization");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierServiceAliveNotIn(List<Boolean> values) {
-            addCriterion("supplier_service_alive not in", values, "supplierServiceAlive");
+        public Criteria andSupplierCapacityUtilizationNotIn(List<Double> values) {
+            addCriterion("supplier_capacity_utilization not in", values, "supplierCapacityUtilization");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierServiceAliveBetween(Boolean value1, Boolean value2) {
-            addCriterion("supplier_service_alive between", value1, value2, "supplierServiceAlive");
+        public Criteria andSupplierCapacityUtilizationBetween(Double value1, Double value2) {
+            addCriterion("supplier_capacity_utilization between", value1, value2, "supplierCapacityUtilization");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierServiceAliveNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("supplier_service_alive not between", value1, value2, "supplierServiceAlive");
+        public Criteria andSupplierCapacityUtilizationNotBetween(Double value1, Double value2) {
+            addCriterion("supplier_capacity_utilization not between", value1, value2, "supplierCapacityUtilization");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeIsNull() {
+            addCriterion("supplier_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeIsNotNull() {
+            addCriterion("supplier_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeEqualTo(Integer value) {
+            addCriterion("supplier_type =", value, "supplierType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeNotEqualTo(Integer value) {
+            addCriterion("supplier_type <>", value, "supplierType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeGreaterThan(Integer value) {
+            addCriterion("supplier_type >", value, "supplierType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("supplier_type >=", value, "supplierType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeLessThan(Integer value) {
+            addCriterion("supplier_type <", value, "supplierType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("supplier_type <=", value, "supplierType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeIn(List<Integer> values) {
+            addCriterion("supplier_type in", values, "supplierType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeNotIn(List<Integer> values) {
+            addCriterion("supplier_type not in", values, "supplierType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeBetween(Integer value1, Integer value2) {
+            addCriterion("supplier_type between", value1, value2, "supplierType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("supplier_type not between", value1, value2, "supplierType");
             return (Criteria) this;
         }
     }

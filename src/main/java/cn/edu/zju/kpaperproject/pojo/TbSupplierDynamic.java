@@ -19,7 +19,9 @@ public class TbSupplierDynamic {
 
     private Integer supplierQualityQs;
 
-    private Boolean supplierServiceAlive;
+    private Double supplierCapacityUtilization;
+
+    private Integer supplierType;
 
     public Integer getId() {
         return id;
@@ -93,11 +95,19 @@ public class TbSupplierDynamic {
         this.supplierQualityQs = supplierQualityQs;
     }
 
-    public Boolean getSupplierServiceAlive() {
-        return supplierServiceAlive;
+    public Double getSupplierCapacityUtilization() {
+        return supplierCapacityUtilization;
     }
 
-    public void setSupplierServiceAlive(Boolean supplierServiceAlive) {
-        this.supplierServiceAlive = supplierServiceAlive;
+    public void setSupplierCapacityUtilization(Double supplierCapacityUtilization) {
+        this.supplierCapacityUtilization = supplierCapacityUtilization;
+    }
+
+    public Integer getSupplierType() {
+        return supplierType;
+    }
+
+    public void setSupplierType(Integer supplierType) {
+        this.supplierType = supplierType;
     }
 }

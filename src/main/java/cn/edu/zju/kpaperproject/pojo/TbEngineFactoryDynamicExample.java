@@ -893,6 +893,66 @@ public class TbEngineFactoryDynamicExample {
             addCriterion("engine_factory_actual_quality_aq not between", value1, value2, "engineFactoryActualQualityAq");
             return (Criteria) this;
         }
+
+        public Criteria andEngineFactoryCapacityUtilizationIsNull() {
+            addCriterion("engine_factory_capacity_utilization is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryCapacityUtilizationIsNotNull() {
+            addCriterion("engine_factory_capacity_utilization is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryCapacityUtilizationEqualTo(Double value) {
+            addCriterion("engine_factory_capacity_utilization =", value, "engineFactoryCapacityUtilization");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryCapacityUtilizationNotEqualTo(Double value) {
+            addCriterion("engine_factory_capacity_utilization <>", value, "engineFactoryCapacityUtilization");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryCapacityUtilizationGreaterThan(Double value) {
+            addCriterion("engine_factory_capacity_utilization >", value, "engineFactoryCapacityUtilization");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryCapacityUtilizationGreaterThanOrEqualTo(Double value) {
+            addCriterion("engine_factory_capacity_utilization >=", value, "engineFactoryCapacityUtilization");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryCapacityUtilizationLessThan(Double value) {
+            addCriterion("engine_factory_capacity_utilization <", value, "engineFactoryCapacityUtilization");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryCapacityUtilizationLessThanOrEqualTo(Double value) {
+            addCriterion("engine_factory_capacity_utilization <=", value, "engineFactoryCapacityUtilization");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryCapacityUtilizationIn(List<Double> values) {
+            addCriterion("engine_factory_capacity_utilization in", values, "engineFactoryCapacityUtilization");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryCapacityUtilizationNotIn(List<Double> values) {
+            addCriterion("engine_factory_capacity_utilization not in", values, "engineFactoryCapacityUtilization");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryCapacityUtilizationBetween(Double value1, Double value2) {
+            addCriterion("engine_factory_capacity_utilization between", value1, value2, "engineFactoryCapacityUtilization");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryCapacityUtilizationNotBetween(Double value1, Double value2) {
+            addCriterion("engine_factory_capacity_utilization not between", value1, value2, "engineFactoryCapacityUtilization");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
