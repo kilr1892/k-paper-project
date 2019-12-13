@@ -22,5 +22,6 @@ public class EngineFactoryFinalProvision {
     private int finalMarketQuality;
     /** 市场需求数量 */
     private int marketNeedNumber;
-
+    /** 实际卖出量 */
+    private int actualSaleNumber;
 }

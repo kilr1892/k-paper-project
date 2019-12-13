@@ -45,7 +45,7 @@ public class StartTaskServiceImpl implements StartTaskService {
      *
      * @param experimentsNumber 实验次数
      * @param cycleTime         循环次数
-     * @return                  循环次数 - 1 时(最新的)关系矩阵
+     * @return 循环次数 - 1 时(最新的)关系矩阵
      */
     @Override
     public Map<String, Double> getMapRelationshipMatrix(int experimentsNumber, int cycleTime) {
@@ -65,6 +65,7 @@ public class StartTaskServiceImpl implements StartTaskService {
 
         return mapRes;
     }
+
     /**
      * 获得主机厂与供应商之间的关系矩阵2
      * key   = 主机厂id + 供应商id
@@ -72,7 +73,7 @@ public class StartTaskServiceImpl implements StartTaskService {
      *
      * @param experimentsNumber 实验次数
      * @param cycleTime         循环次数
-     * @return                  循环次数 - 1 时(最新的)关系矩阵
+     * @return 循环次数 - 1 时(最新的)关系矩阵
      */
     @Override
     public Map<String, TbRelationMatrix> getMapRelationshipMatrix2WithTbRelationMatrix(int experimentsNumber, int cycleTime) {
@@ -92,6 +93,7 @@ public class StartTaskServiceImpl implements StartTaskService {
 
         return mapRes;
     }
+
     /**
      * 供应商提供的服务
      * 如出价/质量/产能等
@@ -100,7 +102,7 @@ public class StartTaskServiceImpl implements StartTaskService {
      *
      * @param experimentsNumber 实验次数
      * @param cycleTime         循环的次数, 从1开始
-     * @return                  返回值中每个元素代表提供某类型服务供应商集合
+     * @return 返回值中每个元素代表提供某类型服务供应商集合
      */
     @Override
     public ArrayList<ArrayList<SupplierTask>> genSupplierTask(int experimentsNumber, int cycleTime) {
@@ -180,12 +182,16 @@ public class StartTaskServiceImpl implements StartTaskService {
      * <p>
      * 返回值按信誉度从高到底排, 信誉度相同就按210任务出价从高到底排
      *
-     * @param experimentsNumber 实验次数
-     * @param cycleTime         循环的次数, 从1开始
-     * @return                  返回值中每个元素代表一个主机厂分解的任务集
+     * @param experimentsNumber         实验次数
+     * @param cycleTime                 循环的次数, 从1开始
+     * @param listEngineFactoryDynamic  存储所有存活的主机厂动态数据
+     * @return                          返回值中每个元素代表一个主机厂分解的任务集
      */
     @Override
-    public ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(int experimentsNumber, int cycleTime) {
+    public ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(
+            int experimentsNumber
+            , int cycleTime
+            , List<TbEngineFactoryDynamic> listEngineFactoryDynamic) {
 
         // 返回值, 排序
         ArrayList<ArrayList<EngineFactoryManufacturingTask>> res = new ArrayList<>();
@@ -205,6 +211,10 @@ public class StartTaskServiceImpl implements StartTaskService {
             String engineFactoryId = aEngineFactory.getEngineFactoryId();
             // 获取主机厂动态数据模型
             TbEngineFactoryDynamic engineFactoryDynamic = getEngineFactoryDynamicWithCycleTimeAndEngineFactoryId(cycleTime, engineFactoryId);
+
+            // 加入一个list里(这个集合最后需要用)
+            listEngineFactoryDynamic.add(engineFactoryDynamic);
+
             // 信誉度
             Double engineFactoryCredit = engineFactoryDynamic.getEngineFactoryCreditH();
             // 成品数量预测
@@ -250,10 +260,11 @@ public class StartTaskServiceImpl implements StartTaskService {
 
     /**
      * 获取所有存活的主机厂
+     *
      * @param experimentsNumber 第几次实验
-     * @return                  主机厂静态数据集合
+     * @return 主机厂静态数据集合
      */
-    private List<TbEngineFactory> getListEngineFactoryWithAlive(int experimentsNumber) {
+    public List<TbEngineFactory> getListEngineFactoryWithAlive(int experimentsNumber) {
         TbEngineFactoryExample tbEngineFactoryExample = new TbEngineFactoryExample();
         TbEngineFactoryExample.Criteria criteria = tbEngineFactoryExample.createCriteria();
         criteria.andEngineFactoryAliveEqualTo(true);

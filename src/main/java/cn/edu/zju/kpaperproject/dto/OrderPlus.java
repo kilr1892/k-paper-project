@@ -13,6 +13,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderPlus extends TbOrder {
+    // TODO 可能把这个和表格合并, 如果影响性能
+
     /** 主机厂每个循环开始的信誉度 */
     private double initEngineFactoryCredit;
     /** 主机厂新的信誉度 */

@@ -1,6 +1,7 @@
 package cn.edu.zju.kpaperproject.controller;
 
 import cn.edu.zju.kpaperproject.dto.*;
+import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamic;
 import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
 import cn.edu.zju.kpaperproject.service.BeforeNextTask;
 import cn.edu.zju.kpaperproject.service.InitService;
@@ -37,7 +38,9 @@ public class TestController {
         int expNum = 0;
         int cycleTime = 1;
 //        initService.init(expNum);
-        ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTaskDecomposition = startTaskService.genEngineFactoryTaskDecomposition(expNum, cycleTime);
+        List<TbEngineFactoryDynamic> listEngineFactoryDynamic = new ArrayList<>();
+
+        ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTaskDecomposition = startTaskService.genEngineFactoryTaskDecomposition(expNum, cycleTime, listEngineFactoryDynamic);
         ArrayList<ArrayList<SupplierTask>> listListSupplierTask = startTaskService.genSupplierTask(expNum, cycleTime);
         Map<String, Double> mapRelationshipMatrix = startTaskService.getMapRelationshipMatrix(expNum, cycleTime);
         Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix = startTaskService.getMapRelationshipMatrix2WithTbRelationMatrix(expNum, cycleTime);

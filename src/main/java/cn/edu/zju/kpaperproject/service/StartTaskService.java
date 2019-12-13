@@ -2,9 +2,11 @@ package cn.edu.zju.kpaperproject.service;
 
 import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
 import cn.edu.zju.kpaperproject.dto.SupplierTask;
+import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamic;
 import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,11 +21,15 @@ public interface StartTaskService {
      * <p>
      * 返回值按信誉度从高到底排, 信誉度相同就按210任务出价从高到底排
      *
-     * @param experimentsNumber 实验次数
-     * @param cycleTime         循环的次数, 从1开始
+     * @param experimentsNumber        实验次数
+     * @param cycleTime                循环的次数, 从1开始
+     * @param listEngineFactoryDynamic 存储所有存活的主机厂动态数据
      * @return 返回值中每个元素代表一个主机厂分解的任务集
      */
-    ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(int experimentsNumber, int cycleTime);
+    ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(
+            int experimentsNumber
+            , int cycleTime
+            , List<TbEngineFactoryDynamic> listEngineFactoryDynamic);
 
     /**
      * 供应商提供的服务
@@ -38,6 +44,7 @@ public interface StartTaskService {
     ArrayList<ArrayList<SupplierTask>> genSupplierTask(int experimentsNumber, int cycleTime);
 
     // TODO 这个供给关系, 需要重构(如果影响性能很大的话)
+
     /**
      * 获得主机厂与供应商之间的关系矩阵
      * key   = 主机厂id + 供应商id
