@@ -101,7 +101,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         calAndSetSupplierTotalAssets(listSupplierDynamics, mapSupplierProfitSum);
 
         // 对主机厂计算并设置产能利用率, 调整产能/价格/质量
-        calAndSetEngineFactoryCapacityUtilizationAnd(listEngineFactoryDynamic, mapEngineIdVsEngineFactoryFinalProvision, avgFinalMarketPrice, avgFinalMarketQuality);
+        calAndSetEngineFactoryCapacityUtilizationAndAdjustCapacityPriceQuality(listEngineFactoryDynamic, mapEngineIdVsEngineFactoryFinalProvision, avgFinalMarketPrice, avgFinalMarketQuality);
         // # 计算所有供应商的产能利用率
         // 一类服务市场总需求数量
         int[] sumArrSupplierOrderNumber = new int[5];
@@ -119,106 +119,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         calArrAvgNumberAndQuantity(listTransactionContract, sumArrSupplierOrderNumber, sumArrSupplierNumber, avgArrSupplierOrderNumber, sumArrSupplierQuality, avgArrSupplierQuality);
 
         // 计算供应商的产能利用率
-        for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
-            // 阶段开始时初始产能
-            int initSupplierCapacity = aSupplierDynamic.getSupplierCapacityM();
-            // 计算利用率并更新
-            // 某类供应总需求
-            int sumSupplierOrderNumber;
-            // 某类平均需求数量
-            double avgSupplierOrderNumber = 0;
-            // 某类供应质量
-            int avgSupplierQuality = 0;
-            int supplierType = aSupplierDynamic.getSupplierType();
-            switch (supplierType) {
-                case 210:
-                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[0];
-                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[0];
-                    avgSupplierQuality = avgArrSupplierQuality[0];
-                    break;
-                case 220:
-                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[1];
-                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[1];
-                    avgSupplierQuality = avgArrSupplierQuality[1];
-                    break;
-                case 230:
-                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[2];
-                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[2];
-                    avgSupplierQuality = avgArrSupplierQuality[2];
-                    break;
-                case 240:
-                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[3];
-                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[3];
-                    avgSupplierQuality = avgArrSupplierQuality[3];
-                    break;
-                case 250:
-                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[4];
-                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[4];
-                    avgSupplierQuality = avgArrSupplierQuality[4];
-                    break;
-                default:
-                    throw new RuntimeException("no such type");
-            }
-
-
-            // 计算产能利用率
-            double supplierCapacityUtilization = sumSupplierOrderNumber * 1D / aSupplierDynamic.getSupplierCapacityM();
-            // 更新
-            aSupplierDynamic.setSupplierCapacityUtilization(supplierCapacityUtilization);
-
-            // 主机产能
-            int supplierCapacity = aSupplierDynamic.getSupplierCapacityM();
-
-            // 供应商原来价格下限
-            int supplierPricePL = aSupplierDynamic.getSupplierPricePL();
-            // 供应商原来价格上限
-            Integer supplierPricePU = aSupplierDynamic.getSupplierPricePU();
-            // 供应商原来平均价
-            double initAvgSupplierPrice = (supplierPricePL + supplierPricePU) / 2.0;
-
-            if (supplierCapacityUtilization == 1) {
-                // 产品成交的平均质量
-                // 利用率为1(供不应求)
-                if (initAvgSupplierPrice >= avgSupplierOrderNumber) {
-                    // 初始价格的平均价 >= 所有成交价格的平均值
-                    // TODO 测试的时候看看动态数据都是否更新
-                    // 调整产能
-                    supplierCapacity = (int) Math.round(supplierCapacity * 1.1);
-                    // 更新下一阶段的产能
-                    aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
-                } else {
-                    // 初始价格的平均价 < 所有成交价格的平均值
-                    // 调整价格区间并更新
-                    aSupplierDynamic.setSupplierPricePL(RandomUtils.nextInt(supplierPricePL, (int) initAvgSupplierPrice + 1));
-                    aSupplierDynamic.setSupplierPricePU(RandomUtils.nextInt((int) initAvgSupplierPrice, supplierPricePU + 1));
-                }
-            } else {
-                // 利用率 < 1(供过于求)
-                if (initAvgSupplierPrice >= avgFinalMarketPrice) {
-                    // 初始价格的平均价 >= 所有成交价格的平均值
-                    aSupplierDynamic.setSupplierPricePL(RandomUtils.nextInt(supplierPricePL, (int) initAvgSupplierPrice + 1));
-                    aSupplierDynamic.setSupplierPricePU(RandomUtils.nextInt((int) initAvgSupplierPrice, supplierPricePU + 1));
-                } else {
-                    // 初始价格的平均价 < 所有成交价格的平均值
-                    int supplierQuality = aSupplierDynamic.getSupplierQualityQs();
-                    if (supplierQuality >= avgSupplierQuality) {
-                        // 质量 >= 平均质量
-                        // 调整产能
-                        supplierCapacity = (int) Math.round(supplierCapacity * 0.9);
-                        // 更新下一阶段的产能
-                        aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
-                    } else {
-                        // 质量 < 平均质量
-                        if (supplierQuality < 10) {
-                            supplierQuality++;
-                            aSupplierDynamic.setSupplierQualityQs(supplierQuality);
-                            // 更新总资产
-                            aSupplierDynamic.setSupplierTotalAssetsP((int) Math.round(aSupplierDynamic.getSupplierTotalAssetsP() * 0.9));
-                        }
-                    }
-                }
-            }
-        }
+        calAndSetSupplierCapacityUtilizationAndAdjustCapacityPriceQuality(listSupplierDynamics, avgFinalMarketPrice, sumArrSupplierOrderNumber, avgArrSupplierOrderNumber, avgArrSupplierQuality);
 
         // 填充map数据
         Map<String, TbEngineFactory> mapEngineFactory = new HashMap<>(100);
@@ -604,6 +505,135 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
     }
 
     /**
+     * 对供应商计算并设置产能利用率,
+     * 调整产能/价格/质量
+     *
+     * @param listSupplierDynamics      供应商动态数据集合
+     * @param avgFinalMarketPrice       平均市场价
+     * @param sumArrSupplierOrderNumber 主机厂对服务需求量总和
+     * @param avgArrSupplierOrderNumber 主机厂对服务平均需求量
+     * @param avgArrSupplierQuality     平均质量数组
+     */
+    private void calAndSetSupplierCapacityUtilizationAndAdjustCapacityPriceQuality(
+            List<TbSupplierDynamic> listSupplierDynamics
+            , double avgFinalMarketPrice
+            , int[] sumArrSupplierOrderNumber
+            , double[] avgArrSupplierOrderNumber
+            , int[] avgArrSupplierQuality) {
+
+        for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
+            // 阶段开始时初始产能
+            int initSupplierCapacity = aSupplierDynamic.getSupplierCapacityM();
+            // 计算利用率并更新
+            // 某类供应总需求
+            int sumSupplierOrderNumber;
+            // 某类平均需求数量
+            double avgSupplierOrderNumber = 0;
+            // 某类供应质量
+            int avgSupplierQuality = 0;
+            int supplierType = aSupplierDynamic.getSupplierType();
+            switch (supplierType) {
+                case 210:
+                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[0];
+                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[0];
+                    avgSupplierQuality = avgArrSupplierQuality[0];
+                    break;
+                case 220:
+                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[1];
+                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[1];
+                    avgSupplierQuality = avgArrSupplierQuality[1];
+                    break;
+                case 230:
+                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[2];
+                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[2];
+                    avgSupplierQuality = avgArrSupplierQuality[2];
+                    break;
+                case 240:
+                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[3];
+                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[3];
+                    avgSupplierQuality = avgArrSupplierQuality[3];
+                    break;
+                case 250:
+                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[4];
+                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[4];
+                    avgSupplierQuality = avgArrSupplierQuality[4];
+                    break;
+                default:
+                    throw new RuntimeException("no such type");
+            }
+
+
+            // 计算产能利用率
+            double supplierCapacityUtilization = sumSupplierOrderNumber * 1D / aSupplierDynamic.getSupplierCapacityM();
+            // 更新
+            aSupplierDynamic.setSupplierCapacityUtilization(supplierCapacityUtilization);
+
+            // 主机产能
+            int supplierCapacity = aSupplierDynamic.getSupplierCapacityM();
+
+            // 供应商原来价格下限
+            int supplierPricePL = aSupplierDynamic.getSupplierPricePL();
+            // 供应商原来价格上限
+            Integer supplierPricePU = aSupplierDynamic.getSupplierPricePU();
+            // 供应商原来平均价
+            double initAvgSupplierPrice = (supplierPricePL + supplierPricePU) / 2.0;
+
+            if (supplierCapacityUtilization == 1) {
+                // 产品成交的平均质量
+                // 利用率为1(供不应求)
+                if (initAvgSupplierPrice >= avgSupplierOrderNumber) {
+                    // 初始价格的平均价 >= 所有成交价格的平均值
+                    // TODO 测试的时候看看动态数据都是否更新
+                    // 调整产能
+                    supplierCapacity = (int) Math.round(supplierCapacity * 1.1);
+                    // 更新下一阶段的产能
+                    aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
+                } else {
+                    // 初始价格的平均价 < 所有成交价格的平均值
+                    // 调整价格区间并更新
+                    if (supplierPricePL < initAvgSupplierPrice) {
+                        aSupplierDynamic.setSupplierPricePL(RandomUtils.nextInt(supplierPricePL, (int) initAvgSupplierPrice + 1));
+                        aSupplierDynamic.setSupplierPricePU(RandomUtils.nextInt((int) initAvgSupplierPrice, supplierPricePU + 1));
+                    } else {
+                        aSupplierDynamic.setSupplierPricePL((int) Math.round(initAvgSupplierPrice / 2.0));
+                        aSupplierDynamic.setSupplierPricePU((int) Math.round(initAvgSupplierPrice * 1.5));
+                    }
+                }
+            } else {
+                // 利用率 < 1(供过于求)
+                if (initAvgSupplierPrice >= avgFinalMarketPrice) {
+                    // 初始价格的平均价 >= 所有成交价格的平均值
+                    if (supplierPricePL < initAvgSupplierPrice) {
+                        aSupplierDynamic.setSupplierPricePL(RandomUtils.nextInt(supplierPricePL, (int) initAvgSupplierPrice + 1));
+                        aSupplierDynamic.setSupplierPricePU(RandomUtils.nextInt((int) initAvgSupplierPrice, supplierPricePU + 1));
+                    } else {
+                        aSupplierDynamic.setSupplierPricePL((int) Math.round(initAvgSupplierPrice / 2.0));
+                        aSupplierDynamic.setSupplierPricePU((int) Math.round(initAvgSupplierPrice * 1.5));
+                    }
+                } else {
+                    // 初始价格的平均价 < 所有成交价格的平均值
+                    int supplierQuality = aSupplierDynamic.getSupplierQualityQs();
+                    if (supplierQuality >= avgSupplierQuality) {
+                        // 质量 >= 平均质量
+                        // 调整产能
+                        supplierCapacity = (int) Math.round(supplierCapacity * 0.9);
+                        // 更新下一阶段的产能
+                        aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
+                    } else {
+                        // 质量 < 平均质量
+                        if (supplierQuality < 10) {
+                            supplierQuality++;
+                            aSupplierDynamic.setSupplierQualityQs(supplierQuality);
+                            // 更新总资产
+                            aSupplierDynamic.setSupplierTotalAssetsP((int) Math.round(aSupplierDynamic.getSupplierTotalAssetsP() * 0.9));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * 计算供应商一类服务的市场需求量/服务商个数/平均需求/质量/平均质量
      *
      * @param listTransactionContract   交易契约集合
@@ -666,7 +696,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
      * @param avgFinalMarketPrice                      所有产品的平均价格
      * @param avgFinalMarketQuality                    所有产品的平均质量
      */
-    private void calAndSetEngineFactoryCapacityUtilizationAnd(
+    private void calAndSetEngineFactoryCapacityUtilizationAndAdjustCapacityPriceQuality(
             List<TbEngineFactoryDynamic> listEngineFactoryDynamic
             , HashMap<String, EngineFactoryFinalProvision> mapEngineIdVsEngineFactoryFinalProvision
             , double avgFinalMarketPrice
