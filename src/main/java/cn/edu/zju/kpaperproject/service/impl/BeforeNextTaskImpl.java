@@ -66,20 +66,20 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         Map<String, Integer> mapEngineFactoryProfitSum = new HashMap<>(100);
 
         // 暂存供应方利润和
-        Map<String, Integer> mapSupplierProfitSum = new HashMap<>(100);
+        Map<String, Integer> mapSupplierProfitSum = new HashMap<>(800);
 
         // 用来存id, 看是否有交易
         HashMap<String, OrderPlus> mapEngineIdVsOrderPlus = new HashMap<>(100);
+        // 算出各主机厂与供应商之间的交易利润和,并加入到各自对应的map集合中
         setMapEngineFactoryAndSupplierProfitSum(listOrderPlus, mapEngineFactoryProfitSum, mapSupplierProfitSum, mapEngineIdVsOrderPlus);
-
-        // 用来存成交价格
-        int sumFinalMarketPrice = 0;
-        // 用来记录产品的成交质量
-        int sumFinalMarketQuality = 0;
 
         // 主机厂总资产计算
         // 主机厂与市场交易Map
         HashMap<String, EngineFactoryFinalProvision> mapEngineIdVsEngineFactoryFinalProvision = new HashMap<>(100);
+        // 用来存成交价格
+        int sumFinalMarketPrice = 0;
+        // 用来记录产品的成交质量
+        int sumFinalMarketQuality = 0;
         for (EngineFactoryFinalProvision aEngineFactoryFinalProvision : listEngineFactoryFinalProvisions) {
             String engineFactoryId = aEngineFactoryFinalProvision.getEngineFactoryId();
             mapEngineIdVsEngineFactoryFinalProvision.put(engineFactoryId, aEngineFactoryFinalProvision);
