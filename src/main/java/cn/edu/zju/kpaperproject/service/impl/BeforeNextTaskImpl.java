@@ -115,47 +115,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 产品成交的平均质量
         int[] avgArrSupplierQuality = new int[5];
 
-        for (TransactionContract aTransactionContract : listTransactionContract) {
-            int taskType = aTransactionContract.getTaskType();
-            int supplierOrderNumber = aTransactionContract.getEngineFactoryNeedServiceNumber();
-            int orderQuality = aTransactionContract.getOrderQuality();
-            switch (taskType) {
-                case 210:
-                    sumArrSupplierOrderNumber[0] += supplierOrderNumber;
-                    sumArrSupplierNumber[0]++;
-                    sumArrSupplierQuality[0] += orderQuality;
-                    break;
-                case 220:
-                    sumArrSupplierOrderNumber[1] += supplierOrderNumber;
-                    sumArrSupplierNumber[1]++;
-                    sumArrSupplierQuality[1] += orderQuality;
-                    break;
-                case 230:
-                    sumArrSupplierOrderNumber[2] += supplierOrderNumber;
-                    sumArrSupplierNumber[2]++;
-                    sumArrSupplierQuality[2] += orderQuality;
-                    break;
-                case 240:
-                    sumArrSupplierOrderNumber[3] += supplierOrderNumber;
-                    sumArrSupplierNumber[3]++;
-                    sumArrSupplierQuality[3] += orderQuality;
-                    break;
-                case 250:
-                    sumArrSupplierOrderNumber[4] += supplierOrderNumber;
-                    sumArrSupplierNumber[4]++;
-                    sumArrSupplierQuality[4] += orderQuality;
-                    break;
-                default:
-                    throw new RuntimeException("no such type");
-            }
-        }
-        // 算下平均值
-        for (int i = 0; i < avgArrSupplierOrderNumber.length; i++) {
-            // 供应商一类服务数量平均值
-            avgArrSupplierOrderNumber[i] = sumArrSupplierOrderNumber[i] * 1D / sumArrSupplierNumber[i];
-            // 供应商一类服务质量平均值
-            avgArrSupplierQuality[i] = (int) Math.round(sumArrSupplierQuality[i] * 1D / sumArrSupplierNumber[i]);
-        }
+        // 计算供应商一类服务的市场需求量/服务商个数/平均需求/质量/平均质量
+        calArrAvgNumberAndQuantity(listTransactionContract, sumArrSupplierOrderNumber, sumArrSupplierNumber, avgArrSupplierOrderNumber, sumArrSupplierQuality, avgArrSupplierQuality);
 
         // 计算供应商的产能利用率
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
@@ -640,6 +601,60 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             aSupplierDynamic.setSupplierCreditA(aSupplierDynamic.getSupplierCreditA() / sumNewSupplierCreditWithAlive);
         }
 
+    }
+
+    /**
+     * 计算供应商一类服务的市场需求量/服务商个数/平均需求/质量/平均质量
+     *
+     * @param listTransactionContract   交易契约集合
+     * @param sumArrSupplierOrderNumber 该类服务主机厂需求量
+     * @param sumArrSupplierNumber      该类供应商数量
+     * @param avgArrSupplierOrderNumber 该类服务平均需求量
+     * @param sumArrSupplierQuality     该类服务总质量
+     * @param avgArrSupplierQuality     该类服务平均质量
+     */
+    private void calArrAvgNumberAndQuantity(ArrayList<TransactionContract> listTransactionContract, int[] sumArrSupplierOrderNumber, int[] sumArrSupplierNumber, double[] avgArrSupplierOrderNumber, int[] sumArrSupplierQuality, int[] avgArrSupplierQuality) {
+        for (TransactionContract aTransactionContract : listTransactionContract) {
+            int taskType = aTransactionContract.getTaskType();
+            int supplierOrderNumber = aTransactionContract.getEngineFactoryNeedServiceNumber();
+            int orderQuality = aTransactionContract.getOrderQuality();
+            switch (taskType) {
+                case 210:
+                    sumArrSupplierOrderNumber[0] += supplierOrderNumber;
+                    sumArrSupplierNumber[0]++;
+                    sumArrSupplierQuality[0] += orderQuality;
+                    break;
+                case 220:
+                    sumArrSupplierOrderNumber[1] += supplierOrderNumber;
+                    sumArrSupplierNumber[1]++;
+                    sumArrSupplierQuality[1] += orderQuality;
+                    break;
+                case 230:
+                    sumArrSupplierOrderNumber[2] += supplierOrderNumber;
+                    sumArrSupplierNumber[2]++;
+                    sumArrSupplierQuality[2] += orderQuality;
+                    break;
+                case 240:
+                    sumArrSupplierOrderNumber[3] += supplierOrderNumber;
+                    sumArrSupplierNumber[3]++;
+                    sumArrSupplierQuality[3] += orderQuality;
+                    break;
+                case 250:
+                    sumArrSupplierOrderNumber[4] += supplierOrderNumber;
+                    sumArrSupplierNumber[4]++;
+                    sumArrSupplierQuality[4] += orderQuality;
+                    break;
+                default:
+                    throw new RuntimeException("no such type");
+            }
+        }
+        // 算下平均值
+        for (int i = 0; i < avgArrSupplierOrderNumber.length; i++) {
+            // 供应商一类服务数量平均值
+            avgArrSupplierOrderNumber[i] = sumArrSupplierOrderNumber[i] * 1D / sumArrSupplierNumber[i];
+            // 供应商一类服务质量平均值
+            avgArrSupplierQuality[i] = (int) Math.round(sumArrSupplierQuality[i] * 1D / sumArrSupplierNumber[i]);
+        }
     }
 
     /**
