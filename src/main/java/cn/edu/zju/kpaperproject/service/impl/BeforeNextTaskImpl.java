@@ -101,71 +101,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         calAndSetSupplierTotalAssets(listSupplierDynamics, mapSupplierProfitSum);
 
         // 计算并更新所有主机厂的产能利用率
-        for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
-            String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
-            EngineFactoryFinalProvision engineFactoryFinalProvision = mapEngineIdVsEngineFactoryFinalProvision.get(engineFactoryId);
-            // 实际销量
-            int actualSaleNumber = 0;
-            if (engineFactoryFinalProvision != null) {
-                actualSaleNumber = engineFactoryFinalProvision.getActualSaleNumber();
-            }
-            // 主机产能
-            int engineFactoryCapacity = aEngineFactoryDynamic.getEngineFactoryCapacityM();
-            // 计算利用率并更新
-            double engineFactoryCapacityUtilization = actualSaleNumber * 1D / engineFactoryCapacity;
-            aEngineFactoryDynamic.setEngineFactoryCapacityUtilization(engineFactoryCapacityUtilization);
-
-
-            // 主机厂原来价格下限
-            int engineFactoryPricePL = aEngineFactoryDynamic.getEngineFactoryPricePL();
-            // 主机厂原来价格上限
-            Integer engineFactoryPricePU = aEngineFactoryDynamic.getEngineFactoryPricePU();
-            // 主机厂原来平均价
-            double initAvgEngineFactoryToMarketPrice = (engineFactoryPricePL + engineFactoryPricePU) / 2.0;
-
-            // 主机厂修改服务质量-售价-产能
-            if (engineFactoryCapacityUtilization == 1) {
-                // 利用率为1(供不应求)
-                if (initAvgEngineFactoryToMarketPrice >= avgFinalMarketPrice) {
-                    // 初始价格的平均价 >= 所有成交价格的平均值
-                    // TODO 测试的时候看看动态数据都是否更新
-                    // 调整产能
-                    engineFactoryCapacity = (int) Math.round(engineFactoryCapacity * 1.1);
-                    // 更新下一阶段的产能
-                    aEngineFactoryDynamic.setEngineFactoryCapacityM(engineFactoryCapacity);
-                } else {
-                    // 初始价格的平均价 < 所有成交价格的平均值
-                    // 调整价格区间并更新
-                    aEngineFactoryDynamic.setEngineFactoryPricePL(RandomUtils.nextInt(engineFactoryPricePL, (int) avgFinalMarketPrice + 1));
-                    aEngineFactoryDynamic.setEngineFactoryPricePU(RandomUtils.nextInt((int) avgFinalMarketPrice, engineFactoryPricePU + 1));
-                }
-            } else {
-                // 利用率 < 1(供过于求)
-                if (initAvgEngineFactoryToMarketPrice >= avgFinalMarketPrice) {
-                    // 初始价格的平均价 >= 所有成交价格的平均值
-                    aEngineFactoryDynamic.setEngineFactoryPricePL(RandomUtils.nextInt(engineFactoryPricePL, (int) avgFinalMarketPrice + 1));
-                    aEngineFactoryDynamic.setEngineFactoryPricePU(RandomUtils.nextInt((int) avgFinalMarketPrice, engineFactoryPricePU + 1));
-                } else {
-                    // 初始价格的平均价 < 所有成交价格的平均值
-                    int engineFactoryQualityQ = aEngineFactoryDynamic.getEngineFactoryQualityQ();
-                    if (engineFactoryQualityQ >= avgFinalMarketQuality) {
-                        // 质量 >= 平均质量
-                        // 调整产能
-                        engineFactoryCapacity = (int) Math.round(engineFactoryCapacity * 0.9);
-                        // 更新下一阶段的产能
-                        aEngineFactoryDynamic.setEngineFactoryCapacityM(engineFactoryCapacity);
-                    } else {
-                        // 质量 < 平均质量
-                        if (engineFactoryQualityQ < 10) {
-                            engineFactoryQualityQ++;
-                            aEngineFactoryDynamic.setEngineFactoryQualityQ(engineFactoryQualityQ);
-                            // 更新总资产
-                            aEngineFactoryDynamic.setEngineFactoryTotalAssetsP((int) Math.round(aEngineFactoryDynamic.getEngineFactoryTotalAssetsP() * 0.9));
-                        }
-                    }
-                }
-            }
-        }
+        calAndSetEngineFactoryCapacityUtilization(listEngineFactoryDynamic, mapEngineIdVsEngineFactoryFinalProvision, avgFinalMarketPrice, avgFinalMarketQuality);
         // # 计算所有供应商的产能利用率
         // 一类服务市场总需求数量
         int[] sumArrSupplierOrderNumber = new int[5];
@@ -704,6 +640,74 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             aSupplierDynamic.setSupplierCreditA(aSupplierDynamic.getSupplierCreditA() / sumNewSupplierCreditWithAlive);
         }
 
+    }
+
+    private void calAndSetEngineFactoryCapacityUtilization(List<TbEngineFactoryDynamic> listEngineFactoryDynamic, HashMap<String, EngineFactoryFinalProvision> mapEngineIdVsEngineFactoryFinalProvision, double avgFinalMarketPrice, double avgFinalMarketQuality) {
+        for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
+            String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
+            EngineFactoryFinalProvision engineFactoryFinalProvision = mapEngineIdVsEngineFactoryFinalProvision.get(engineFactoryId);
+            // 实际销量
+            int actualSaleNumber = 0;
+            if (engineFactoryFinalProvision != null) {
+                actualSaleNumber = engineFactoryFinalProvision.getActualSaleNumber();
+            }
+            // 主机产能
+            int engineFactoryCapacity = aEngineFactoryDynamic.getEngineFactoryCapacityM();
+            // 计算利用率并更新
+            double engineFactoryCapacityUtilization = actualSaleNumber * 1D / engineFactoryCapacity;
+            aEngineFactoryDynamic.setEngineFactoryCapacityUtilization(engineFactoryCapacityUtilization);
+
+
+            // 主机厂原来价格下限
+            int engineFactoryPricePL = aEngineFactoryDynamic.getEngineFactoryPricePL();
+            // 主机厂原来价格上限
+            Integer engineFactoryPricePU = aEngineFactoryDynamic.getEngineFactoryPricePU();
+            // 主机厂原来平均价
+            double initAvgEngineFactoryToMarketPrice = (engineFactoryPricePL + engineFactoryPricePU) / 2.0;
+
+            // 主机厂修改服务质量-售价-产能
+            if (engineFactoryCapacityUtilization == 1) {
+                // 利用率为1(供不应求)
+                if (initAvgEngineFactoryToMarketPrice >= avgFinalMarketPrice) {
+                    // 初始价格的平均价 >= 所有成交价格的平均值
+                    // TODO 测试的时候看看动态数据都是否更新
+                    // 调整产能
+                    engineFactoryCapacity = (int) Math.round(engineFactoryCapacity * 1.1);
+                    // 更新下一阶段的产能
+                    aEngineFactoryDynamic.setEngineFactoryCapacityM(engineFactoryCapacity);
+                } else {
+                    // 初始价格的平均价 < 所有成交价格的平均值
+                    // 调整价格区间并更新
+                    aEngineFactoryDynamic.setEngineFactoryPricePL(RandomUtils.nextInt(engineFactoryPricePL, (int) avgFinalMarketPrice + 1));
+                    aEngineFactoryDynamic.setEngineFactoryPricePU(RandomUtils.nextInt((int) avgFinalMarketPrice, engineFactoryPricePU + 1));
+                }
+            } else {
+                // 利用率 < 1(供过于求)
+                if (initAvgEngineFactoryToMarketPrice >= avgFinalMarketPrice) {
+                    // 初始价格的平均价 >= 所有成交价格的平均值
+                    aEngineFactoryDynamic.setEngineFactoryPricePL(RandomUtils.nextInt(engineFactoryPricePL, (int) avgFinalMarketPrice + 1));
+                    aEngineFactoryDynamic.setEngineFactoryPricePU(RandomUtils.nextInt((int) avgFinalMarketPrice, engineFactoryPricePU + 1));
+                } else {
+                    // 初始价格的平均价 < 所有成交价格的平均值
+                    int engineFactoryQualityQ = aEngineFactoryDynamic.getEngineFactoryQualityQ();
+                    if (engineFactoryQualityQ >= avgFinalMarketQuality) {
+                        // 质量 >= 平均质量
+                        // 调整产能
+                        engineFactoryCapacity = (int) Math.round(engineFactoryCapacity * 0.9);
+                        // 更新下一阶段的产能
+                        aEngineFactoryDynamic.setEngineFactoryCapacityM(engineFactoryCapacity);
+                    } else {
+                        // 质量 < 平均质量
+                        if (engineFactoryQualityQ < 10) {
+                            engineFactoryQualityQ++;
+                            aEngineFactoryDynamic.setEngineFactoryQualityQ(engineFactoryQualityQ);
+                            // 更新总资产
+                            aEngineFactoryDynamic.setEngineFactoryTotalAssetsP((int) Math.round(aEngineFactoryDynamic.getEngineFactoryTotalAssetsP() * 0.9));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
