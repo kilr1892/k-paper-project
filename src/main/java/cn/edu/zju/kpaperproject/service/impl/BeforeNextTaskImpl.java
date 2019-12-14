@@ -186,7 +186,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         TbSupplierDynamic supplierDynamicWithHighestCredit = null;
         double sumSupplierCreditWithAlive = 0;
         int supplierIsAliveNumber = 0;
-        for (int i = 1; i < listSupplierDynamics.size(); i++) {
+        for (int i = 0; i < listSupplierDynamics.size(); i++) {
             TbSupplierDynamic tmp = listSupplierDynamics.get(i);
             String supplierId = tmp.getSupplierId();
             TbSupplier tbSupplier = mapSupplier.get(supplierId);
