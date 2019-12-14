@@ -474,66 +474,6 @@ public class TbEngineFactoryExample {
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryFixedCostCIsNull() {
-            addCriterion("engine_factory_fixed_cost_c is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryFixedCostCIsNotNull() {
-            addCriterion("engine_factory_fixed_cost_c is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryFixedCostCEqualTo(Integer value) {
-            addCriterion("engine_factory_fixed_cost_c =", value, "engineFactoryFixedCostC");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryFixedCostCNotEqualTo(Integer value) {
-            addCriterion("engine_factory_fixed_cost_c <>", value, "engineFactoryFixedCostC");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryFixedCostCGreaterThan(Integer value) {
-            addCriterion("engine_factory_fixed_cost_c >", value, "engineFactoryFixedCostC");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryFixedCostCGreaterThanOrEqualTo(Integer value) {
-            addCriterion("engine_factory_fixed_cost_c >=", value, "engineFactoryFixedCostC");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryFixedCostCLessThan(Integer value) {
-            addCriterion("engine_factory_fixed_cost_c <", value, "engineFactoryFixedCostC");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryFixedCostCLessThanOrEqualTo(Integer value) {
-            addCriterion("engine_factory_fixed_cost_c <=", value, "engineFactoryFixedCostC");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryFixedCostCIn(List<Integer> values) {
-            addCriterion("engine_factory_fixed_cost_c in", values, "engineFactoryFixedCostC");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryFixedCostCNotIn(List<Integer> values) {
-            addCriterion("engine_factory_fixed_cost_c not in", values, "engineFactoryFixedCostC");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryFixedCostCBetween(Integer value1, Integer value2) {
-            addCriterion("engine_factory_fixed_cost_c between", value1, value2, "engineFactoryFixedCostC");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryFixedCostCNotBetween(Integer value1, Integer value2) {
-            addCriterion("engine_factory_fixed_cost_c not between", value1, value2, "engineFactoryFixedCostC");
-            return (Criteria) this;
-        }
-
         public Criteria andEngineFactoryAliveIsNull() {
             addCriterion("engine_factory_alive is null");
             return (Criteria) this;

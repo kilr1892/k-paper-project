@@ -733,66 +733,6 @@ public class TbRelationMatrixExample {
             addCriterion("transaction_number not between", value1, value2, "transactionNumber");
             return (Criteria) this;
         }
-
-        public Criteria andRelationMatrixAliveIsNull() {
-            addCriterion("relation_matrix_alive is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationMatrixAliveIsNotNull() {
-            addCriterion("relation_matrix_alive is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationMatrixAliveEqualTo(Boolean value) {
-            addCriterion("relation_matrix_alive =", value, "relationMatrixAlive");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationMatrixAliveNotEqualTo(Boolean value) {
-            addCriterion("relation_matrix_alive <>", value, "relationMatrixAlive");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationMatrixAliveGreaterThan(Boolean value) {
-            addCriterion("relation_matrix_alive >", value, "relationMatrixAlive");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationMatrixAliveGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("relation_matrix_alive >=", value, "relationMatrixAlive");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationMatrixAliveLessThan(Boolean value) {
-            addCriterion("relation_matrix_alive <", value, "relationMatrixAlive");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationMatrixAliveLessThanOrEqualTo(Boolean value) {
-            addCriterion("relation_matrix_alive <=", value, "relationMatrixAlive");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationMatrixAliveIn(List<Boolean> values) {
-            addCriterion("relation_matrix_alive in", values, "relationMatrixAlive");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationMatrixAliveNotIn(List<Boolean> values) {
-            addCriterion("relation_matrix_alive not in", values, "relationMatrixAlive");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationMatrixAliveBetween(Boolean value1, Boolean value2) {
-            addCriterion("relation_matrix_alive between", value1, value2, "relationMatrixAlive");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationMatrixAliveNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("relation_matrix_alive not between", value1, value2, "relationMatrixAlive");
-            return (Criteria) this;
-        }
     }
 
     public static class Criteria extends GeneratedCriteria {

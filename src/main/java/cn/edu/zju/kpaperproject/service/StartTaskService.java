@@ -16,6 +16,22 @@ import java.util.Map;
  */
 public interface StartTaskService {
     /**
+     * 获取所有存活的主机厂
+     *
+     * @param experimentsNumber 第几次实验
+     * @param cycleTime         循环次数
+     * @return 主机厂静态数据集合
+     */
+    List<TbEngineFactory> getListEngineFactoryWithAlive(int experimentsNumber, int cycleTime);
+    /**
+     * 生成所有活的供应商
+     *
+     * @param experimentsNumber 实验次数
+     * @param cycleTime         循环次数
+     * @return                  活着的供应商集合
+     */
+    List<TbSupplier> getListTbSuppliersWithAlive(int experimentsNumber, int cycleTime) ;
+    /**
      * 生成主机厂分解任务
      * <p>
      * 返回值按信誉度从高到底排, 信誉度相同就按210任务出价从高到底排

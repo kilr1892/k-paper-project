@@ -8,7 +8,6 @@
     <result column="engine_factory_id" property="engineFactoryId" jdbcType="VARCHAR" />
     <result column="engine_factory_location_g_x" property="engineFactoryLocationGX" jdbcType="INTEGER" />
     <result column="engine_factory_location_g_y" property="engineFactoryLocationGY" jdbcType="INTEGER" />
-    <result column="engine_factory_fixed_cost_c" property="engineFactoryFixedCostC" jdbcType="INTEGER" />
     <result column="engine_factory_alive" property="engineFactoryAlive" jdbcType="BIT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -71,7 +70,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, experiments_number, cycle_times, engine_factory_id, engine_factory_location_g_x, 
-    engine_factory_location_g_y, engine_factory_fixed_cost_c, engine_factory_alive
+    engine_factory_location_g_y, engine_factory_alive
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactoryExample" >
     select
@@ -106,12 +105,12 @@
   <insert id="insert" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactory" >
     insert into tb_engine_factory (id, experiments_number, cycle_times, 
       engine_factory_id, engine_factory_location_g_x, 
-      engine_factory_location_g_y, engine_factory_fixed_cost_c, 
-      engine_factory_alive)
+      engine_factory_location_g_y, engine_factory_alive
+      )
     values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
       #{engineFactoryId,jdbcType=VARCHAR}, #{engineFactoryLocationGX,jdbcType=INTEGER}, 
-      #{engineFactoryLocationGY,jdbcType=INTEGER}, #{engineFactoryFixedCostC,jdbcType=INTEGER}, 
-      #{engineFactoryAlive,jdbcType=BIT})
+      #{engineFactoryLocationGY,jdbcType=INTEGER}, #{engineFactoryAlive,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactory" >
     insert into tb_engine_factory
@@ -133,9 +132,6 @@
       </if>
       <if test="engineFactoryLocationGY != null" >
         engine_factory_location_g_y,
-      </if>
-      <if test="engineFactoryFixedCostC != null" >
-        engine_factory_fixed_cost_c,
       </if>
       <if test="engineFactoryAlive != null" >
         engine_factory_alive,
@@ -159,9 +155,6 @@
       </if>
       <if test="engineFactoryLocationGY != null" >
         #{engineFactoryLocationGY,jdbcType=INTEGER},
-      </if>
-      <if test="engineFactoryFixedCostC != null" >
-        #{engineFactoryFixedCostC,jdbcType=INTEGER},
       </if>
       <if test="engineFactoryAlive != null" >
         #{engineFactoryAlive,jdbcType=BIT},
@@ -195,9 +188,6 @@
       <if test="record.engineFactoryLocationGY != null" >
         engine_factory_location_g_y = #{record.engineFactoryLocationGY,jdbcType=INTEGER},
       </if>
-      <if test="record.engineFactoryFixedCostC != null" >
-        engine_factory_fixed_cost_c = #{record.engineFactoryFixedCostC,jdbcType=INTEGER},
-      </if>
       <if test="record.engineFactoryAlive != null" >
         engine_factory_alive = #{record.engineFactoryAlive,jdbcType=BIT},
       </if>
@@ -214,7 +204,6 @@
       engine_factory_id = #{record.engineFactoryId,jdbcType=VARCHAR},
       engine_factory_location_g_x = #{record.engineFactoryLocationGX,jdbcType=INTEGER},
       engine_factory_location_g_y = #{record.engineFactoryLocationGY,jdbcType=INTEGER},
-      engine_factory_fixed_cost_c = #{record.engineFactoryFixedCostC,jdbcType=INTEGER},
       engine_factory_alive = #{record.engineFactoryAlive,jdbcType=BIT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -238,9 +227,6 @@
       <if test="engineFactoryLocationGY != null" >
         engine_factory_location_g_y = #{engineFactoryLocationGY,jdbcType=INTEGER},
       </if>
-      <if test="engineFactoryFixedCostC != null" >
-        engine_factory_fixed_cost_c = #{engineFactoryFixedCostC,jdbcType=INTEGER},
-      </if>
       <if test="engineFactoryAlive != null" >
         engine_factory_alive = #{engineFactoryAlive,jdbcType=BIT},
       </if>
@@ -254,7 +240,6 @@
       engine_factory_id = #{engineFactoryId,jdbcType=VARCHAR},
       engine_factory_location_g_x = #{engineFactoryLocationGX,jdbcType=INTEGER},
       engine_factory_location_g_y = #{engineFactoryLocationGY,jdbcType=INTEGER},
-      engine_factory_fixed_cost_c = #{engineFactoryFixedCostC,jdbcType=INTEGER},
       engine_factory_alive = #{engineFactoryAlive,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>

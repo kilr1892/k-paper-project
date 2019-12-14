@@ -13,8 +13,6 @@ public class TbEngineFactory {
 
     private Integer engineFactoryLocationGY;
 
-    private Integer engineFactoryFixedCostC;
-
     private Boolean engineFactoryAlive;
 
     public Integer getId() {
@@ -63,14 +61,6 @@ public class TbEngineFactory {
 
     public void setEngineFactoryLocationGY(Integer engineFactoryLocationGY) {
         this.engineFactoryLocationGY = engineFactoryLocationGY;
-    }
-
-    public Integer getEngineFactoryFixedCostC() {
-        return engineFactoryFixedCostC;
-    }
-
-    public void setEngineFactoryFixedCostC(Integer engineFactoryFixedCostC) {
-        this.engineFactoryFixedCostC = engineFactoryFixedCostC;
     }
 
     public Boolean getEngineFactoryAlive() {

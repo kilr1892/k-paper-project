@@ -21,8 +21,6 @@ public class TbRelationMatrix {
 
     private Integer transactionNumber;
 
-    private Boolean relationMatrixAlive;
-
     public Integer getId() {
         return id;
     }
@@ -101,13 +99,5 @@ public class TbRelationMatrix {
 
     public void setTransactionNumber(Integer transactionNumber) {
         this.transactionNumber = transactionNumber;
-    }
-
-    public Boolean getRelationMatrixAlive() {
-        return relationMatrixAlive;
-    }
-
-    public void setRelationMatrixAlive(Boolean relationMatrixAlive) {
-        this.relationMatrixAlive = relationMatrixAlive;
     }
 }

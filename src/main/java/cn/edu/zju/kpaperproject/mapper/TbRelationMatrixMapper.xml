@@ -12,7 +12,6 @@
     <result column="initial_relational_degree" property="initialRelationalDegree" jdbcType="DOUBLE" />
     <result column="accumulative_total_score" property="accumulativeTotalScore" jdbcType="INTEGER" />
     <result column="transaction_number" property="transactionNumber" jdbcType="INTEGER" />
-    <result column="relation_matrix_alive" property="relationMatrixAlive" jdbcType="BIT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -74,7 +73,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, experiments_number, cycle_times, engine_factory_id, supplier_id, map_key, relation_score, 
-    initial_relational_degree, accumulative_total_score, transaction_number, relation_matrix_alive
+    initial_relational_degree, accumulative_total_score, transaction_number
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.zju.kpaperproject.pojo.TbRelationMatrixExample" >
     select
@@ -110,11 +109,11 @@
     insert into tb_relation_matrix (id, experiments_number, cycle_times, 
       engine_factory_id, supplier_id, map_key, 
       relation_score, initial_relational_degree, accumulative_total_score, 
-      transaction_number, relation_matrix_alive)
+      transaction_number)
     values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
       #{engineFactoryId,jdbcType=VARCHAR}, #{supplierId,jdbcType=VARCHAR}, #{mapKey,jdbcType=VARCHAR}, 
       #{relationScore,jdbcType=DOUBLE}, #{initialRelationalDegree,jdbcType=DOUBLE}, #{accumulativeTotalScore,jdbcType=INTEGER}, 
-      #{transactionNumber,jdbcType=INTEGER}, #{relationMatrixAlive,jdbcType=BIT})
+      #{transactionNumber,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbRelationMatrix" >
     insert into tb_relation_matrix
@@ -149,9 +148,6 @@
       <if test="transactionNumber != null" >
         transaction_number,
       </if>
-      <if test="relationMatrixAlive != null" >
-        relation_matrix_alive,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -183,9 +179,6 @@
       </if>
       <if test="transactionNumber != null" >
         #{transactionNumber,jdbcType=INTEGER},
-      </if>
-      <if test="relationMatrixAlive != null" >
-        #{relationMatrixAlive,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -228,9 +221,6 @@
       <if test="record.transactionNumber != null" >
         transaction_number = #{record.transactionNumber,jdbcType=INTEGER},
       </if>
-      <if test="record.relationMatrixAlive != null" >
-        relation_matrix_alive = #{record.relationMatrixAlive,jdbcType=BIT},
-      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -247,8 +237,7 @@
       relation_score = #{record.relationScore,jdbcType=DOUBLE},
       initial_relational_degree = #{record.initialRelationalDegree,jdbcType=DOUBLE},
       accumulative_total_score = #{record.accumulativeTotalScore,jdbcType=INTEGER},
-      transaction_number = #{record.transactionNumber,jdbcType=INTEGER},
-      relation_matrix_alive = #{record.relationMatrixAlive,jdbcType=BIT}
+      transaction_number = #{record.transactionNumber,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -283,9 +272,6 @@
       <if test="transactionNumber != null" >
         transaction_number = #{transactionNumber,jdbcType=INTEGER},
       </if>
-      <if test="relationMatrixAlive != null" >
-        relation_matrix_alive = #{relationMatrixAlive,jdbcType=BIT},
-      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -299,8 +285,7 @@
       relation_score = #{relationScore,jdbcType=DOUBLE},
       initial_relational_degree = #{initialRelationalDegree,jdbcType=DOUBLE},
       accumulative_total_score = #{accumulativeTotalScore,jdbcType=INTEGER},
-      transaction_number = #{transactionNumber,jdbcType=INTEGER},
-      relation_matrix_alive = #{relationMatrixAlive,jdbcType=BIT}
+      transaction_number = #{transactionNumber,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

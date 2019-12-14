@@ -56,7 +56,7 @@ public class StartTaskServiceImpl implements StartTaskService {
         TbRelationMatrixExample.Criteria criteria = tbRelationMatrixExample.createCriteria();
         criteria.andExperimentsNumberEqualTo(experimentsNumber);
         criteria.andCycleTimesEqualTo(cycleTime - 1);
-        criteria.andRelationMatrixAliveEqualTo(true);
+//        criteria.andRelationMatrixAliveEqualTo(true);
         List<TbRelationMatrix> tbRelationMatrices = tbRelationMatrixMapper.selectByExample(tbRelationMatrixExample);
 
         for (TbRelationMatrix aRelationMatrix : tbRelationMatrices) {
@@ -84,7 +84,7 @@ public class StartTaskServiceImpl implements StartTaskService {
         TbRelationMatrixExample.Criteria criteria = tbRelationMatrixExample.createCriteria();
         criteria.andExperimentsNumberEqualTo(experimentsNumber);
         criteria.andCycleTimesEqualTo(cycleTime - 1);
-        criteria.andRelationMatrixAliveEqualTo(true);
+//        criteria.andRelationMatrixAliveEqualTo(true);
         List<TbRelationMatrix> tbRelationMatrices = tbRelationMatrixMapper.selectByExample(tbRelationMatrixExample);
 
         for (TbRelationMatrix aRelationMatrix : tbRelationMatrices) {
@@ -117,13 +117,8 @@ public class StartTaskServiceImpl implements StartTaskService {
         for (int i = 0; i < resSize; i++) {
             res.add(new ArrayList<>());
         }
-
         // 查询出所有活着的供应商
-        TbSupplierExample tbSupplierExample = new TbSupplierExample();
-        TbSupplierExample.Criteria tbSupplierExampleCriteria = tbSupplierExample.createCriteria();
-        tbSupplierExampleCriteria.andExperimentsNumberEqualTo(experimentsNumber);
-        tbSupplierExampleCriteria.andSupplierAliveEqualTo(true);
-        listSuppliers = tbSupplierMapper.selectByExample(tbSupplierExample);
+//        listSuppliers = getListTbSuppliersWithAlive(experimentsNumber,cycleTime);
 
         for (TbSupplier aSupplier : listSuppliers) {
             // 供应商id
@@ -186,16 +181,35 @@ public class StartTaskServiceImpl implements StartTaskService {
     }
 
     /**
+     * 生成所有活的供应商
+     *
+     * @param experimentsNumber 实验次数
+     * @param cycleTime         循环次数
+     * @return                  活着的供应商集合
+     */
+    @Override
+    public List<TbSupplier> getListTbSuppliersWithAlive(int experimentsNumber, int cycleTime) {
+        List<TbSupplier> listSuppliers;
+        TbSupplierExample tbSupplierExample = new TbSupplierExample();
+        TbSupplierExample.Criteria tbSupplierExampleCriteria = tbSupplierExample.createCriteria();
+        tbSupplierExampleCriteria.andExperimentsNumberEqualTo(experimentsNumber);
+        tbSupplierExampleCriteria.andCycleTimesEqualTo(cycleTime - 1);
+        tbSupplierExampleCriteria.andSupplierAliveEqualTo(true);
+        listSuppliers = tbSupplierMapper.selectByExample(tbSupplierExample);
+        return listSuppliers;
+    }
+
+    /**
      * 生成主机厂分解任务
      * <p>
      * 返回值按信誉度从高到底排, 信誉度相同就按210任务出价从高到底排
      * (会更新主机厂动态数组)
      *
-     * @param experimentsNumber         实验次数
-     * @param cycleTime                 循环的次数, 从1开始
-     * @param listEngineFactory         主机厂静态数据集合
-     * @param listEngineFactoryDynamic  主机厂动态数据集合
-     * @return                          返回值中每个元素代表一个主机厂分解的任务集
+     * @param experimentsNumber        实验次数
+     * @param cycleTime                循环的次数, 从1开始
+     * @param listEngineFactory        主机厂静态数据集合
+     * @param listEngineFactoryDynamic 主机厂动态数据集合
+     * @return 返回值中每个元素代表一个主机厂分解的任务集
      */
     @Override
     public ArrayList<ArrayList<EngineFactoryManufacturingTask>> genEngineFactoryTaskDecomposition(
@@ -208,7 +222,7 @@ public class StartTaskServiceImpl implements StartTaskService {
         ArrayList<ArrayList<EngineFactoryManufacturingTask>> res = new ArrayList<>();
 
         // 找出所有存活的主机厂
-        listEngineFactory = getListEngineFactoryWithAlive(experimentsNumber);
+//        listEngineFactory = getListEngineFactoryWithAlive(experimentsNumber, cycleTime);
         // 服务代码数组
         int[] supplierTypeCodes = SupplierEnum.getSupplierTypeCodes();
 
@@ -273,13 +287,16 @@ public class StartTaskServiceImpl implements StartTaskService {
      * 获取所有存活的主机厂
      *
      * @param experimentsNumber 第几次实验
+     * @param cycleTime         循环次数
      * @return 主机厂静态数据集合
      */
-    public List<TbEngineFactory> getListEngineFactoryWithAlive(int experimentsNumber) {
+    @Override
+    public List<TbEngineFactory> getListEngineFactoryWithAlive(int experimentsNumber, int cycleTime) {
         TbEngineFactoryExample tbEngineFactoryExample = new TbEngineFactoryExample();
         TbEngineFactoryExample.Criteria criteria = tbEngineFactoryExample.createCriteria();
-        criteria.andEngineFactoryAliveEqualTo(true);
         criteria.andExperimentsNumberEqualTo(experimentsNumber);
+        criteria.andCycleTimesEqualTo(cycleTime - 1);
+        criteria.andEngineFactoryAliveEqualTo(true);
         return tbEngineFactoryMapper.selectByExample(tbEngineFactoryExample);
     }
 

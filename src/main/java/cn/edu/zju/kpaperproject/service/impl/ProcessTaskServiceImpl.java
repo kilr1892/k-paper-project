@@ -49,9 +49,9 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         double supplierPerformanceProbability;
         // 信誉度计算相关的map
         // 主机厂的
-        Map<String, List<OrderPlus>> mapEngineFactoryCredit = new HashMap<>();
+        Map<String, List<OrderPlus>> mapEngineFactoryCredit = new HashMap<>(100);
         // 供应商的
-        Map<String, List<OrderPlus>> mapSupplierCredit = new HashMap<>();
+        Map<String, List<OrderPlus>> mapSupplierCredit = new HashMap<>(100);
 
         for (TransactionContract aTransactionContract : listTransactionContracts) {
             // 每次循环是每个交易契约

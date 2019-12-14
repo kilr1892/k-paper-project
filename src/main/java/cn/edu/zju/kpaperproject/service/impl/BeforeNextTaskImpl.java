@@ -38,11 +38,18 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
      * <p>
      * 对主机厂动态数据及服务商动态数据重算
      *
-     * @param listEngineFactoryFinalProvisions 最终交货结果集合
-     * @param listOrderPlus                    实际交易结果集合
-     * @param listEngineFactoryDynamic         所有存活主机厂动态数据的集合
-     * @param listSupplierDynamics             所有存活服务商动态数据集合
+     * @param experimentsNumber                          实验次数
+     * @param cycleTime                                  循环次数
+     * @param listEngineFactoryFinalProvisions           最终交货结果集合
+     * @param listOrderPlus                              实际交易结果集合
+     * @param listTransactionContract                    交易契约集合
+     * @param listEngineFactory                          主机厂集合
+     * @param listEngineFactoryDynamic                   主机厂动态数据的集合
+     * @param listSupplier                               供应商集合
+     * @param listSupplierDynamics                       所有存活服务商动态数据集合
+     * @param mapRelationshipMatrix2WithTbRelationMatrix 关系矩阵
      */
+    @Override
     public void beforeNextTask(
             int experimentsNumber
             , int cycleTime
@@ -64,20 +71,26 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 用来存id, 看是否有交易
         HashMap<String, OrderPlus> mapEngineIdVsOrderPlus = new HashMap<>(100);
 
+        // 暂存主机厂利润
+        int tmpEngineFactoryProfit = 0;
+        // 暂存供应商利润
+        int tmpSupplierProfit = 0;
         for (OrderPlus orderPlus : listOrderPlus) {
             String engineFactoryId = orderPlus.getEngineFactoryId();
             String supplierId = orderPlus.getSupplierId();
             mapEngineIdVsOrderPlus.put(engineFactoryId, orderPlus);
             // 主机厂与供应商交易后的利润
-            int tmpEngineFactoryProfit = mapEngineFactoryProfitSum.get(engineFactoryId);
+            if (mapEngineFactoryProfitSum.containsKey(engineFactoryId)) {
+                tmpEngineFactoryProfit = mapEngineFactoryProfitSum.get(engineFactoryId);
+            }
             tmpEngineFactoryProfit += orderPlus.getEngineFactoryProfit();
             mapEngineFactoryProfitSum.put(engineFactoryId, tmpEngineFactoryProfit);
             // 供应商与主机厂交易后的利润
-            int tmpSupplierProfit = mapSupplierProfitSum.get(supplierId);
+            if (mapSupplierProfitSum.containsKey(supplierId)) {
+                tmpSupplierProfit = mapSupplierProfitSum.get(supplierId);
+            }
             tmpSupplierProfit += orderPlus.getSupplierProfit();
             mapSupplierProfitSum.put(supplierId, tmpEngineFactoryProfit);
-
-
         }
 
         // 用来存成交价格
@@ -703,7 +716,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                                     // 主机厂id 与 信誉度最高的主机厂id相同
                                     tbRelationMatrix.setRelationScore(0.2);
                                     tbRelationMatrix.setInitialRelationalDegree(0.2);
-                                }else {
+                                } else {
                                     // 主机厂id 就是普通的主机厂
                                     double initRelationshipStrengthScore = InitRelationMatrixUtils.initRelationshipStrengthScore();
                                     tbRelationMatrix.setRelationScore(initRelationshipStrengthScore);
@@ -724,10 +737,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // # 双方信誉度归一化
         // 退出后的厂还活着的
         int sumNewEngineFactoryCreditWithAlive = 0;
-        for (TbEngineFactory aEngineFactoryDynamic : listEngineFactory) {
+        for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
             String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
             if (mapEngineFactory.get(engineFactoryId).getEngineFactoryAlive()) {
-                sumNewEngineFactoryCreditWithAlive += aEngineFactoryDynamic.getEngineFactoryFixedCostC();
+                sumNewEngineFactoryCreditWithAlive += aEngineFactoryDynamic.getEngineFactoryCreditH();
 
             }
         }
@@ -863,9 +876,9 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         int k1Step = EngineFactoryEnum.engineFactoryDemandForecastK1Step;
         double k2Step = EngineFactoryEnum.engineFactoryDemandForecastK2Step;
         int cm = CalculationEnum.saleProductsInitCm;
-        k1 = k1 + cycleTimes * k1Step;
-        k2 = k2 + cycleTimes * k2Step;
-        cm = cm + cycleTimes;
+        k1 = k1 + (cycleTimes - 1) * k1Step;
+        k2 = k2 + (cycleTimes - 1) * k2Step;
+        cm = cm + (cycleTimes - 1);
 
         int pa = RandomUtils.nextInt(EngineFactoryEnum.engineFactoryInitPriceLow, EngineFactoryEnum.engineFactoryInitPriceUpper + 1);
         int qa = RandomUtils.nextInt(EngineFactoryEnum.engineFactoryInitQualityLow, EngineFactoryEnum.engineFactoryInitQualityUpper + 1);

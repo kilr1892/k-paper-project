@@ -34,23 +34,25 @@ public class TestController {
 
     @GetMapping("/test")
     public String test() {
-        int expNum = 0;
+        int experimentsNumber = 0;
         int cycleTime = 1;
-        initService.init(expNum);
-        List<TbEngineFactory> listEngineFactory = new ArrayList<>();
+//        initService.init(experimentsNumber);
+        List<TbEngineFactory> listEngineFactory = listEngineFactory = startTaskService.getListEngineFactoryWithAlive(experimentsNumber, cycleTime);
+
         List<TbEngineFactoryDynamic> listEngineFactoryDynamic = new ArrayList<>();
-        List<TbSupplier> listSuppliers = new ArrayList<>();
+        List<TbSupplier> listSuppliers =startTaskService.getListTbSuppliersWithAlive(experimentsNumber,cycleTime);
         List<TbSupplierDynamic> listSupplierDynamic = new ArrayList<>();
 
-        ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTaskDecomposition = startTaskService.genEngineFactoryTaskDecomposition(expNum, cycleTime, listEngineFactory, listEngineFactoryDynamic);
-        ArrayList<ArrayList<SupplierTask>> listListSupplierTask = startTaskService.genSupplierTask(expNum, cycleTime, listSuppliers, listSupplierDynamic);
-        Map<String, Double> mapRelationshipMatrix = startTaskService.getMapRelationshipMatrix(expNum, cycleTime);
-        Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix = startTaskService.getMapRelationshipMatrix2WithTbRelationMatrix(expNum, cycleTime);
-        ArrayList<TransactionContract> transactionContracts = processTaskService.getTransactionContracts(listListEngineFactoryTaskDecomposition, listListSupplierTask, mapRelationshipMatrix);
-        List<OrderPlus> listOrderPlus = processTaskService.getTransactionSettlement(expNum, cycleTime, transactionContracts, mapRelationshipMatrix, mapRelationshipMatrix2WithTbRelationMatrix);
+        ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTaskDecomposition = startTaskService.genEngineFactoryTaskDecomposition(
+                experimentsNumber, cycleTime, listEngineFactory, listEngineFactoryDynamic);
+        ArrayList<ArrayList<SupplierTask>> listListSupplierTask = startTaskService.genSupplierTask(
+                experimentsNumber, cycleTime, listSuppliers, listSupplierDynamic);
+        Map<String, Double> mapRelationshipMatrix = startTaskService.getMapRelationshipMatrix(experimentsNumber, cycleTime);
+        Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix = startTaskService.getMapRelationshipMatrix2WithTbRelationMatrix(experimentsNumber, cycleTime);
+        ArrayList<TransactionContract> listTransactionContract = processTaskService.getTransactionContracts(listListEngineFactoryTaskDecomposition, listListSupplierTask, mapRelationshipMatrix);
+        List<OrderPlus> listOrderPlus = processTaskService.getTransactionSettlement(experimentsNumber, cycleTime, listTransactionContract, mapRelationshipMatrix, mapRelationshipMatrix2WithTbRelationMatrix);
         List<EngineFactoryFinalProvision> listEngineFactoryFinalProvision = beforeNextTask.getListEngineFactoryFinalProvision(cycleTime, listOrderPlus);
-//        beforeNextTask.beforeNextTask(listEngineFactoryFinalProvision, listOrderPlus, listEngineFactoryDynamic, listSupplierDynamic);
-
+        beforeNextTask.beforeNextTask(experimentsNumber, cycleTime, listEngineFactoryFinalProvision, listOrderPlus, listTransactionContract, listEngineFactory, listEngineFactoryDynamic, listSuppliers, listSupplierDynamic, mapRelationshipMatrix2WithTbRelationMatrix);
 
 
         System.out.println();
@@ -62,6 +64,7 @@ public class TestController {
     public String test2() {
         return "success";
     }
+
     @GetMapping("/test3")
     public String test3() {
         return "success";
