@@ -70,28 +70,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
         // 用来存id, 看是否有交易
         HashMap<String, OrderPlus> mapEngineIdVsOrderPlus = new HashMap<>(100);
-
-        // 暂存主机厂利润
-        int tmpEngineFactoryProfit = 0;
-        // 暂存供应商利润
-        int tmpSupplierProfit = 0;
-        for (OrderPlus orderPlus : listOrderPlus) {
-            String engineFactoryId = orderPlus.getEngineFactoryId();
-            String supplierId = orderPlus.getSupplierId();
-            mapEngineIdVsOrderPlus.put(engineFactoryId, orderPlus);
-            // 主机厂与供应商交易后的利润
-            if (mapEngineFactoryProfitSum.containsKey(engineFactoryId)) {
-                tmpEngineFactoryProfit = mapEngineFactoryProfitSum.get(engineFactoryId);
-            }
-            tmpEngineFactoryProfit += orderPlus.getEngineFactoryProfit();
-            mapEngineFactoryProfitSum.put(engineFactoryId, tmpEngineFactoryProfit);
-            // 供应商与主机厂交易后的利润
-            if (mapSupplierProfitSum.containsKey(supplierId)) {
-                tmpSupplierProfit = mapSupplierProfitSum.get(supplierId);
-            }
-            tmpSupplierProfit += orderPlus.getSupplierProfit();
-            mapSupplierProfitSum.put(supplierId, tmpEngineFactoryProfit);
-        }
+        setMapEngineFactoryAndSupplierProfitSum(listOrderPlus, mapEngineFactoryProfitSum, mapSupplierProfitSum, mapEngineIdVsOrderPlus);
 
         // 用来存成交价格
         int sumFinalMarketPrice = 0;
@@ -761,6 +740,39 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             aSupplierDynamic.setSupplierCreditA(aSupplierDynamic.getSupplierCreditA() / sumNewSupplierCreditWithAlive);
         }
 
+    }
+
+    /**
+     * 算出各主机厂与供应商之间的交易利润和,
+     * 并加入到各自对应的map集合中
+     *
+     * @param listOrderPlus             交易结算集合
+     * @param mapEngineFactoryProfitSum 主机厂利润集合(主机厂id, 和供应商交易好后的利润), 算好后put该处
+     * @param mapSupplierProfitSum      供应商利润集合(供应商id, 和主机厂交易好后的利润), 算好后put该处
+     * @param mapEngineIdVsOrderPlus    存放主机厂id对应的订单, 后续处理需要
+     */
+    private void setMapEngineFactoryAndSupplierProfitSum(List<OrderPlus> listOrderPlus, Map<String, Integer> mapEngineFactoryProfitSum, Map<String, Integer> mapSupplierProfitSum, HashMap<String, OrderPlus> mapEngineIdVsOrderPlus) {
+        // 暂存主机厂利润
+        int tmpEngineFactoryProfit = 0;
+        // 暂存供应商利润
+        int tmpSupplierProfit = 0;
+        for (OrderPlus orderPlus : listOrderPlus) {
+            String engineFactoryId = orderPlus.getEngineFactoryId();
+            String supplierId = orderPlus.getSupplierId();
+            mapEngineIdVsOrderPlus.put(engineFactoryId, orderPlus);
+            // 主机厂与供应商交易后的利润
+            if (mapEngineFactoryProfitSum.containsKey(engineFactoryId)) {
+                tmpEngineFactoryProfit = mapEngineFactoryProfitSum.get(engineFactoryId);
+            }
+            tmpEngineFactoryProfit += orderPlus.getEngineFactoryProfit();
+            mapEngineFactoryProfitSum.put(engineFactoryId, tmpEngineFactoryProfit);
+            // 供应商与主机厂交易后的利润
+            if (mapSupplierProfitSum.containsKey(supplierId)) {
+                tmpSupplierProfit = mapSupplierProfitSum.get(supplierId);
+            }
+            tmpSupplierProfit += orderPlus.getSupplierProfit();
+            mapSupplierProfitSum.put(supplierId, tmpEngineFactoryProfit);
+        }
     }
 
     /**
