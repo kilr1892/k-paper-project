@@ -122,16 +122,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         calAndSetSupplierCapacityUtilizationAndAdjustCapacityPriceQuality(listSupplierDynamics, avgFinalMarketPrice, sumArrSupplierOrderNumber, avgArrSupplierOrderNumber, avgArrSupplierQuality);
 
         // 填充map数据
-        Map<String, TbEngineFactory> mapEngineFactory = new HashMap<>(100);
-        Map<String, TbSupplier> mapSupplier = new HashMap<>(100);
-        for (TbEngineFactory aEngineFactory : listEngineFactory) {
-            String engineFactoryId = aEngineFactory.getEngineFactoryId();
-            mapEngineFactory.put(engineFactoryId, aEngineFactory);
-        }
-        for (TbSupplier aSupplier : listSupplier) {
-            String supplierId = aSupplier.getSupplierId();
-            mapSupplier.put(supplierId, aSupplier);
-        }
+        Map<String, TbEngineFactory> mapEngineFactory = getMapEngineFactoryIdVsEngineFactory(listEngineFactory);
+        Map<String, TbSupplier> mapSupplier = getMapSupplierIdVsSupplier(listSupplier);
 
         // # 企业进入与退出
         // 主机厂信誉度最高的
@@ -505,6 +497,36 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
     }
 
     /**
+     * 把供应商id 和 对应的供应商静态数据 存入map中
+     *
+     * @param listSupplier 供应商静态数据集合
+     * @return 供应商id - 供应商静态数据
+     */
+    private Map<String, TbSupplier> getMapSupplierIdVsSupplier(List<TbSupplier> listSupplier) {
+        Map<String, TbSupplier> mapSupplier = new HashMap<>(100);
+        for (TbSupplier aSupplier : listSupplier) {
+            String supplierId = aSupplier.getSupplierId();
+            mapSupplier.put(supplierId, aSupplier);
+        }
+        return mapSupplier;
+    }
+
+    /**
+     * 把主机厂id 与 主机厂静态数据 存入map中
+     *
+     * @param listEngineFactory 主机厂静态数据集合
+     * @return 主机厂id - 主机厂静态数据
+     */
+    private Map<String, TbEngineFactory> getMapEngineFactoryIdVsEngineFactory(List<TbEngineFactory> listEngineFactory) {
+        Map<String, TbEngineFactory> mapEngineFactory = new HashMap<>(100);
+        for (TbEngineFactory aEngineFactory : listEngineFactory) {
+            String engineFactoryId = aEngineFactory.getEngineFactoryId();
+            mapEngineFactory.put(engineFactoryId, aEngineFactory);
+        }
+        return mapEngineFactory;
+    }
+
+    /**
      * 对供应商计算并设置产能利用率,
      * 调整产能/价格/质量
      *
@@ -568,7 +590,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             // 更新
             aSupplierDynamic.setSupplierCapacityUtilization(supplierCapacityUtilization);
 
-            // 主机产能
+            // 供应商产能
             int supplierCapacity = aSupplierDynamic.getSupplierCapacityM();
 
             // 供应商原来价格下限

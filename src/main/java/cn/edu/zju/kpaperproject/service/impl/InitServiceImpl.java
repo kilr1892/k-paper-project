@@ -152,6 +152,7 @@ public class InitServiceImpl implements InitService {
         tbSupplier.setSupplierLocationGY(position[NumberEnum.POSITION_Y_ARRAY_INDEX]);
         // 供应商代码
         tbSupplier.setSupplierType(InitSupplierUtils.initType(typeCode));
+        tbSupplierDynamic.setSupplierType(InitSupplierUtils.initType(typeCode));
         // 每阶段固定成本
         tbSupplier.setSupplierFixedCostC(InitSupplierUtils.initFixedCost());
         tbSupplier.setSupplierAlive(true);
