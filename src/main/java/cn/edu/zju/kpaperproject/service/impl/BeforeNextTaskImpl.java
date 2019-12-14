@@ -94,33 +94,9 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 产品成交的平均质量
         double avgFinalMarketQuality = sumFinalMarketQuality * 1D / listEngineFactoryFinalProvisions.size();
 
-        for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
-            // 计算所有主机厂与供应商的总资产
-            String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
-            // 开始资产
-            int initEngineFactoryTotalAssets = aEngineFactoryDynamic.getEngineFactoryTotalAssetsP();
-            // 销售收入 = 售价 * 实际数量
-            int totalSalesMoney = 0;
-            // 主机厂与供应商交易的利润和
-            int engineFactoryProfit = 0;
-
-            OrderPlus orderPlus = mapEngineIdVsOrderPlus.get(engineFactoryId);
-            EngineFactoryFinalProvision engineFactoryFinalProvision = mapEngineIdVsEngineFactoryFinalProvision.get(engineFactoryId);
-            if (orderPlus != null && engineFactoryFinalProvision != null) {
-                // 有生产产品
-                int finalMarketPrice = engineFactoryFinalProvision.getFinalMarketPrice();
-                int actualSaleNumber = engineFactoryFinalProvision.getActualSaleNumber();
-                totalSalesMoney = finalMarketPrice * actualSaleNumber;
-                // 与供应商的交易利润
-                engineFactoryProfit = mapEngineFactoryProfitSum.get(engineFactoryId);
-            }
-            // 固定成本
-            int engineFactoryFixedCost = EngineFactoryEnum.engineFactoryFixedCost;
-            int engineFactoryTotalAsserts = initEngineFactoryTotalAssets + totalSalesMoney + engineFactoryProfit - engineFactoryFixedCost;
-
-            // 更新模型中的总资产
-            aEngineFactoryDynamic.setEngineFactoryTotalAssetsP(engineFactoryTotalAsserts);
-        }
+        // 计算所有主机厂的总资产
+        calAndSetEngineFactoryTotalAssets(listEngineFactoryDynamic, mapEngineFactoryProfitSum, mapEngineIdVsOrderPlus, mapEngineIdVsEngineFactoryFinalProvision);
+        // 与供应商的总资产
 
         // 供应商总资产计算并更新
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
@@ -740,6 +716,48 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             aSupplierDynamic.setSupplierCreditA(aSupplierDynamic.getSupplierCreditA() / sumNewSupplierCreditWithAlive);
         }
 
+    }
+
+    /**
+     * 计算所有主机厂的总资产
+     *
+     * @param listEngineFactoryDynamic                  所有主机厂的动态数据集合
+     * @param mapEngineFactoryProfitSum                 主机厂与供应商交易后的利润集合
+     * @param mapEngineIdVsOrderPlus                    主机厂与市场交易的订单集合
+     * @param mapEngineIdVsEngineFactoryFinalProvision  主机厂为市场交易提供的产品实际价格和卖出结果集合
+     */
+    private void calAndSetEngineFactoryTotalAssets(
+            List<TbEngineFactoryDynamic> listEngineFactoryDynamic
+            , Map<String, Integer> mapEngineFactoryProfitSum
+            , HashMap<String, OrderPlus> mapEngineIdVsOrderPlus
+            , HashMap<String, EngineFactoryFinalProvision> mapEngineIdVsEngineFactoryFinalProvision) {
+
+        for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
+            String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
+            // 开始资产
+            int initEngineFactoryTotalAssets = aEngineFactoryDynamic.getEngineFactoryTotalAssetsP();
+            // 销售收入 = 售价 * 实际数量
+            int totalSalesMoney = 0;
+            // 主机厂与供应商交易的利润和
+            int engineFactoryProfit = 0;
+
+            OrderPlus orderPlus = mapEngineIdVsOrderPlus.get(engineFactoryId);
+            EngineFactoryFinalProvision engineFactoryFinalProvision = mapEngineIdVsEngineFactoryFinalProvision.get(engineFactoryId);
+            if (orderPlus != null && engineFactoryFinalProvision != null) {
+                // 有生产产品
+                int finalMarketPrice = engineFactoryFinalProvision.getFinalMarketPrice();
+                int actualSaleNumber = engineFactoryFinalProvision.getActualSaleNumber();
+                totalSalesMoney = finalMarketPrice * actualSaleNumber;
+                // 与供应商的交易利润
+                engineFactoryProfit = mapEngineFactoryProfitSum.get(engineFactoryId);
+            }
+            // 固定成本
+            int engineFactoryFixedCost = EngineFactoryEnum.engineFactoryFixedCost;
+            int engineFactoryTotalAsserts = initEngineFactoryTotalAssets + totalSalesMoney + engineFactoryProfit - engineFactoryFixedCost;
+
+            // 更新模型中的总资产
+            aEngineFactoryDynamic.setEngineFactoryTotalAssetsP(engineFactoryTotalAsserts);
+        }
     }
 
     /**

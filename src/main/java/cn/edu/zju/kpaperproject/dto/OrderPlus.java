@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * 主机厂与供应商之间的交易最终结果模型
+ * (比如是双方否违约/供应商实际质量与价格/ 信誉度等等)
  * TbOrder 补充
  *
  * @author RichardLee
