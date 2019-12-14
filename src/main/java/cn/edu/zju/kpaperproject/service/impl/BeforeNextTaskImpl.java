@@ -5,10 +5,11 @@ import cn.edu.zju.kpaperproject.dto.OrderPlus;
 import cn.edu.zju.kpaperproject.dto.TransactionContract;
 import cn.edu.zju.kpaperproject.enums.CalculationEnum;
 import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
+import cn.edu.zju.kpaperproject.enums.NumberEnum;
 import cn.edu.zju.kpaperproject.enums.SupplierEnum;
-import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamic;
-import cn.edu.zju.kpaperproject.pojo.TbSupplierDynamic;
+import cn.edu.zju.kpaperproject.pojo.*;
 import cn.edu.zju.kpaperproject.service.BeforeNextTask;
+import cn.edu.zju.kpaperproject.utils.*;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
 
@@ -42,13 +43,17 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
      * @param listEngineFactoryDynamic         所有存活主机厂动态数据的集合
      * @param listSupplierDynamics             所有存活服务商动态数据集合
      */
-    @Override
     public void beforeNextTask(
-            List<EngineFactoryFinalProvision> listEngineFactoryFinalProvisions
+            int experimentsNumber
+            , int cycleTime
+            , List<EngineFactoryFinalProvision> listEngineFactoryFinalProvisions
             , List<OrderPlus> listOrderPlus
             , ArrayList<TransactionContract> listTransactionContract
+            , List<TbEngineFactory> listEngineFactory
             , List<TbEngineFactoryDynamic> listEngineFactoryDynamic
-            , List<TbSupplierDynamic> listSupplierDynamics) {
+            , List<TbSupplier> listSupplier
+            , List<TbSupplierDynamic> listSupplierDynamics
+            , Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix) {
 
         // 暂存主机厂利润和
         Map<String, Integer> mapEngineFactoryProfitSum = new HashMap<>(100);
@@ -362,9 +367,408 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             }
         }
 
+        // 填充map数据
+        Map<String, TbEngineFactory> mapEngineFactory = new HashMap<>(100);
+        Map<String, TbSupplier> mapSupplier = new HashMap<>(100);
+        for (TbEngineFactory aEngineFactory : listEngineFactory) {
+            String engineFactoryId = aEngineFactory.getEngineFactoryId();
+            mapEngineFactory.put(engineFactoryId, aEngineFactory);
+        }
+        for (TbSupplier aSupplier : listSupplier) {
+            String supplierId = aSupplier.getSupplierId();
+            mapSupplier.put(supplierId, aSupplier);
+        }
 
-        // 企业进入与退出
-        // 双方信誉度归一化
+        // # 企业进入与退出
+        // 主机厂信誉度最高的
+        TbEngineFactoryDynamic engineFactoryDynamicWithHighestCredit = listEngineFactoryDynamic.get(0);
+        // 主机厂信誉度
+        double sumEngineFactoryCreditWithAlive = engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH();
+        int engineFactoryIsAliveNumber = 0;
+        for (int i = 1; i < listEngineFactoryDynamic.size(); i++) {
+            TbEngineFactoryDynamic tmp = listEngineFactoryDynamic.get(i);
+            String engineFactoryId = tmp.getEngineFactoryId();
+            TbEngineFactory tbEngineFactory = mapEngineFactory.get(engineFactoryId);
+            if (tbEngineFactory.getEngineFactoryAlive()) {
+                // 存活才算
+                engineFactoryIsAliveNumber++;
+                double engineFactoryCreditH = tmp.getEngineFactoryCreditH();
+                sumEngineFactoryCreditWithAlive += engineFactoryCreditH;
+                if (engineFactoryCreditH > engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()) {
+                    engineFactoryDynamicWithHighestCredit = tmp;
+                }
+            }
+        }
+        // 所有存活主机厂平均信誉度
+        double aveEngineFactoryCredit = sumEngineFactoryCreditWithAlive / engineFactoryIsAliveNumber;
+
+
+        // 求出供应商信誉的最高的
+        // 供应商信誉度
+        TbSupplierDynamic supplierDynamicWithHighestCredit = listSupplierDynamics.get(0);
+        double sumSupplierCreditWithAlive = supplierDynamicWithHighestCredit.getSupplierCreditA();
+        int supplierIsAliveNumber = 0;
+        for (int i = 1; i < listSupplierDynamics.size(); i++) {
+            TbSupplierDynamic tmp = listSupplierDynamics.get(i);
+            String supplierId = tmp.getSupplierId();
+            TbSupplier tbSupplier = mapSupplier.get(supplierId);
+            if (tbSupplier.getSupplierAlive()) {
+                // 存活才算
+                supplierIsAliveNumber++;
+                Double supplierCreditA = tmp.getSupplierCreditA();
+                sumSupplierCreditWithAlive += supplierCreditA;
+                if (supplierCreditA > supplierDynamicWithHighestCredit.getSupplierCreditA()) {
+                    supplierDynamicWithHighestCredit = tmp;
+                }
+            }
+        }
+        // 所有存活供应商平均信誉度
+        double aveSupplierCredit = sumEngineFactoryCreditWithAlive / engineFactoryIsAliveNumber;
+
+        // 主机厂的退出
+        TbEngineFactory tbEngineFactory = null;
+        for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
+            int engineFactoryTotalAssets = aEngineFactoryDynamic.getEngineFactoryTotalAssetsP();
+            if (engineFactoryTotalAssets < 0) {
+                String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
+                tbEngineFactory = mapEngineFactory.get(engineFactoryId);
+                tbEngineFactory.setEngineFactoryAlive(false);
+            }
+        }
+        // 供应商的退出
+        TbSupplier tbSupplier = null;
+        for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
+            int supplierTotalAssets = aSupplierDynamic.getSupplierTotalAssetsP();
+            if (supplierTotalAssets < 0) {
+                String supplierId = aSupplierDynamic.getSupplierId();
+                tbSupplier = mapSupplier.get(supplierId);
+                tbSupplier.setSupplierAlive(false);
+            }
+        }
+
+        // 主机厂的进入
+        // 所有还存活主机厂实际供给数
+        int sumFinalProductNumberWithAlive = 0;
+        // 算一下所有的主机厂实际供给数
+        for (EngineFactoryFinalProvision aEngineFactoryFinalProvision : listEngineFactoryFinalProvisions) {
+            String engineFactoryId = aEngineFactoryFinalProvision.getEngineFactoryId();
+            TbEngineFactory tmp = mapEngineFactory.get(engineFactoryId);
+            if (tmp.getEngineFactoryAlive()) {
+                // 存活才加实际供给数
+                sumFinalProductNumberWithAlive += aEngineFactoryFinalProvision.getFinalProductNumber();
+            }
+        }
+
+        // 用来存新生成的主机厂id, 和信誉度最高的供应商id        supplierDynamicWithHighestCredit.getSupplierId();
+
+        Map<String, String> mapNewEngineFactoryIdVsSupplierIdWithHighestCredit = new HashMap<>();
+        EngineFactoryFinalProvision engineFactoryFinalProvision = listEngineFactoryFinalProvisions.get(0);
+        int marketNeedNumber = engineFactoryFinalProvision.getMarketNeedNumber();
+        TbEngineFactoryDynamic tbEngineFactoryDynamic;
+        if (marketNeedNumber > sumFinalProductNumberWithAlive) {
+            // 真实需求 > 所有主机厂的(阶段结束, 实际能提供的产品)之和
+            // 随机生成1~3个主机厂
+            int tmp = RandomUtils.nextInt(1, 4);
+            for (int i = 0; i < tmp; i++) {
+                tbEngineFactory = new TbEngineFactory();
+                tbEngineFactoryDynamic = new TbEngineFactoryDynamic();
+                // 第几轮实验
+                tbEngineFactory.setExperimentsNumber(experimentsNumber);
+                // 循环
+                tbEngineFactory.setCycleTimes(cycleTime);
+
+                // 工厂id
+                String engineFactoryId = CommonUtils.genId();
+                tbEngineFactory.setEngineFactoryId(engineFactoryId);
+                mapNewEngineFactoryIdVsSupplierIdWithHighestCredit.put(engineFactoryId, supplierDynamicWithHighestCredit.getSupplierId());
+
+                // 地理位置
+                tbSupplier = mapSupplier.get(supplierDynamicWithHighestCredit.getSupplierId());
+
+                int[] position = genNewPosition(new int[]{tbSupplier.getSupplierLocationGX(), tbSupplier.getSupplierLocationGY()});
+
+                tbEngineFactory.setEngineFactoryLocationGX(position[NumberEnum.POSITION_X_ARRAY_INDEX]);
+                tbEngineFactory.setEngineFactoryLocationGY(position[NumberEnum.POSITION_Y_ARRAY_INDEX]);
+                // 存活
+                tbEngineFactory.setEngineFactoryAlive(true);
+
+                // 工厂动态数据------------------
+                tbEngineFactoryDynamic.setCycleTimes(cycleTime);
+                tbEngineFactoryDynamic.setEngineFactoryId(engineFactoryId);
+                // 初始总资产
+                tbEngineFactoryDynamic.setEngineFactoryTotalAssetsP(InitEngineFactoryUtils.initTotalAssets());
+                // 信誉度
+                // 主机厂信誉度平均值
+                tbEngineFactoryDynamic.setEngineFactoryCreditH(aveEngineFactoryCredit);
+                // 最大产能
+                tbEngineFactoryDynamic.setEngineFactoryCapacityM(InitEngineFactoryUtils.initCapacity());
+                // 价格
+                int[] price = InitEngineFactoryUtils.initPrice();
+                tbEngineFactoryDynamic.setEngineFactoryPricePL(price[NumberEnum.PRICE_LOW_ARRAY_INDEX]);
+                tbEngineFactoryDynamic.setEngineFactoryPricePU(price[NumberEnum.PRICE_UPPER_ARRAY_INDEX]);
+                // 质量
+                int quality = InitEngineFactoryUtils.initQuality();
+                tbEngineFactoryDynamic.setEngineFactoryQualityQ(quality);
+                // 需求预测
+                tbEngineFactoryDynamic.setEngineFactoryDemandForecastD(CalculationUtils.demandForecast((NumberEnum.CYCLE_TIME_INIT)
+                        , price[NumberEnum.PRICE_LOW_ARRAY_INDEX], price[NumberEnum.PRICE_UPPER_ARRAY_INDEX], quality));
+
+                // 加入集合中
+                listEngineFactory.add(tbEngineFactory);
+                mapEngineFactory.put(engineFactoryId, tbEngineFactory);
+                listEngineFactoryDynamic.add(tbEngineFactoryDynamic);
+            }
+//TODO 关系矩阵还没写, 看看是不是都用了存活的
+        }
+
+
+        // 一类服务, 供应商的实际需求量之和
+        int[] sumArrEngineFactoryNeedServiceNumberWithAlive = new int[5];
+        // 一类服务, 供应商信誉度之和
+        int[] sumArrSupplierCreditWithAlive = new int[5];
+        // 一类服务, 供应商存活的数量
+        int[] sumArrSupplierIsAlive = new int[5];
+
+        for (TransactionContract aTransactionContract : listTransactionContract) {
+            String supplierId = aTransactionContract.getSupplierId();
+            TbSupplier tmpSupplier = mapSupplier.get(supplierId);
+            if (tmpSupplier.getSupplierAlive()) {
+                int taskType = aTransactionContract.getTaskType();
+                int engineFactoryNeedServiceNumber = aTransactionContract.getEngineFactoryNeedServiceNumber();
+                double supplierCredit = aTransactionContract.getSupplierCredit();
+                switch (taskType) {
+                    case 210:
+                        sumArrEngineFactoryNeedServiceNumberWithAlive[0] += engineFactoryNeedServiceNumber;
+                        sumArrSupplierCreditWithAlive[0] += supplierCredit;
+                        sumArrSupplierIsAlive[0]++;
+                        break;
+                    case 220:
+                        sumArrEngineFactoryNeedServiceNumberWithAlive[1] += engineFactoryNeedServiceNumber;
+                        sumArrSupplierCreditWithAlive[1] += supplierCredit;
+                        sumArrSupplierIsAlive[1]++;
+                        break;
+                    case 230:
+                        sumArrEngineFactoryNeedServiceNumberWithAlive[2] += engineFactoryNeedServiceNumber;
+                        sumArrSupplierCreditWithAlive[2] += supplierCredit;
+                        sumArrSupplierIsAlive[2]++;
+                        break;
+                    case 240:
+                        sumArrEngineFactoryNeedServiceNumberWithAlive[3] += engineFactoryNeedServiceNumber;
+                        sumArrSupplierCreditWithAlive[3] += supplierCredit;
+                        sumArrSupplierIsAlive[3]++;
+                        break;
+                    case 250:
+                        sumArrEngineFactoryNeedServiceNumberWithAlive[4] += engineFactoryNeedServiceNumber;
+                        sumArrSupplierCreditWithAlive[4] += supplierCredit;
+                        sumArrSupplierIsAlive[4]++;
+                        break;
+                    default:
+                        throw new RuntimeException("no such type");
+                }
+            }
+        }
+
+        // 供应商的进入
+        // 某类服务供应商产能之和
+        int[] supplierTypeCode = {SupplierEnum.supplierType210, SupplierEnum.supplierType220, SupplierEnum.supplierType230
+                , SupplierEnum.supplierType240, SupplierEnum.supplierType250};
+
+        int[] sumArrSupplierCapacity = new int[5];
+        for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
+            String supplierId = aSupplierDynamic.getSupplierId();
+            TbSupplier tmpSupplier = mapSupplier.get(supplierId);
+            if (tmpSupplier.getSupplierAlive()) {
+                int type = tmpSupplier.getSupplierType();
+                int supplierCapacity = aSupplierDynamic.getSupplierCapacityM();
+                switch (type) {
+                    case 210:
+                        sumArrSupplierCapacity[0] += supplierCapacity;
+                        break;
+                    case 220:
+                        sumArrSupplierCapacity[1] += supplierCapacity;
+                        break;
+                    case 230:
+                        sumArrSupplierCapacity[2] += supplierCapacity;
+                        break;
+                    case 240:
+                        sumArrSupplierCapacity[3] += supplierCapacity;
+                        break;
+                    case 250:
+                        sumArrSupplierCapacity[4] += supplierCapacity;
+                        break;
+                    default:
+                        throw new RuntimeException("no such type");
+                }
+            }
+        }
+        // 用来存储新生成的供应商ID
+        Map<String, String> mapNewSupplierIdVsEngineFactoryIdWithHighestCredit = new HashMap<>();
+        // 随机生成供应商
+        for (int i = 0; i < 4; i++) {
+            double aveSupplierCreditTmp = sumArrSupplierCreditWithAlive[i] * 1D / sumArrSupplierIsAlive[i];
+
+            int engineFactoryNeedServiceNumberWithAlive = sumArrEngineFactoryNeedServiceNumberWithAlive[i];
+            int supplierCapacity = sumArrSupplierCapacity[i];
+            if (supplierCapacity < engineFactoryNeedServiceNumberWithAlive) {
+                // 供应商产能 < 主机厂对该类服务的需求
+                int tmp = RandomUtils.nextInt(1, 4);
+                for (int j = 0; j < tmp; j++) {
+                    tbSupplier = new TbSupplier();
+                    tbSupplier.setExperimentsNumber(experimentsNumber);
+                    tbSupplier.setCycleTimes(cycleTime);
+                    TbSupplierDynamic tbSupplierDynamic = new TbSupplierDynamic();
+                    tbSupplierDynamic.setCycleTimes(cycleTime);
+
+                    // 供应商id
+                    String supplierId = CommonUtils.genId();
+                    tbSupplier.setSupplierId(supplierId);
+                    mapNewSupplierIdVsEngineFactoryIdWithHighestCredit.put(supplierId, engineFactoryDynamicWithHighestCredit.getEngineFactoryId());
+
+                    // 地理位置
+                    tbEngineFactory = mapEngineFactory.get(engineFactoryDynamicWithHighestCredit.getEngineFactoryId());
+                    int[] position = genNewPosition(new int[]{tbEngineFactory.getEngineFactoryLocationGX(), tbEngineFactory.getEngineFactoryLocationGY()});
+                    tbSupplier.setSupplierLocationGX(position[NumberEnum.POSITION_X_ARRAY_INDEX]);
+                    tbSupplier.setSupplierLocationGY(position[NumberEnum.POSITION_Y_ARRAY_INDEX]);
+                    // 供应商代码
+                    tbSupplier.setSupplierType(InitSupplierUtils.initType(supplierTypeCode[i]));
+                    // 每阶段固定成本
+                    tbSupplier.setSupplierFixedCostC(InitSupplierUtils.initFixedCost());
+                    tbSupplier.setSupplierAlive(true);
+                    // 动态数据----------------
+                    tbSupplierDynamic.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
+                    // 供应商id
+                    tbSupplierDynamic.setSupplierId(supplierId);
+                    // 初始总资产
+                    tbSupplierDynamic.setSupplierTotalAssetsP(InitSupplierUtils.initTotalAssets());
+                    // 信誉度
+                    tbSupplierDynamic.setSupplierCreditA(aveSupplierCreditTmp);
+                    // 最大产能
+                    tbSupplierDynamic.setSupplierCapacityM(InitSupplierUtils.initCapacity());
+                    // 价格
+                    int[] price = InitSupplierUtils.initPrice();
+                    tbSupplierDynamic.setSupplierPricePL(price[NumberEnum.PRICE_LOW_ARRAY_INDEX]);
+                    tbSupplierDynamic.setSupplierPricePU(price[NumberEnum.PRICE_UPPER_ARRAY_INDEX]);
+                    // 质量
+                    tbSupplierDynamic.setSupplierQualityQs(InitSupplierUtils.initQuality());
+
+                    // 加入集合中
+                    listSupplier.add(tbSupplier);
+                    mapSupplier.put(supplierId, tbSupplier);
+                    listSupplierDynamics.add(tbSupplierDynamic);
+                }
+            }
+        }
+
+
+        // TODO 关系强度, 都是重新生成的, 每个阶段生成, 历史数据用map读出来,
+        // 下一个阶段要用的关系矩阵
+        List<TbRelationMatrix> listNewRelationMatrix = new ArrayList<>();
+        // 两个循环生成关系矩阵
+        TbRelationMatrix tbRelationMatrix = new TbRelationMatrix();
+        tbRelationMatrix.setExperimentsNumber(experimentsNumber);
+        tbRelationMatrix.setCycleTimes(cycleTime);
+        for (TbEngineFactory aTbEngineFactory : listEngineFactory) {
+            if (aTbEngineFactory.getEngineFactoryAlive()) {
+                String engineFactoryId = aTbEngineFactory.getEngineFactoryId();
+                tbRelationMatrix.setEngineFactoryId(engineFactoryId);
+                for (TbSupplier aTbSupplier : listSupplier) {
+                    if (aTbSupplier.getSupplierAlive()) {
+                        String supplierId = aTbSupplier.getSupplierId();
+                        tbRelationMatrix.setSupplierId(supplierId);
+                        // 获取之前的数据
+                        TbRelationMatrix oldRelationMatrix = mapRelationshipMatrix2WithTbRelationMatrix.get(engineFactoryId + supplierId);
+                        if (oldRelationMatrix != null) {
+                            // 原来有的
+                            tbRelationMatrix.setRelationScore(oldRelationMatrix.getRelationScore());
+                            tbRelationMatrix.setInitialRelationalDegree(oldRelationMatrix.getInitialRelationalDegree());
+                            tbRelationMatrix.setAccumulativeTotalScore(oldRelationMatrix.getAccumulativeTotalScore());
+                            tbRelationMatrix.setTransactionNumber(oldRelationMatrix.getTransactionNumber());
+                        } else {
+                            // 要么工厂新增, 要么供应商新增
+                            if (mapNewEngineFactoryIdVsSupplierIdWithHighestCredit.containsKey(engineFactoryId)) {
+                                // 工厂是新增的
+                                if (supplierId.equals(mapNewEngineFactoryIdVsSupplierIdWithHighestCredit.get(engineFactoryId))) {
+                                    // 供应商id 与 信誉度最高的供应商id相同
+                                    tbRelationMatrix.setRelationScore(0.2);
+                                    tbRelationMatrix.setInitialRelationalDegree(0.2);
+                                } else {
+                                    // 供应商id 就是普通的供应商
+                                    double initRelationshipStrengthScore = InitRelationMatrixUtils.initRelationshipStrengthScore();
+                                    tbRelationMatrix.setRelationScore(initRelationshipStrengthScore);
+                                    tbRelationMatrix.setInitialRelationalDegree(initRelationshipStrengthScore);
+                                }
+                            } else {
+                                // 供应商是新增的
+                                if (engineFactoryId.equals(mapNewSupplierIdVsEngineFactoryIdWithHighestCredit.get(supplierId))) {
+                                    // 主机厂id 与 信誉度最高的主机厂id相同
+                                    tbRelationMatrix.setRelationScore(0.2);
+                                    tbRelationMatrix.setInitialRelationalDegree(0.2);
+                                }else {
+                                    // 主机厂id 就是普通的主机厂
+                                    double initRelationshipStrengthScore = InitRelationMatrixUtils.initRelationshipStrengthScore();
+                                    tbRelationMatrix.setRelationScore(initRelationshipStrengthScore);
+                                    tbRelationMatrix.setInitialRelationalDegree(initRelationshipStrengthScore);
+                                }
+                            }
+                            // 补全其他的值
+                            tbRelationMatrix.setAccumulativeTotalScore(0);
+                            tbRelationMatrix.setTransactionNumber(0);
+                        }
+                        listNewRelationMatrix.add(tbRelationMatrix);
+                    }
+                }
+            }
+        }
+
+
+        // # 双方信誉度归一化
+        // 退出后的厂还活着的
+        int sumNewEngineFactoryCreditWithAlive = 0;
+        for (TbEngineFactory aEngineFactoryDynamic : listEngineFactory) {
+            String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
+            if (mapEngineFactory.get(engineFactoryId).getEngineFactoryAlive()) {
+                sumNewEngineFactoryCreditWithAlive += aEngineFactoryDynamic.getEngineFactoryFixedCostC();
+
+            }
+        }
+        // 主机厂归一化
+        for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
+            aEngineFactoryDynamic.setEngineFactoryCreditH(aEngineFactoryDynamic.getEngineFactoryCreditH() / sumNewEngineFactoryCreditWithAlive);
+        }
+
+        // 供应商归一化
+        int sumNewSupplierCreditWithAlive = 0;
+        for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
+            String supplierId = aSupplierDynamic.getSupplierId();
+            if (mapSupplier.get(supplierId).getSupplierAlive()) {
+                sumNewSupplierCreditWithAlive += aSupplierDynamic.getSupplierCreditA();
+            }
+        }
+        for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
+            aSupplierDynamic.setSupplierCreditA(aSupplierDynamic.getSupplierCreditA() / sumNewSupplierCreditWithAlive);
+        }
+
+    }
+
+    /**
+     * 生成新的坐标
+     *
+     * @param arrPosition 信誉度最高的主机厂或供应商的位置坐标
+     * @return 生成的新坐标
+     */
+    private int[] genNewPosition(int[] arrPosition) {
+        int[] res = new int[2];
+        int x = arrPosition[0];
+        int y = arrPosition[1];
+        int newX = RandomUtils.nextInt(x - 2, x + 3);
+        int newY = RandomUtils.nextInt(y - 2, y + 3);
+        newX = newX < 0 ? 0 : newX;
+        newX = newX > 20 ? 20 : newX;
+        newY = newY < 0 ? 0 : newY;
+        newY = newY > 20 ? 20 : newY;
+        res[0] = newX;
+        res[1] = newY;
+        return res;
     }
 
 //--------------------------生成最终的交货结果-----------------------------

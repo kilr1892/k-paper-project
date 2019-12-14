@@ -93,6 +93,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // 计算新的关系强度
             double newRelationshipStrength = getNewRelationshipStrength(aTransactionContract, whetherPerformContract, evaluationScore, mapRelationshipMatrix2WithTbRelationMatrix);
             orderPlus.setRelationshipStrength(newRelationshipStrength);
+            orderPlus.setRelationshipStrength(newRelationshipStrength);
 
             // 计算利润
             int[] profit = getProfit(aTransactionContract, whetherPerformContract, actualTransactionsNumber);
@@ -274,14 +275,17 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // 有一个不履约就为负
             accumulativeTotalScore -= evaluationScoreSum;
         }
+        // 重新设置累加的中间变量
+        tbRelationMatrix.setAccumulativeTotalScore(accumulativeTotalScore);
+
         // 交易次数 =0?
 
         int transactionNumber = tbRelationMatrix.getTransactionNumber() + 1;
         tbRelationMatrix.setTransactionNumber(transactionNumber);
-        // TODO 什么时候把这个修改交易次数的记录加入呢
-//        TbRelationMatrix tbRelationMatrix1 = mapRelationshipMatrix2WithTbRelationMatrix.get(key);
-
-        return initialRelationalDegree + relationshipStrengthA2Slash * accumulativeTotalScore / (20 * transactionNumber);
+        // 重新计算出的关系强度
+        double relationScore = initialRelationalDegree + 1D * relationshipStrengthA2Slash * accumulativeTotalScore / (20 * transactionNumber);
+        tbRelationMatrix.setRelationScore(relationScore);
+        return relationScore;
     }
 
 

@@ -72,7 +72,8 @@ public class InitServiceImpl implements InitService {
             tbEngineFactory.setEngineFactoryLocationGX(position[NumberEnum.POSITION_X_ARRAY_INDEX]);
             tbEngineFactory.setEngineFactoryLocationGY(position[NumberEnum.POSITION_Y_ARRAY_INDEX]);
             // 每阶段固定成本
-            tbEngineFactory.setEngineFactoryFixedCostC(InitEngineFactoryUtils.initFixedCost());
+            // TODO 感觉这个没用= =
+//            tbEngineFactory.setEngineFactoryFixedCostC(InitEngineFactoryUtils.initFixedCost());
             // 存活
             tbEngineFactory.setEngineFactoryAlive(true);
             // 单条插入
@@ -170,7 +171,7 @@ public class InitServiceImpl implements InitService {
         tbSupplierDynamic.setSupplierPricePU(price[NumberEnum.PRICE_UPPER_ARRAY_INDEX]);
         // 质量
         tbSupplierDynamic.setSupplierQualityQs(InitSupplierUtils.initQuality());
-        tbSupplierDynamic.setSupplierServiceAlive(true);
+//        tbSupplierDynamic.setSupplierServiceAlive(true);
     }
 
 
@@ -202,7 +203,7 @@ public class InitServiceImpl implements InitService {
                 tbRelationMatrix.setInitialRelationalDegree(initRelationshipStrengthScore);
                 tbRelationMatrix.setAccumulativeTotalScore(0);
                 tbRelationMatrix.setTransactionNumber(0);
-                tbRelationMatrix.setRelationMatrixAlive(true);
+//                tbRelationMatrix.setRelationMatrixAlive(true);
                 // 插入数据库
                 tbRelationMatrixMapper.insertSelective(tbRelationMatrix);
             }

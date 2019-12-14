@@ -36,7 +36,7 @@ public class TestController {
     public String test() {
         int expNum = 0;
         int cycleTime = 1;
-//        initService.init(expNum);
+        initService.init(expNum);
         List<TbEngineFactory> listEngineFactory = new ArrayList<>();
         List<TbEngineFactoryDynamic> listEngineFactoryDynamic = new ArrayList<>();
         List<TbSupplier> listSuppliers = new ArrayList<>();
@@ -49,7 +49,7 @@ public class TestController {
         ArrayList<TransactionContract> transactionContracts = processTaskService.getTransactionContracts(listListEngineFactoryTaskDecomposition, listListSupplierTask, mapRelationshipMatrix);
         List<OrderPlus> listOrderPlus = processTaskService.getTransactionSettlement(expNum, cycleTime, transactionContracts, mapRelationshipMatrix, mapRelationshipMatrix2WithTbRelationMatrix);
         List<EngineFactoryFinalProvision> listEngineFactoryFinalProvision = beforeNextTask.getListEngineFactoryFinalProvision(cycleTime, listOrderPlus);
-        beforeNextTask.beforeNextTask(listEngineFactoryFinalProvision, listOrderPlus, listEngineFactoryDynamic, listSupplierDynamic);
+//        beforeNextTask.beforeNextTask(listEngineFactoryFinalProvision, listOrderPlus, listEngineFactoryDynamic, listSupplierDynamic);
 
 
 

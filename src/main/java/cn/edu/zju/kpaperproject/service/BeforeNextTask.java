@@ -2,11 +2,7 @@ package cn.edu.zju.kpaperproject.service;
 
 import cn.edu.zju.kpaperproject.dto.EngineFactoryFinalProvision;
 import cn.edu.zju.kpaperproject.dto.OrderPlus;
-import cn.edu.zju.kpaperproject.dto.TransactionContract;
-import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamic;
-import cn.edu.zju.kpaperproject.pojo.TbSupplierDynamic;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,10 +31,12 @@ public interface BeforeNextTask {
      * @param listEngineFactoryDynamic         所有存活主机厂动态数据的集合
      * @param listSupplierDynamics             所有存活服务商动态数据集合
      */
-    void beforeNextTask(
-            List<EngineFactoryFinalProvision> listEngineFactoryFinalProvisions
-            , List<OrderPlus> listOrderPlus
-            , ArrayList<TransactionContract> listTransactionContract
-            , List<TbEngineFactoryDynamic> listEngineFactoryDynamic
-            , List<TbSupplierDynamic> listSupplierDynamics);
+//    void beforeNextTask(
+//            List<EngineFactoryFinalProvision> listEngineFactoryFinalProvisions
+//            , List<OrderPlus> listOrderPlus
+//            , ArrayList<TransactionContract> listTransactionContract
+//            , List<TbEngineFactory> listEngineFactory
+//            , List<TbEngineFactoryDynamic> listEngineFactoryDynamic
+//            , List<TbSupplier> listSupplier
+//            , List<TbSupplierDynamic> listSupplierDynamics);
 }
