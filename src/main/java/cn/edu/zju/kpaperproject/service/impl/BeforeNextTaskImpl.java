@@ -96,20 +96,9 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
         // 计算所有主机厂的总资产
         calAndSetEngineFactoryTotalAssets(listEngineFactoryDynamic, mapEngineFactoryProfitSum, mapEngineIdVsOrderPlus, mapEngineIdVsEngineFactoryFinalProvision);
-        // 与供应商的总资产
 
-        // 供应商总资产计算并更新
-        for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
-            String supplierId = aSupplierDynamic.getSupplierId();
-            // 开始总资产
-            int initSupplierTotalAssets = aSupplierDynamic.getSupplierTotalAssetsP();
-            // 利润和
-            int supplierProfitSum = mapSupplierProfitSum.get(supplierId);
-            // 固定成本
-            int supplierFixedCost = SupplierEnum.supplierFixedCost;
-            int supplierTotalAsserts = initSupplierTotalAssets + supplierProfitSum - supplierFixedCost;
-            aSupplierDynamic.setSupplierTotalAssetsP(supplierTotalAsserts);
-        }
+        // 计算供应商总资产并更新
+        calAndSetSupplierTotalAssets(listSupplierDynamics, mapSupplierProfitSum);
 
         // TODO 先分开循环吧, 之后看看能不能合并
         // 计算并更新所有主机厂的产能利用率
@@ -719,9 +708,29 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
     }
 
     /**
+     * 计算供应商总资产并更新
+     *
+     * @param listSupplierDynamics  供应商的动态数据集合(实际被更新的)
+     * @param mapSupplierProfitSum  供应商与主机厂交易后的利润
+     */
+    private void calAndSetSupplierTotalAssets(List<TbSupplierDynamic> listSupplierDynamics, Map<String, Integer> mapSupplierProfitSum) {
+        for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
+            String supplierId = aSupplierDynamic.getSupplierId();
+            // 开始总资产
+            int initSupplierTotalAssets = aSupplierDynamic.getSupplierTotalAssetsP();
+            // 利润和
+            int supplierProfitSum = mapSupplierProfitSum.get(supplierId);
+            // 固定成本
+            int supplierFixedCost = SupplierEnum.supplierFixedCost;
+            int supplierTotalAsserts = initSupplierTotalAssets + supplierProfitSum - supplierFixedCost;
+            aSupplierDynamic.setSupplierTotalAssetsP(supplierTotalAsserts);
+        }
+    }
+
+    /**
      * 计算所有主机厂的总资产
      *
-     * @param listEngineFactoryDynamic                  所有主机厂的动态数据集合
+     * @param listEngineFactoryDynamic                  所有主机厂的动态数据集合(实际被更新的)
      * @param mapEngineFactoryProfitSum                 主机厂与供应商交易后的利润集合
      * @param mapEngineIdVsOrderPlus                    主机厂与市场交易的订单集合
      * @param mapEngineIdVsEngineFactoryFinalProvision  主机厂为市场交易提供的产品实际价格和卖出结果集合
