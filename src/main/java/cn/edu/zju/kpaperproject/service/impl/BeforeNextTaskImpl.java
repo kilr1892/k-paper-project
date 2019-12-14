@@ -156,6 +156,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 }
             }
         }
+        // 所有存活主机厂平均信誉度
+        double aveEngineFactoryCredit = sumEngineFactoryCreditWithAlive / engineFactoryIsAliveNumber;
 //        TbEngineFactoryDynamic engineFactoryDynamicWithHighestCredit = listEngineFactoryDynamic.get(0);
 //        double sumEngineFactoryCreditWithAlive = engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH();
 //        int engineFactoryIsAliveNumber = 1;
@@ -178,15 +180,12 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 //                }
 //            }
 //        }
-        // 所有存活主机厂平均信誉度
-        double aveEngineFactoryCredit = sumEngineFactoryCreditWithAlive / engineFactoryIsAliveNumber;
-
 
         // 求出供应商信誉的最高的
         // 供应商信誉度
-        TbSupplierDynamic supplierDynamicWithHighestCredit = listSupplierDynamics.get(0);
-        double sumSupplierCreditWithAlive = supplierDynamicWithHighestCredit.getSupplierCreditA();
-        int supplierIsAliveNumber = 1;
+        TbSupplierDynamic supplierDynamicWithHighestCredit = null;
+        double sumSupplierCreditWithAlive = 0;
+        int supplierIsAliveNumber = 0;
         for (int i = 1; i < listSupplierDynamics.size(); i++) {
             TbSupplierDynamic tmp = listSupplierDynamics.get(i);
             String supplierId = tmp.getSupplierId();
@@ -194,20 +193,48 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             if (tbSupplier.getSupplierAlive()) {
                 // 存活才算
                 supplierIsAliveNumber++;
-                double supplierCreditA = tmp.getSupplierCreditA();
-                sumSupplierCreditWithAlive += supplierCreditA;
-                if (supplierCreditA > supplierDynamicWithHighestCredit.getSupplierCreditA()) {
+                if (supplierIsAliveNumber == 1) {
                     supplierDynamicWithHighestCredit = tmp;
-                }else if (supplierCreditA == supplierDynamicWithHighestCredit.getSupplierCreditA()){
-                    // 信誉度相同, 要出价高的
-                    if (tmp.getSupplierPricePU() > supplierDynamicWithHighestCredit.getSupplierPricePU()) {
+                    sumSupplierCreditWithAlive += tmp.getSupplierCreditA();
+                } else {
+                    double supplierCredit = tmp.getSupplierCreditA();
+                    sumSupplierCreditWithAlive += supplierCredit;
+                    if (supplierCredit > supplierDynamicWithHighestCredit.getSupplierCreditA()) {
                         supplierDynamicWithHighestCredit = tmp;
+                    }else if (supplierCredit == supplierDynamicWithHighestCredit.getSupplierCreditA()){
+                        // 信誉度相同, 要出价高的
+                        if (tmp.getSupplierPricePU() > supplierDynamicWithHighestCredit.getSupplierPricePU()) {
+                            supplierDynamicWithHighestCredit = tmp;
+                        }
                     }
                 }
             }
         }
         // 所有存活供应商平均信誉度
         double aveSupplierCredit = sumEngineFactoryCreditWithAlive / engineFactoryIsAliveNumber;
+
+//        TbSupplierDynamic supplierDynamicWithHighestCredit = listSupplierDynamics.get(0);
+//        double sumSupplierCreditWithAlive = supplierDynamicWithHighestCredit.getSupplierCreditA();
+//        int supplierIsAliveNumber = 1;
+//        for (int i = 1; i < listSupplierDynamics.size(); i++) {
+//            TbSupplierDynamic tmp = listSupplierDynamics.get(i);
+//            String supplierId = tmp.getSupplierId();
+//            TbSupplier tbSupplier = mapSupplier.get(supplierId);
+//            if (tbSupplier.getSupplierAlive()) {
+//                // 存活才算
+//                supplierIsAliveNumber++;
+//                double supplierCreditA = tmp.getSupplierCreditA();
+//                sumSupplierCreditWithAlive += supplierCreditA;
+//                if (supplierCreditA > supplierDynamicWithHighestCredit.getSupplierCreditA()) {
+//                    supplierDynamicWithHighestCredit = tmp;
+//                }else if (supplierCreditA == supplierDynamicWithHighestCredit.getSupplierCreditA()){
+//                    // 信誉度相同, 要出价高的
+//                    if (tmp.getSupplierPricePU() > supplierDynamicWithHighestCredit.getSupplierPricePU()) {
+//                        supplierDynamicWithHighestCredit = tmp;
+//                    }
+//                }
+//            }
+//        }
 
         // 主机厂的退出
         TbEngineFactory tbEngineFactory = null;
