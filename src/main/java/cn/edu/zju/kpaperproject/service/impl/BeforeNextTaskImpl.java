@@ -142,6 +142,11 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 sumEngineFactoryCreditWithAlive += engineFactoryCreditH;
                 if (engineFactoryCreditH > engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()) {
                     engineFactoryDynamicWithHighestCredit = tmp;
+                } else if (engineFactoryCreditH == engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()){
+                    // 信誉度相同, 要出价高的
+                    if (tmp.getEngineFactoryPricePU() > engineFactoryDynamicWithHighestCredit.getEngineFactoryPricePU()) {
+                        engineFactoryDynamicWithHighestCredit = tmp;
+                    }
                 }
             }
         }
@@ -161,10 +166,15 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             if (tbSupplier.getSupplierAlive()) {
                 // 存活才算
                 supplierIsAliveNumber++;
-                Double supplierCreditA = tmp.getSupplierCreditA();
+                double supplierCreditA = tmp.getSupplierCreditA();
                 sumSupplierCreditWithAlive += supplierCreditA;
                 if (supplierCreditA > supplierDynamicWithHighestCredit.getSupplierCreditA()) {
                     supplierDynamicWithHighestCredit = tmp;
+                }else if (supplierCreditA == supplierDynamicWithHighestCredit.getSupplierCreditA()){
+                    // 信誉度相同, 要出价高的
+                    if (tmp.getSupplierPricePU() > supplierDynamicWithHighestCredit.getSupplierPricePU()) {
+                        supplierDynamicWithHighestCredit = tmp;
+                    }
                 }
             }
         }
