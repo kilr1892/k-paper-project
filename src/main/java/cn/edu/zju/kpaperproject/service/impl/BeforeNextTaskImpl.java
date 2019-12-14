@@ -100,7 +100,6 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 计算供应商总资产并更新
         calAndSetSupplierTotalAssets(listSupplierDynamics, mapSupplierProfitSum);
 
-        // TODO 先分开循环吧, 之后看看能不能合并
         // 计算并更新所有主机厂的产能利用率
         for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
             String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
@@ -719,7 +718,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             // 开始总资产
             int initSupplierTotalAssets = aSupplierDynamic.getSupplierTotalAssetsP();
             // 利润和
-            int supplierProfitSum = mapSupplierProfitSum.get(supplierId);
+            int supplierProfitSum = 0;
+            if (mapSupplierProfitSum.containsKey(supplierId)) {
+                supplierProfitSum = mapSupplierProfitSum.get(supplierId);
+            }
             // 固定成本
             int supplierFixedCost = SupplierEnum.supplierFixedCost;
             int supplierTotalAsserts = initSupplierTotalAssets + supplierProfitSum - supplierFixedCost;
