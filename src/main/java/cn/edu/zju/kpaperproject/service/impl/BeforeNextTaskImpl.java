@@ -62,6 +62,13 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             , List<TbSupplierDynamic> listSupplierDynamics
             , Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix) {
 
+        // 填充map数据
+        Map<String, TbEngineFactory> mapEngineFactory = getMapEngineFactoryIdVsEngineFactory(listEngineFactory);
+        Map<String, TbSupplier> mapSupplier = getMapSupplierIdVsSupplier(listSupplier);
+
+        Map<String, TbEngineFactoryDynamic> mapEngineFactoryDynamic = getMapEngineFactoryIdVsEngineFactoryDynamic(listEngineFactoryDynamic);
+        Map<String, TbSupplierDynamic> mapSupplierDynamic = getMapSupplierIdVsSupplierDynamic(listSupplierDynamics);
+
         // 暂存主机厂利润和
         Map<String, Integer> mapEngineFactoryProfitSum = new HashMap<>(100);
 
@@ -71,7 +78,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 用来存id, 看是否有交易
         HashMap<String, OrderPlus> mapEngineIdVsOrderPlus = new HashMap<>(100);
         // 算出各主机厂与供应商之间的交易利润和,并加入到各自对应的map集合中
-        setMapEngineFactoryAndSupplierProfitSum(listOrderPlus, mapEngineFactoryProfitSum, mapSupplierProfitSum, mapEngineIdVsOrderPlus);
+        setMapEngineFactoryAndSupplierProfitSum(listOrderPlus, mapEngineFactoryProfitSum, mapSupplierProfitSum, mapEngineIdVsOrderPlus, mapEngineFactoryDynamic, mapSupplierDynamic);
 
         // 主机厂总资产计算
         // 主机厂与市场交易Map
@@ -121,18 +128,13 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 计算供应商的产能利用率
         calAndSetSupplierCapacityUtilizationAndAdjustCapacityPriceQuality(listSupplierDynamics, avgFinalMarketPrice, sumArrSupplierOrderNumber, avgArrSupplierOrderNumber, avgArrSupplierQuality);
 
-        // 填充map数据
-        Map<String, TbEngineFactory> mapEngineFactory = getMapEngineFactoryIdVsEngineFactory(listEngineFactory);
-        Map<String, TbSupplier> mapSupplier = getMapSupplierIdVsSupplier(listSupplier);
-
         // # 企业进入与退出
         // 主机厂信誉度最高的
         TbEngineFactoryDynamic engineFactoryDynamicWithHighestCredit = null;
         // 主机厂信誉度
         double sumEngineFactoryCreditWithAlive = 0;
         int engineFactoryIsAliveNumber = 0;
-        for (int i = 0; i < listEngineFactoryDynamic.size(); i++) {
-            TbEngineFactoryDynamic tmp = listEngineFactoryDynamic.get(i);
+        for (TbEngineFactoryDynamic tmp : listEngineFactoryDynamic) {
             String engineFactoryId = tmp.getEngineFactoryId();
             TbEngineFactory tbEngineFactory = mapEngineFactory.get(engineFactoryId);
             if (tbEngineFactory.getEngineFactoryAlive()) {
@@ -147,7 +149,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                     sumEngineFactoryCreditWithAlive += engineFactoryCredit;
                     if (engineFactoryCredit > engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()) {
                         engineFactoryDynamicWithHighestCredit = tmp;
-                    } else if (engineFactoryCredit == engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()){
+                    } else if (engineFactoryCredit == engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()) {
                         // 信誉度相同, 要出价高的
                         if (tmp.getEngineFactoryPricePU() > engineFactoryDynamicWithHighestCredit.getEngineFactoryPricePU()) {
                             engineFactoryDynamicWithHighestCredit = tmp;
@@ -186,8 +188,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         TbSupplierDynamic supplierDynamicWithHighestCredit = null;
         double sumSupplierCreditWithAlive = 0;
         int supplierIsAliveNumber = 0;
-        for (int i = 0; i < listSupplierDynamics.size(); i++) {
-            TbSupplierDynamic tmp = listSupplierDynamics.get(i);
+        for (TbSupplierDynamic tmp : listSupplierDynamics) {
             String supplierId = tmp.getSupplierId();
             TbSupplier tbSupplier = mapSupplier.get(supplierId);
             if (tbSupplier.getSupplierAlive()) {
@@ -201,7 +202,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                     sumSupplierCreditWithAlive += supplierCredit;
                     if (supplierCredit > supplierDynamicWithHighestCredit.getSupplierCreditA()) {
                         supplierDynamicWithHighestCredit = tmp;
-                    }else if (supplierCredit == supplierDynamicWithHighestCredit.getSupplierCreditA()){
+                    } else if (supplierCredit == supplierDynamicWithHighestCredit.getSupplierCreditA()) {
                         // 信誉度相同, 要出价高的
                         if (tmp.getSupplierPricePU() > supplierDynamicWithHighestCredit.getSupplierPricePU()) {
                             supplierDynamicWithHighestCredit = tmp;
@@ -559,6 +560,36 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             aSupplierDynamic.setSupplierCreditA(aSupplierDynamic.getSupplierCreditA() / sumNewSupplierCreditWithAlive);
         }
 
+    }
+
+    /**
+     * 用于填充供应商动态数据map
+     *
+     * @param listSupplierDynamics 供应商动态数据集合
+     * @return 供应商id - 供应商对应的动态数据
+     */
+    private Map<String, TbSupplierDynamic> getMapSupplierIdVsSupplierDynamic(List<TbSupplierDynamic> listSupplierDynamics) {
+        Map<String, TbSupplierDynamic> mapEngineFactory = new HashMap<>(100);
+        for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
+            String supplierId = aSupplierDynamic.getSupplierId();
+            mapEngineFactory.put(supplierId, aSupplierDynamic);
+        }
+        return mapEngineFactory;
+    }
+
+    /**
+     * 用于填充主机厂动态数据map
+     *
+     * @param listEngineFactoryDynamic 主机厂动态数据集合
+     * @return 主机厂id - 主机厂对应的动态数据
+     */
+    private Map<String, TbEngineFactoryDynamic> getMapEngineFactoryIdVsEngineFactoryDynamic(List<TbEngineFactoryDynamic> listEngineFactoryDynamic) {
+        Map<String, TbEngineFactoryDynamic> mapEngineFactoryDynamic = new HashMap<>(100);
+        for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
+            String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
+            mapEngineFactoryDynamic.put(engineFactoryId, aEngineFactoryDynamic);
+        }
+        return mapEngineFactoryDynamic;
     }
 
     /**
@@ -929,20 +960,37 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
     /**
      * 算出各主机厂与供应商之间的交易利润和,
      * 并加入到各自对应的map集合中
+     * 并把主机厂和供应商的信誉度补全
      *
      * @param listOrderPlus             交易结算集合
      * @param mapEngineFactoryProfitSum 主机厂利润集合(主机厂id, 和供应商交易好后的利润), 算好后put该处
      * @param mapSupplierProfitSum      供应商利润集合(供应商id, 和主机厂交易好后的利润), 算好后put该处
      * @param mapEngineIdVsOrderPlus    存放主机厂id对应的订单, 后续处理需要
+     * @param mapEngineFactoryDynamic   主机厂的动态数据map
+     * @param mapSupplierDynamic        供应商的动态数据map
      */
-    private void setMapEngineFactoryAndSupplierProfitSum(List<OrderPlus> listOrderPlus, Map<String, Integer> mapEngineFactoryProfitSum, Map<String, Integer> mapSupplierProfitSum, HashMap<String, OrderPlus> mapEngineIdVsOrderPlus) {
+    private void setMapEngineFactoryAndSupplierProfitSum(
+            List<OrderPlus> listOrderPlus
+            , Map<String, Integer> mapEngineFactoryProfitSum
+            , Map<String, Integer> mapSupplierProfitSum
+            , HashMap<String, OrderPlus> mapEngineIdVsOrderPlus
+            , Map<String, TbEngineFactoryDynamic> mapEngineFactoryDynamic
+            , Map<String, TbSupplierDynamic> mapSupplierDynamic) {
+
         // 暂存主机厂利润
         int tmpEngineFactoryProfit = 0;
         // 暂存供应商利润
         int tmpSupplierProfit = 0;
         for (OrderPlus orderPlus : listOrderPlus) {
             String engineFactoryId = orderPlus.getEngineFactoryId();
+            TbEngineFactoryDynamic engineFactoryDynamic = mapEngineFactoryDynamic.get(engineFactoryId);
             String supplierId = orderPlus.getSupplierId();
+            TbSupplierDynamic supplierDynamic = mapSupplierDynamic.get(supplierId);
+
+            // 更新主机厂和供应方的信誉度
+            engineFactoryDynamic.setEngineFactoryCreditH(orderPlus.getNewEngineFactoryCredit());
+            supplierDynamic.setSupplierCreditA(orderPlus.getNewSupplierCredit());
+
             mapEngineIdVsOrderPlus.put(engineFactoryId, orderPlus);
             // 主机厂与供应商交易后的利润
             if (mapEngineFactoryProfitSum.containsKey(engineFactoryId)) {
