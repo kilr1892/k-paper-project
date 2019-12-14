@@ -127,29 +127,57 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
         // # 企业进入与退出
         // 主机厂信誉度最高的
-        TbEngineFactoryDynamic engineFactoryDynamicWithHighestCredit = listEngineFactoryDynamic.get(0);
+        TbEngineFactoryDynamic engineFactoryDynamicWithHighestCredit = null;
         // 主机厂信誉度
-        double sumEngineFactoryCreditWithAlive = engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH();
+        double sumEngineFactoryCreditWithAlive = 0;
         int engineFactoryIsAliveNumber = 0;
-        for (int i = 1; i < listEngineFactoryDynamic.size(); i++) {
+        for (int i = 0; i < listEngineFactoryDynamic.size(); i++) {
             TbEngineFactoryDynamic tmp = listEngineFactoryDynamic.get(i);
             String engineFactoryId = tmp.getEngineFactoryId();
             TbEngineFactory tbEngineFactory = mapEngineFactory.get(engineFactoryId);
             if (tbEngineFactory.getEngineFactoryAlive()) {
-                // 存活才算
                 engineFactoryIsAliveNumber++;
-                double engineFactoryCreditH = tmp.getEngineFactoryCreditH();
-                sumEngineFactoryCreditWithAlive += engineFactoryCreditH;
-                if (engineFactoryCreditH > engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()) {
+                // 存活才算
+                if (engineFactoryIsAliveNumber == 1) {
+                    // 第一个要初始化
                     engineFactoryDynamicWithHighestCredit = tmp;
-                } else if (engineFactoryCreditH == engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()){
-                    // 信誉度相同, 要出价高的
-                    if (tmp.getEngineFactoryPricePU() > engineFactoryDynamicWithHighestCredit.getEngineFactoryPricePU()) {
+                    sumEngineFactoryCreditWithAlive += tmp.getEngineFactoryCreditH();
+                } else {
+                    double engineFactoryCredit = tmp.getEngineFactoryCreditH();
+                    sumEngineFactoryCreditWithAlive += engineFactoryCredit;
+                    if (engineFactoryCredit > engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()) {
                         engineFactoryDynamicWithHighestCredit = tmp;
+                    } else if (engineFactoryCredit == engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()){
+                        // 信誉度相同, 要出价高的
+                        if (tmp.getEngineFactoryPricePU() > engineFactoryDynamicWithHighestCredit.getEngineFactoryPricePU()) {
+                            engineFactoryDynamicWithHighestCredit = tmp;
+                        }
                     }
                 }
             }
         }
+//        TbEngineFactoryDynamic engineFactoryDynamicWithHighestCredit = listEngineFactoryDynamic.get(0);
+//        double sumEngineFactoryCreditWithAlive = engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH();
+//        int engineFactoryIsAliveNumber = 1;
+//        for (int i = 1; i < listEngineFactoryDynamic.size(); i++) {
+//            TbEngineFactoryDynamic tmp = listEngineFactoryDynamic.get(i);
+//            String engineFactoryId = tmp.getEngineFactoryId();
+//            TbEngineFactory tbEngineFactory = mapEngineFactory.get(engineFactoryId);
+//            if (tbEngineFactory.getEngineFactoryAlive()) {
+//                // 存活才算
+//                engineFactoryIsAliveNumber++;
+//                double engineFactoryCreditH = tmp.getEngineFactoryCreditH();
+//                sumEngineFactoryCreditWithAlive += engineFactoryCreditH;
+//                if (engineFactoryCreditH > engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()) {
+//                    engineFactoryDynamicWithHighestCredit = tmp;
+//                } else if (engineFactoryCreditH == engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()){
+//                    // 信誉度相同, 要出价高的
+//                    if (tmp.getEngineFactoryPricePU() > engineFactoryDynamicWithHighestCredit.getEngineFactoryPricePU()) {
+//                        engineFactoryDynamicWithHighestCredit = tmp;
+//                    }
+//                }
+//            }
+//        }
         // 所有存活主机厂平均信誉度
         double aveEngineFactoryCredit = sumEngineFactoryCreditWithAlive / engineFactoryIsAliveNumber;
 
@@ -158,7 +186,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 供应商信誉度
         TbSupplierDynamic supplierDynamicWithHighestCredit = listSupplierDynamics.get(0);
         double sumSupplierCreditWithAlive = supplierDynamicWithHighestCredit.getSupplierCreditA();
-        int supplierIsAliveNumber = 0;
+        int supplierIsAliveNumber = 1;
         for (int i = 1; i < listSupplierDynamics.size(); i++) {
             TbSupplierDynamic tmp = listSupplierDynamics.get(i);
             String supplierId = tmp.getSupplierId();
