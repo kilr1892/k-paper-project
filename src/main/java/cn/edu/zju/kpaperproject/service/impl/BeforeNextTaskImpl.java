@@ -100,8 +100,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 计算供应商总资产并更新
         calAndSetSupplierTotalAssets(listSupplierDynamics, mapSupplierProfitSum);
 
-        // 计算并更新所有主机厂的产能利用率
-        calAndSetEngineFactoryCapacityUtilization(listEngineFactoryDynamic, mapEngineIdVsEngineFactoryFinalProvision, avgFinalMarketPrice, avgFinalMarketQuality);
+        // 对主机厂计算并设置产能利用率, 调整产能/价格/质量
+        calAndSetEngineFactoryCapacityUtilizationAnd(listEngineFactoryDynamic, mapEngineIdVsEngineFactoryFinalProvision, avgFinalMarketPrice, avgFinalMarketQuality);
         // # 计算所有供应商的产能利用率
         // 一类服务市场总需求数量
         int[] sumArrSupplierOrderNumber = new int[5];
@@ -642,7 +642,21 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
     }
 
-    private void calAndSetEngineFactoryCapacityUtilization(List<TbEngineFactoryDynamic> listEngineFactoryDynamic, HashMap<String, EngineFactoryFinalProvision> mapEngineIdVsEngineFactoryFinalProvision, double avgFinalMarketPrice, double avgFinalMarketQuality) {
+    /**
+     * 对主机厂计算并设置产能利用率,
+     * 调整产能/价格/质量
+     *
+     * @param listEngineFactoryDynamic                 主机厂动态数据集合
+     * @param mapEngineIdVsEngineFactoryFinalProvision 主机厂与市场实际交易集合
+     * @param avgFinalMarketPrice                      所有产品的平均价格
+     * @param avgFinalMarketQuality                    所有产品的平均质量
+     */
+    private void calAndSetEngineFactoryCapacityUtilizationAnd(
+            List<TbEngineFactoryDynamic> listEngineFactoryDynamic
+            , HashMap<String, EngineFactoryFinalProvision> mapEngineIdVsEngineFactoryFinalProvision
+            , double avgFinalMarketPrice
+            , double avgFinalMarketQuality) {
+
         for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
             String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
             EngineFactoryFinalProvision engineFactoryFinalProvision = mapEngineIdVsEngineFactoryFinalProvision.get(engineFactoryId);
@@ -685,8 +699,13 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 // 利用率 < 1(供过于求)
                 if (initAvgEngineFactoryToMarketPrice >= avgFinalMarketPrice) {
                     // 初始价格的平均价 >= 所有成交价格的平均值
-                    aEngineFactoryDynamic.setEngineFactoryPricePL(RandomUtils.nextInt(engineFactoryPricePL, (int) avgFinalMarketPrice + 1));
-                    aEngineFactoryDynamic.setEngineFactoryPricePU(RandomUtils.nextInt((int) avgFinalMarketPrice, engineFactoryPricePU + 1));
+                    if (engineFactoryPricePL < avgFinalMarketPrice) {
+                        aEngineFactoryDynamic.setEngineFactoryPricePL(RandomUtils.nextInt(engineFactoryPricePL, (int) avgFinalMarketPrice + 1));
+                        aEngineFactoryDynamic.setEngineFactoryPricePU(RandomUtils.nextInt((int) avgFinalMarketPrice, engineFactoryPricePU + 1));
+                    } else {
+                        aEngineFactoryDynamic.setEngineFactoryPricePL((int) Math.round(avgFinalMarketPrice / 2.0));
+                        aEngineFactoryDynamic.setEngineFactoryPricePU((int) Math.round(avgFinalMarketPrice * 1.5));
+                    }
                 } else {
                     // 初始价格的平均价 < 所有成交价格的平均值
                     int engineFactoryQualityQ = aEngineFactoryDynamic.getEngineFactoryQualityQ();
@@ -713,8 +732,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
     /**
      * 计算供应商总资产并更新
      *
-     * @param listSupplierDynamics  供应商的动态数据集合(实际被更新的)
-     * @param mapSupplierProfitSum  供应商与主机厂交易后的利润
+     * @param listSupplierDynamics 供应商的动态数据集合(实际被更新的)
+     * @param mapSupplierProfitSum 供应商与主机厂交易后的利润
      */
     private void calAndSetSupplierTotalAssets(List<TbSupplierDynamic> listSupplierDynamics, Map<String, Integer> mapSupplierProfitSum) {
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
@@ -736,10 +755,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
     /**
      * 计算所有主机厂的总资产
      *
-     * @param listEngineFactoryDynamic                  所有主机厂的动态数据集合(实际被更新的)
-     * @param mapEngineFactoryProfitSum                 主机厂与供应商交易后的利润集合
-     * @param mapEngineIdVsOrderPlus                    主机厂与市场交易的订单集合
-     * @param mapEngineIdVsEngineFactoryFinalProvision  主机厂为市场交易提供的产品实际价格和卖出结果集合
+     * @param listEngineFactoryDynamic                 所有主机厂的动态数据集合(实际被更新的)
+     * @param mapEngineFactoryProfitSum                主机厂与供应商交易后的利润集合
+     * @param mapEngineIdVsOrderPlus                   主机厂与市场交易的订单集合
+     * @param mapEngineIdVsEngineFactoryFinalProvision 主机厂为市场交易提供的产品实际价格和卖出结果集合
      */
     private void calAndSetEngineFactoryTotalAssets(
             List<TbEngineFactoryDynamic> listEngineFactoryDynamic
