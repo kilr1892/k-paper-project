@@ -18,15 +18,15 @@ public class OrderPlus extends TbOrder {
     // TODO 可能把这个和表格合并, 如果影响性能
 
     /** 主机厂每个循环开始的信誉度 */
-    private double initEngineFactoryCredit;
+    private double engineFactoryInitCredit;
     /** 主机厂新的信誉度 */
-    private double newEngineFactoryCredit;
+    private double engineFactoryNewCredit;
     /** 主机厂初始期望价格 */
-    private int[] engineFactory2ServiceOfferPrice;
+    private int[] engineFactoryToServiceOfferPrice;
     /** 供应商每个循环开始的信誉度 */
-    private double initSupplierCredit;
+    private double supplierInitCredit;
     /** 供应商新的信誉度 */
-    private double newSupplierCredit;
+    private double supplierNewCredit;
     /** 新的关系强度 */
     private double relationshipStrength;
     /** 主机厂利润 */

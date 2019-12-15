@@ -10,6 +10,7 @@ import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
 import cn.edu.zju.kpaperproject.service.ProcessTaskService;
 import cn.edu.zju.kpaperproject.utils.CalculationUtils;
 import org.apache.commons.lang3.RandomUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,6 +23,9 @@ import java.util.*;
  */
 @Service
 public class ProcessTaskServiceImpl implements ProcessTaskService {
+
+    @Autowired
+    private TbOrderPlusMapper tbOrderPlusMapper;
 
     /**
      * 交易结算
@@ -42,7 +46,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             , Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix) {
 
         // 返回值的list
-        List<OrderPlus> listRes = new ArrayList<>();
+        List<OrderPlus> listOrderPlus = new ArrayList<>();
 
         // 主机厂和供应商的履约概率
         double engineFactoryPerformanceProbability;
@@ -60,7 +64,9 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             orderPlus.setEngineFactoryId(aTransactionContract.getEngineFactoryId());
             orderPlus.setSupplierId(aTransactionContract.getSupplierId());
             // 主机厂初始期望价格
-            orderPlus.setEngineFactory2ServiceOfferPrice(aTransactionContract.getEngineFactory2ServiceOfferPrice());
+//            orderPlus.setEngineFactoryToServiceOfferPrice(aTransactionContract.getEngineFactory2ServiceOfferPrice());
+            orderPlus.setEngineFactoryToServiceOfferPriceLow(aTransactionContract.getEngineFactory2ServiceOfferPrice()[0]);
+            orderPlus.getEngineFactoryToServiceOfferPriceUpper(aTransactionContract.getEngineFactory2ServiceOfferPrice()[1]);
 
             // 实验次数与循环次数
             orderPlus.setExperimentsNumber(experimentsNumber);
@@ -100,15 +106,15 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             orderPlus.setEngineFactoryProfit(profit[0]);
             orderPlus.setSupplierProfit(profit[1]);
 
-            listRes.add(orderPlus);
+            listOrderPlus.add(orderPlus);
             // 初始信誉度
-            orderPlus.setInitEngineFactoryCredit(aTransactionContract.getEngineFactoryCredit());
-            orderPlus.setInitSupplierCredit(aTransactionContract.getSupplierCredit());
+            orderPlus.setEngineFactoryInitCredit(aTransactionContract.getEngineFactoryCredit());
+            orderPlus.setSupplierInitCredit(aTransactionContract.getSupplierCredit());
             // 计算交易后的信誉度, 放在map里先
             addMapForCredit(orderPlus, mapEngineFactoryCredit, mapSupplierCredit);
         }
         // 计算信誉度
-        for (OrderPlus aOrderPlus : listRes) {
+        for (OrderPlus aOrderPlus : listOrderPlus) {
             String engineFactoryId = aOrderPlus.getEngineFactoryId();
             String supplierId = aOrderPlus.getSupplierId();
             // 主机厂id 对应的listOrder(也就是说这个主机厂与5个供应商相关的订单)
@@ -122,11 +128,13 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             aOrderPlus.setNewEngineFactoryCredit(engineFactoryNewCredit);
             // 补全供应商新的信誉度
             double supplierNewCredit = getNewCredit(listSupplierMatchEngineFactory, "supplier");
-            aOrderPlus.setNewSupplierCredit(supplierNewCredit);
+            aOrderPlus.setSupplierNewCredit(supplierNewCredit);
         }
 
+        // # 把orderPlus存入数据库
+        tbOrderPlusMapper.insertList(listOrderPlus);
 
-        return listRes;
+        return listOrderPlus;
     }
 
     /**
@@ -141,14 +149,14 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         double sum = 0D;
         switch (type) {
             case "engine":
-                initCredit = listMatches.get(0).getInitEngineFactoryCredit();
+                initCredit = listMatches.get(0).getEngineFactoryInitCredit();
                 for (OrderPlus orderPlus : listMatches) {
                     // 主机厂的履约情况
                     boolean supplierWhetherPerformContract = orderPlus.getEngineWhetherPerformContract();
                     // 供应商的评分
                     int supplierToEngineFactoryScore = orderPlus.getSupplierToEngineFactoryScore();
                     // 供应商的信誉度
-                    double initSupplierCredit = orderPlus.getInitSupplierCredit();
+                    double initSupplierCredit = orderPlus.getSupplierInitCredit();
                     if (supplierWhetherPerformContract) {
                         // 履约
                         sum += supplierToEngineFactoryScore * initSupplierCredit;
@@ -159,14 +167,14 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                 }
                 break;
             case "supplier":
-                initCredit = listMatches.get(0).getInitSupplierCredit();
+                initCredit = listMatches.get(0).getSupplierInitCredit();
                 for (OrderPlus orderPlus : listMatches) {
                     // 供应商的履约情况
                     boolean supplierWhetherPerformContract = orderPlus.getSupplierWhetherPerformContract();
                     // 主机厂的评分
                     int engineFactoryToSupplierScore = orderPlus.getEngineFactoryToSupplierScore();
                     // 主机厂的信誉度
-                    double initEngineFactoryCredit = orderPlus.getInitEngineFactoryCredit();
+                    double initEngineFactoryCredit = orderPlus.getEngineFactoryInitCredit();
                     if (supplierWhetherPerformContract) {
                         // 履约
                         sum += engineFactoryToSupplierScore * initEngineFactoryCredit;

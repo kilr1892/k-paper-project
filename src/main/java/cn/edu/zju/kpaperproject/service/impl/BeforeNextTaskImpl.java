@@ -7,10 +7,12 @@ import cn.edu.zju.kpaperproject.enums.CalculationEnum;
 import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
 import cn.edu.zju.kpaperproject.enums.NumberEnum;
 import cn.edu.zju.kpaperproject.enums.SupplierEnum;
+import cn.edu.zju.kpaperproject.mapper.*;
 import cn.edu.zju.kpaperproject.pojo.*;
 import cn.edu.zju.kpaperproject.service.BeforeNextTask;
 import cn.edu.zju.kpaperproject.utils.*;
 import org.apache.commons.lang3.RandomUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +28,18 @@ import java.util.Map;
  */
 @Service
 public class BeforeNextTaskImpl implements BeforeNextTask {
+
+    @Autowired
+    private TbEngineFactoryMapper tbEngineFactoryMapper;
+    @Autowired
+    private TbEngineFactoryDynamicMapper tbEngineFactoryDynamicMapper;
+    @Autowired
+    private TbSupplierMapper tbSupplierMapper;
+    @Autowired
+    private TbSupplierDynamicMapper tbSupplierDynamicMapper;
+
+    @Autowired
+    private TbRelationMatrixMapper tbRelationMatrixMapper;
 
     /**
      * 计算总资产
@@ -519,6 +533,28 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             aSupplierDynamic.setSupplierCreditA(aSupplierDynamic.getSupplierCreditA() / sumNewSupplierCreditWithAlive);
         }
 
+        // TODO 发现好像分静态数据和动态数据没有意义... 如果有需要, 第二版倒是可以改改设计
+        // # 把主机厂/ 供应商 静态数据或动态数据都存一下
+        // 此时已经完成进入和退出
+        storeIntoDatabase(listEngineFactory, listEngineFactoryDynamic, listSupplier, listSupplierDynamics, listNewRelationMatrix);
+
+    }
+
+    /**
+     * 将更新计算好后的数据存入数据库
+     *
+     * @param listEngineFactory        主机厂静态数据
+     * @param listEngineFactoryDynamic 主机厂动态数据
+     * @param listSupplier             供应商静态数据
+     * @param listSupplierDynamics     供应商动态数据
+     * @param listNewRelationMatrix    主机厂与供应商之间的关系矩阵
+     */
+    private void storeIntoDatabase(List<TbEngineFactory> listEngineFactory, List<TbEngineFactoryDynamic> listEngineFactoryDynamic, List<TbSupplier> listSupplier, List<TbSupplierDynamic> listSupplierDynamics, List<TbRelationMatrix> listNewRelationMatrix) {
+        tbEngineFactoryMapper.insertList(listEngineFactory);
+        tbEngineFactoryDynamicMapper.insertList(listEngineFactoryDynamic);
+        tbSupplierMapper.insertList(listSupplier);
+        tbSupplierDynamicMapper.insertList(listSupplierDynamics);
+        tbRelationMatrixMapper.insertList(listNewRelationMatrix);
     }
 
     /**
@@ -948,7 +984,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
             // 更新主机厂和供应方的信誉度
             engineFactoryDynamic.setEngineFactoryCreditH(orderPlus.getNewEngineFactoryCredit());
-            supplierDynamic.setSupplierCreditA(orderPlus.getNewSupplierCredit());
+            supplierDynamic.setSupplierCreditA(orderPlus.getSupplierNewCredit());
 
             mapEngineIdVsOrderPlus.put(engineFactoryId, orderPlus);
             // 主机厂与供应商交易后的利润
@@ -1031,8 +1067,9 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 // 最终质量
                 actualQuality = 0;
                 // 最终面向市场价格
-                int[] engineFactory2ServiceOfferPrice = orderPlus.getEngineFactory2ServiceOfferPrice();
-                actualPrice = RandomUtils.nextInt(engineFactory2ServiceOfferPrice[0], engineFactory2ServiceOfferPrice[1] + 1);
+                actualPrice = RandomUtils.nextInt(orderPlus.getEngineFactoryToServiceOfferPriceLow(), orderPlus.getEngineFactoryToServiceOfferPriceUpper() + 1);
+//                int[] engineFactory2ServiceOfferPrice = orderPlus.getEngineFactoryToServiceOfferPrice();
+//                actualPrice = RandomUtils.nextInt(engineFactory2ServiceOfferPrice[0], engineFactory2ServiceOfferPrice[1] + 1);
                 tmpPrice = orderPlus.getSupplierActualPriceP();
 
             }

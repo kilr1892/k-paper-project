@@ -7,6 +7,9 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface TbEngineFactoryMapper {
+    //-------------------------------------------------------------
+    void insertList(List<TbEngineFactory> listEngineFactory);
+    //-------------------------------------------------------------
     int countByExample(TbEngineFactoryExample example);
 
     int deleteByExample(TbEngineFactoryExample example);
@@ -28,4 +31,5 @@ public interface TbEngineFactoryMapper {
     int updateByPrimaryKeySelective(TbEngineFactory record);
 
     int updateByPrimaryKey(TbEngineFactory record);
+
 }
