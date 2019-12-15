@@ -111,18 +111,18 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         for (OrderPlus aOrderPlus : listRes) {
             String engineFactoryId = aOrderPlus.getEngineFactoryId();
             String supplierId = aOrderPlus.getSupplierId();
-
+            // 主机厂id 对应的listOrder(也就是说这个主机厂与5个供应商相关的订单)
             List<OrderPlus> listEngineFactoryMatchSupplier = mapEngineFactoryCredit.get(engineFactoryId);
+            // 供应商id 对应的listOrder(供应商对那家主机厂提供服务代订单)
             List<OrderPlus> listSupplierMatchEngineFactory = mapSupplierCredit.get(supplierId);
 
-            if (aOrderPlus.getNewEngineFactoryCredit() == 0) {
-                // 补全主机厂新的的信誉度
-                aOrderPlus.setNewEngineFactoryCredit(getNewCredit(listEngineFactoryMatchSupplier, "engine"));
-            }
-            if (aOrderPlus.getNewSupplierCredit() == 0) {
-                // 补全供应商新的信誉度
-                aOrderPlus.setNewSupplierCredit(getNewCredit(listSupplierMatchEngineFactory, "supplier"));
-            }
+            // TODO 这里应该是可以消除重复计算的, 后续再优化
+            // 补全主机厂新的的信誉度
+            double engineFactoryNewCredit = getNewCredit(listEngineFactoryMatchSupplier, "engine");
+            aOrderPlus.setNewEngineFactoryCredit(engineFactoryNewCredit);
+            // 补全供应商新的信誉度
+            double supplierNewCredit = getNewCredit(listSupplierMatchEngineFactory, "supplier");
+            aOrderPlus.setNewSupplierCredit(supplierNewCredit);
         }
 
 
@@ -203,6 +203,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         }
         listEngineFactoryMatchSupplier.add(orderPlus);
         listSupplierMatchEngineFactory.add(orderPlus);
+        // TODO 稍微可以优化一下下
         mapEngineFactoryCredit.put(engineFactoryId, listEngineFactoryMatchSupplier);
         mapSupplierCredit.put(supplierId, listSupplierMatchEngineFactory);
     }
@@ -304,11 +305,13 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
      * 计算双方互评分数
      *
      * @param whetherPerformContract 是否履约
-     * @return 0: 主机厂对供应商的分数, 1: 供应商对主机厂的分数
+     * @return 0: 供应商对主机厂的分数, 1: 主机厂对供应商的分数
      */
     private int[] getEvaluationScore(boolean[] whetherPerformContract) {
         int[] res = new int[2];
         for (int i = 0; i < whetherPerformContract.length; i++) {
+            // i = 0 主机厂是否履约
+            // i = 1 供应商是否履约
             boolean isPerformContract = whetherPerformContract[i];
             if (isPerformContract) {
                 res[i] = RandomUtils.nextInt(6, 11);

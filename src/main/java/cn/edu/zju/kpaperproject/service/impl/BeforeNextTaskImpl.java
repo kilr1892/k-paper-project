@@ -291,7 +291,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 一类服务, 供应商的实际需求量之和
         int[] sumArrEngineFactoryNeedServiceNumberWithAlive = new int[5];
         // 一类服务, 供应商信誉度之和
-        int[] sumArrSupplierCreditWithAlive = new int[5];
+        double[] sumArrSupplierCreditWithAlive = new double[5];
         // 一类服务, 供应商存活的数量
         int[] sumArrSupplierIsAlive = new int[5];
 
@@ -494,7 +494,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
         // # 双方信誉度归一化
         // 退出后的厂还活着的
-        int sumNewEngineFactoryCreditWithAlive = 0;
+        double sumNewEngineFactoryCreditWithAlive = 0;
         for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
             String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
             if (mapEngineFactory.get(engineFactoryId).getEngineFactoryAlive()) {
@@ -508,7 +508,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         }
 
         // 供应商归一化
-        int sumNewSupplierCreditWithAlive = 0;
+        double sumNewSupplierCreditWithAlive = 0;
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
             String supplierId = aSupplierDynamic.getSupplierId();
             if (mapSupplier.get(supplierId).getSupplierAlive()) {
