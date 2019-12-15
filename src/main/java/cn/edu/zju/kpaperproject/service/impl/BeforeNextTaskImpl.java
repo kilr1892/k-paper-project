@@ -46,6 +46,9 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
     @Autowired
     private TbSupplierTypeAvgMapper tbSupplierTypeAvgMapper;
 
+    @Autowired
+    private TbBalanceMapper tbBalanceMapper;
+
     /**
      * 计算总资产
      * // 计算主机厂的产能利用率
@@ -544,13 +547,64 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 生成并插入tb_supplier_type_avg表里
         calSupplierTypeAvgPriceAndQuality(experimentsNumber, cycleTime, listOrderPlus, mapSupplier);
 
-        // TODO 算出每个二级供应商的实际平均价格和实际平均质量
+        // 算出每个二级供应商的实际平均价格和实际平均质量
         setSupplierAvgPriceAndAvgQuality(listSupplierDynamics, listOrderPlus, mapSupplierDynamic);
+        // 计算一级市场供需情况和二级市场供需情况
+        calBalance(experimentsNumber, cycleTime, listEngineFactoryFinalProvisions, listEngineFactoryDynamic, mapEngineFactory, listOrderPlus, listSupplierDynamics, mapSupplier);
+
         // TODO 发现好像分静态数据和动态数据没有意义... 如果有需要, 第二版倒是可以改改设计
         // # 把主机厂/ 供应商 静态数据或动态数据都存一下
         // 此时已经完成进入和退出
         storeIntoDatabase(listEngineFactory, listEngineFactoryDynamic, listSupplier, listSupplierDynamics, listNewRelationMatrix);
 
+    }
+
+    /**
+     * 计算一级市场供需情况和二级市场供需情况
+     *
+     * @param experimentsNumber                实验次数
+     * @param cycleTime                        循环次数
+     * @param listEngineFactoryFinalProvisions 市场最终成交订单
+     * @param listEngineFactoryDynamic         主机厂动态数据集合
+     * @param mapEngineFactory                 主机厂静态映射
+     * @param listOrderPlus                    主机与供应商订单
+     * @param listSupplierDynamics             供应商动态数据集合
+     * @param mapSupplier                      供应商映射
+     */
+    private void calBalance(int experimentsNumber, int cycleTime, List<EngineFactoryFinalProvision> listEngineFactoryFinalProvisions, List<TbEngineFactoryDynamic> listEngineFactoryDynamic, Map<String, TbEngineFactory> mapEngineFactory, List<OrderPlus> listOrderPlus, List<TbSupplierDynamic> listSupplierDynamics, Map<String, TbSupplier> mapSupplier) {
+        TbBalance tbBalance = new TbBalance();
+        tbBalance.setExperimentsNumber(experimentsNumber);
+        tbBalance.setCycleTimes(cycleTime);
+        // 一级市场供需平衡
+        int sumActualSaleNumber = 0;
+        int sumEngineFactoryCapacity = 0;
+        for (EngineFactoryFinalProvision aEngineFactoryFinalProvision : listEngineFactoryFinalProvisions) {
+            sumActualSaleNumber += aEngineFactoryFinalProvision.getActualSaleNumber();
+        }
+        for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
+            String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
+            TbEngineFactory engineFactory = mapEngineFactory.get(engineFactoryId);
+            if (engineFactory.getEngineFactoryAlive()) {
+                sumEngineFactoryCapacity += aEngineFactoryDynamic.getEngineFactoryCapacityM();
+            }
+        }
+        tbBalance.setEngineFactoryBalance(sumEngineFactoryCapacity * 1.0 / sumEngineFactoryCapacity);
+        // 二级市场供需平衡
+        int sumSupplierActualNumber = 0;
+        for (OrderPlus aOrderPlus : listOrderPlus) {
+            sumSupplierActualNumber += aOrderPlus.getSupplierActualNumberM();
+        }
+        int sumSupplierCapacity = 0;
+        for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
+            String supplierId = aSupplierDynamic.getSupplierId();
+            TbSupplier tbSupplier = mapSupplier.get(supplierId);
+            if (tbSupplier.getSupplierAlive()) {
+                sumSupplierCapacity += aSupplierDynamic.getSupplierCapacityM();
+            }
+        }
+        tbBalance.setSupplierBalance(sumSupplierActualNumber * 1.0 / sumSupplierCapacity);
+
+        tbBalanceMapper.insertSelective(tbBalance);
     }
 
     /**
