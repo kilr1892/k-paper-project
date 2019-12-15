@@ -225,4 +225,22 @@
       avg_acture_quality = #{avgActureQuality,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+
+
+
+
+
+
+  <insert id="insertList" parameterType="java.util.List">
+    INSERT INTO `tb_supplier_type_avg`(
+    `experiments_number`, `cycle_times`, `supplier_type`, `avg_acture_price`, `avg_acture_quality`
+    )
+    VALUES
+    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+      #{experiments_number}, #{cycle_times}, #{supplier_type}, #{avg_acture_price}, #{avg_acture_quality}
+    </foreach>
+  </insert>
+
 </mapper>

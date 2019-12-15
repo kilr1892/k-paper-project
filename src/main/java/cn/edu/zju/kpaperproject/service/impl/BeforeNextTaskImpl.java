@@ -43,6 +43,9 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
     @Autowired
     private EngineFactoryFinalProvisionMapper engineFactoryFinalProvisionMapper;
 
+    @Autowired
+    private TbSupplierTypeAvgMapper tbSupplierTypeAvgMapper;
+
     /**
      * 计算总资产
      * // 计算主机厂的产能利用率
@@ -141,10 +144,6 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
         // 计算供应商一类服务的市场需求量/服务商个数/平均需求/质量/平均质量
         calArrAvgNumberAndQuantity(listTransactionContract, sumArrSupplierOrderNumber, sumArrSupplierNumber, avgArrSupplierOrderNumber, sumArrSupplierQuality, avgArrSupplierQuality);
-
-        // # 存入数据库
-        // 生成并插入tb_supplier_type_avg表里
-        tb_supplier_type_avg;
 
 
         // 计算供应商的产能利用率
@@ -541,6 +540,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             aSupplierDynamic.setSupplierCreditA(aSupplierDynamic.getSupplierCreditA() / sumNewSupplierCreditWithAlive);
         }
 
+        // 计算并生成每类供应商的平均价格和平均质量
+        // 生成并插入tb_supplier_type_avg表里
+        calSupplierTypeAvgPriceAndQuality(experimentsNumber, cycleTime, listOrderPlus, mapSupplier);
+
         // TODO 算出每个二级供应商的实际平均价格和实际平均质量
         setSupplierAvgPriceAndAvgQuality(listSupplierDynamics, listOrderPlus, mapSupplierDynamic);
         // TODO 发现好像分静态数据和动态数据没有意义... 如果有需要, 第二版倒是可以改改设计
@@ -548,6 +551,60 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 此时已经完成进入和退出
         storeIntoDatabase(listEngineFactory, listEngineFactoryDynamic, listSupplier, listSupplierDynamics, listNewRelationMatrix);
 
+    }
+
+    /**
+     * 计算并生成每类供应商的平均价格和平均质量
+     * 生成并插入tb_supplier_type_avg表里
+     *
+     * @param experimentsNumber 实验次数
+     * @param cycleTime         循环次数
+     * @param listOrderPlus     主机厂与供应商交易结果
+     * @param mapSupplier       供应商静态数据集合
+     */
+    private void calSupplierTypeAvgPriceAndQuality(int experimentsNumber, int cycleTime, List<OrderPlus> listOrderPlus, Map<String, TbSupplier> mapSupplier) {
+        ArrayList<TbSupplierTypeAvg> listSupplierTypeAvgArray = new ArrayList<>();
+        // 供应商类型 - 实际金额
+        Map<Integer, Integer> mapTmpPriceSum = new HashMap<>(listOrderPlus.size());
+        // 供应商类型 - 质量
+        Map<Integer, Integer> mapTmpQualitySum = new HashMap<>(listOrderPlus.size());
+        // 供应商类型 - 实际交易数量
+        Map<Integer, Integer> mapTmpNumberSum = new HashMap<>(listOrderPlus.size());
+        for (OrderPlus orderPlus : listOrderPlus) {
+            String supplierId = orderPlus.getSupplierId();
+            TbSupplier tbSupplier = mapSupplier.get(supplierId);
+            int supplierType = tbSupplier.getSupplierType();
+
+            int priceSum = mapTmpPriceSum.get(supplierType);
+            int qualitySum = mapTmpQualitySum.get(supplierType);
+            int numberSum = mapTmpNumberSum.get(supplierType);
+
+            priceSum += orderPlus.getSupplierActualPriceP();
+            mapTmpPriceSum.put(supplierType, priceSum);
+
+            qualitySum += orderPlus.getSupplierActualQualityQs();
+            mapTmpQualitySum.put(supplierType, qualitySum);
+
+            numberSum++;
+            mapTmpNumberSum.put(supplierType, numberSum);
+
+        }
+        for (Map.Entry<Integer, Integer> entry : mapTmpNumberSum.entrySet()) {
+            int supplierType = entry.getKey();
+            int numberSum = entry.getValue();
+
+            int priceSum = mapTmpPriceSum.get(supplierType);
+            int qualitySum = mapTmpQualitySum.get(supplierType);
+
+            TbSupplierTypeAvg tbSupplierTypeAvg = new TbSupplierTypeAvg();
+            tbSupplierTypeAvg.setExperimentsNumber(experimentsNumber);
+            tbSupplierTypeAvg.setCycleTimes(cycleTime);
+            tbSupplierTypeAvg.setSupplierType(supplierType);
+            tbSupplierTypeAvg.setAvgActurePrice((int) (priceSum * 1.0 / numberSum));
+            tbSupplierTypeAvg.setAvgActureQuality((int) (qualitySum * 1.0 / numberSum));
+        }
+
+        tbSupplierTypeAvgMapper.insertList(listSupplierTypeAvgArray);
     }
 
     /**
@@ -562,7 +619,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         Map<String, Integer> mapTmpPriceSum = new HashMap<>(listOrderPlus.size());
         // 供应商id - 质量
         Map<String, Integer> mapTmpQualitySum = new HashMap<>(listOrderPlus.size());
-        // 供应商id - 实际交易数量
+        // 供应商id - 实际交易单数
         Map<String, Integer> mapTmpNumberSum = new HashMap<>(listOrderPlus.size());
         for (OrderPlus orderPlus : listOrderPlus) {
             String supplierId = orderPlus.getSupplierId();

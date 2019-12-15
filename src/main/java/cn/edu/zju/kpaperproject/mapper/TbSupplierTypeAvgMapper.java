@@ -5,6 +5,7 @@ import cn.edu.zju.kpaperproject.pojo.TbSupplierTypeAvgExample;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -30,4 +31,7 @@ public interface TbSupplierTypeAvgMapper {
     int updateByPrimaryKeySelective(TbSupplierTypeAvg record);
 
     int updateByPrimaryKey(TbSupplierTypeAvg record);
+
+    //-------------------------
+    void insertList(ArrayList<TbSupplierTypeAvg> listSupplierTypeAvgArray);
 }
