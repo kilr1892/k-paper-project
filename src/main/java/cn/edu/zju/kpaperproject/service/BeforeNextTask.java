@@ -1,7 +1,5 @@
 package cn.edu.zju.kpaperproject.service;
 
-import cn.edu.zju.kpaperproject.dto.EngineFactoryFinalProvision;
-import cn.edu.zju.kpaperproject.dto.OrderPlus;
 import cn.edu.zju.kpaperproject.dto.TransactionContract;
 import cn.edu.zju.kpaperproject.pojo.*;
 
@@ -19,11 +17,12 @@ public interface BeforeNextTask {
     /**
      * 生成最终的交货结果
      *
-     * @param cycleTimes    实验次数
-     * @param listOrderPlus 产品订单
+     * @param cycleTimes        实验次数
+     * @param listOrderPlus     产品订单
+     * @param experimentsNumber 实验次数
      * @return 最终交货结果集合
      */
-    List<EngineFactoryFinalProvision> getListEngineFactoryFinalProvision(int cycleTimes, List<OrderPlus> listOrderPlus);
+    List<EngineFactoryFinalProvision> getListEngineFactoryFinalProvision(int experimentsNumber, int cycleTimes, List<OrderPlus> listOrderPlus);
 
     /**
      * 计算总资产

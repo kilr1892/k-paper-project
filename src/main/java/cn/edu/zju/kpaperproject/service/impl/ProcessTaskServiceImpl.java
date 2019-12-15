@@ -1,11 +1,12 @@
 package cn.edu.zju.kpaperproject.service.impl;
 
 import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
-import cn.edu.zju.kpaperproject.dto.OrderPlus;
 import cn.edu.zju.kpaperproject.dto.SupplierTask;
 import cn.edu.zju.kpaperproject.dto.TransactionContract;
 import cn.edu.zju.kpaperproject.enums.CalculationEnum;
 import cn.edu.zju.kpaperproject.enums.NumberEnum;
+import cn.edu.zju.kpaperproject.mapper.OrderPlusMapper;
+import cn.edu.zju.kpaperproject.pojo.OrderPlus;
 import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
 import cn.edu.zju.kpaperproject.service.ProcessTaskService;
 import cn.edu.zju.kpaperproject.utils.CalculationUtils;
@@ -25,7 +26,7 @@ import java.util.*;
 public class ProcessTaskServiceImpl implements ProcessTaskService {
 
     @Autowired
-    private TbOrderPlusMapper tbOrderPlusMapper;
+    private OrderPlusMapper orderPlusMapper;
 
     /**
      * 交易结算
@@ -66,7 +67,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // 主机厂初始期望价格
 //            orderPlus.setEngineFactoryToServiceOfferPrice(aTransactionContract.getEngineFactory2ServiceOfferPrice());
             orderPlus.setEngineFactoryToServiceOfferPriceLow(aTransactionContract.getEngineFactory2ServiceOfferPrice()[0]);
-            orderPlus.getEngineFactoryToServiceOfferPriceUpper(aTransactionContract.getEngineFactory2ServiceOfferPrice()[1]);
+            orderPlus.setEngineFactoryToServiceOfferPriceUpper(aTransactionContract.getEngineFactory2ServiceOfferPrice()[1]);
 
             // 实验次数与循环次数
             orderPlus.setExperimentsNumber(experimentsNumber);
@@ -125,14 +126,14 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // TODO 这里应该是可以消除重复计算的, 后续再优化
             // 补全主机厂新的的信誉度
             double engineFactoryNewCredit = getNewCredit(listEngineFactoryMatchSupplier, "engine");
-            aOrderPlus.setNewEngineFactoryCredit(engineFactoryNewCredit);
+            aOrderPlus.setEngineFactoryNewCredit(engineFactoryNewCredit);
             // 补全供应商新的信誉度
             double supplierNewCredit = getNewCredit(listSupplierMatchEngineFactory, "supplier");
             aOrderPlus.setSupplierNewCredit(supplierNewCredit);
         }
 
         // # 把orderPlus存入数据库
-        tbOrderPlusMapper.insertList(listOrderPlus);
+        orderPlusMapper.insertList(listOrderPlus);
 
         return listOrderPlus;
     }

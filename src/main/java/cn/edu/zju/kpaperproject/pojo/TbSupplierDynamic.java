@@ -23,6 +23,12 @@ public class TbSupplierDynamic {
 
     private Integer supplierType;
 
+    private Integer avgPrice;
+
+    private Integer avgQuality;
+
+    private Integer supplierActualSaleNumber;
+
     public Integer getId() {
         return id;
     }
@@ -109,5 +115,29 @@ public class TbSupplierDynamic {
 
     public void setSupplierType(Integer supplierType) {
         this.supplierType = supplierType;
+    }
+
+    public Integer getAvgPrice() {
+        return avgPrice;
+    }
+
+    public void setAvgPrice(Integer avgPrice) {
+        this.avgPrice = avgPrice;
+    }
+
+    public Integer getAvgQuality() {
+        return avgQuality;
+    }
+
+    public void setAvgQuality(Integer avgQuality) {
+        this.avgQuality = avgQuality;
+    }
+
+    public Integer getSupplierActualSaleNumber() {
+        return supplierActualSaleNumber;
+    }
+
+    public void setSupplierActualSaleNumber(Integer supplierActualSaleNumber) {
+        this.supplierActualSaleNumber = supplierActualSaleNumber;
     }
 }

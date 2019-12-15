@@ -1,7 +1,6 @@
 package cn.edu.zju.kpaperproject.service.impl;
 
-import cn.edu.zju.kpaperproject.dto.EngineFactoryFinalProvision;
-import cn.edu.zju.kpaperproject.dto.OrderPlus;
+
 import cn.edu.zju.kpaperproject.dto.TransactionContract;
 import cn.edu.zju.kpaperproject.enums.CalculationEnum;
 import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
@@ -40,6 +39,9 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
     @Autowired
     private TbRelationMatrixMapper tbRelationMatrixMapper;
+
+    @Autowired
+    private EngineFactoryFinalProvisionMapper engineFactoryFinalProvisionMapper;
 
     /**
      * 计算总资产
@@ -94,6 +96,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 算出各主机厂与供应商之间的交易利润和,并加入到各自对应的map集合中
         setMapEngineFactoryAndSupplierProfitSum(listOrderPlus, mapEngineFactoryProfitSum, mapSupplierProfitSum, mapEngineIdVsOrderPlus, mapEngineFactoryDynamic, mapSupplierDynamic);
 
+
         // 主机厂总资产计算
         // 主机厂与市场交易Map
         HashMap<String, EngineFactoryFinalProvision> mapEngineIdVsEngineFactoryFinalProvision = new HashMap<>(100);
@@ -138,6 +141,11 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
         // 计算供应商一类服务的市场需求量/服务商个数/平均需求/质量/平均质量
         calArrAvgNumberAndQuantity(listTransactionContract, sumArrSupplierOrderNumber, sumArrSupplierNumber, avgArrSupplierOrderNumber, sumArrSupplierQuality, avgArrSupplierQuality);
+
+        // # 存入数据库
+        // 生成并插入tb_supplier_type_avg表里
+        tb_supplier_type_avg;
+
 
         // 计算供应商的产能利用率
         calAndSetSupplierCapacityUtilizationAndAdjustCapacityPriceQuality(listSupplierDynamics, avgFinalMarketPrice, sumArrSupplierOrderNumber, avgArrSupplierOrderNumber, avgArrSupplierQuality);
@@ -533,11 +541,56 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             aSupplierDynamic.setSupplierCreditA(aSupplierDynamic.getSupplierCreditA() / sumNewSupplierCreditWithAlive);
         }
 
+        // TODO 算出每个二级供应商的实际平均价格和实际平均质量
+        setSupplierAvgPriceAndAvgQuality(listSupplierDynamics, listOrderPlus, mapSupplierDynamic);
         // TODO 发现好像分静态数据和动态数据没有意义... 如果有需要, 第二版倒是可以改改设计
         // # 把主机厂/ 供应商 静态数据或动态数据都存一下
         // 此时已经完成进入和退出
         storeIntoDatabase(listEngineFactory, listEngineFactoryDynamic, listSupplier, listSupplierDynamics, listNewRelationMatrix);
 
+    }
+
+    /**
+     * 算出并设置每个二级供应商的实际平均价格和实际平均质量
+     *
+     * @param listSupplierDynamics 供应商动态数据
+     * @param listOrderPlus        主机厂与供应商交易结果
+     * @param mapSupplierDynamic   供应商动态数据
+     */
+    private void setSupplierAvgPriceAndAvgQuality(List<TbSupplierDynamic> listSupplierDynamics, List<OrderPlus> listOrderPlus, Map<String, TbSupplierDynamic> mapSupplierDynamic) {
+        // 供应商id - 实际金额
+        Map<String, Integer> mapTmpPriceSum = new HashMap<>(listOrderPlus.size());
+        // 供应商id - 质量
+        Map<String, Integer> mapTmpQualitySum = new HashMap<>(listOrderPlus.size());
+        // 供应商id - 实际交易数量
+        Map<String, Integer> mapTmpNumberSum = new HashMap<>(listOrderPlus.size());
+        for (OrderPlus orderPlus : listOrderPlus) {
+            String supplierId = orderPlus.getSupplierId();
+            int priceSum = mapTmpPriceSum.get(supplierId);
+            int qualitySum = mapTmpQualitySum.get(supplierId);
+            int numberSum = mapTmpNumberSum.get(supplierId);
+
+            priceSum += orderPlus.getSupplierActualPriceP();
+            mapTmpPriceSum.put(supplierId, priceSum);
+
+            qualitySum += orderPlus.getSupplierActualQualityQs();
+            mapTmpQualitySum.put(supplierId, qualitySum);
+
+            numberSum++;
+            mapTmpNumberSum.put(supplierId, numberSum);
+        }
+
+        for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
+            String supplierId = aSupplierDynamic.getSupplierId();
+            TbSupplierDynamic supplierDynamic = mapSupplierDynamic.get(supplierId);
+            if (supplierDynamic != null) {
+                int priceSum = mapTmpPriceSum.get(supplierId);
+                int qualitySum = mapTmpQualitySum.get(supplierId);
+                int numberSum = mapTmpNumberSum.get(supplierId);
+                supplierDynamic.setAvgPrice((int) (priceSum * 1.0 / numberSum));
+                supplierDynamic.setAvgQuality((int) (qualitySum * 1.0 / numberSum));
+            }
+        }
     }
 
     /**
@@ -983,7 +1036,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             TbSupplierDynamic supplierDynamic = mapSupplierDynamic.get(supplierId);
 
             // 更新主机厂和供应方的信誉度
-            engineFactoryDynamic.setEngineFactoryCreditH(orderPlus.getNewEngineFactoryCredit());
+            engineFactoryDynamic.setEngineFactoryCreditH(orderPlus.getEngineFactoryNewCredit());
             supplierDynamic.setSupplierCreditA(orderPlus.getSupplierNewCredit());
 
             mapEngineIdVsOrderPlus.put(engineFactoryId, orderPlus);
@@ -1035,9 +1088,9 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
      * @return 最终交货结果集合
      */
     @Override
-    public List<EngineFactoryFinalProvision> getListEngineFactoryFinalProvision(int cycleTimes, List<OrderPlus> listOrderPlus) {
+    public List<EngineFactoryFinalProvision> getListEngineFactoryFinalProvision(int experimentsNumber, int cycleTimes, List<OrderPlus> listOrderPlus) {
 
-        List<EngineFactoryFinalProvision> listRes = new ArrayList<>();
+        List<EngineFactoryFinalProvision> listEngineFactoryFinalProvision = new ArrayList<>();
 
         EngineFactoryFinalProvision engineFactoryFinalProvision = null;
 
@@ -1060,6 +1113,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             if (tmp == 0) {
                 // 实例化
                 engineFactoryFinalProvision = new EngineFactoryFinalProvision();
+                // 实验次数
+                engineFactoryFinalProvision.setExperimentsNumber(experimentsNumber);
+                // 循环次数
+                engineFactoryFinalProvision.setCycleTimes(cycleTimes);
                 // 主机厂Id
                 engineFactoryFinalProvision.setEngineFactoryId(orderPlus.getEngineFactoryId());
                 // 实际数量
@@ -1100,10 +1157,12 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 engineFactoryFinalProvision.setActualSaleNumber(actualSaleNumber);
 
                 // 加入返回值数组中
-                listRes.add(engineFactoryFinalProvision);
+                listEngineFactoryFinalProvision.add(engineFactoryFinalProvision);
             }
         }
-        return listRes;
+
+        engineFactoryFinalProvisionMapper.insertList(listEngineFactoryFinalProvision);
+        return listEngineFactoryFinalProvision;
     }
 
     /**

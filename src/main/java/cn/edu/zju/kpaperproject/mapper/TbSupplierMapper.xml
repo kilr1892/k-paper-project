@@ -175,6 +175,7 @@
       </if>
     </trim>
   </insert>
+
   <select id="countByExample" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplierExample" resultType="java.lang.Integer" >
     select count(*) from tb_supplier
     <if test="_parameter != null" >
@@ -273,4 +274,14 @@
       supplier_alive = #{supplierAlive,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+  <insert id="insertList" parameterType="java.util.List">
+    INSERT INTO `tb_supplier`
+    (`experiments_number`, `cycle_times`, `supplier_id`, `supplier_location_g_x`, `supplier_location_g_y`, `supplier_type`, `supplier_fixed_cost_c`, `supplier_alive`)
+    VALUES
+    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+      #{experiments_number}, #{cycle_times}, #{supplier_id}, #{supplier_location_g_x}, #{supplier_location_g_y}, #{supplier_type}, #{supplier_fixed_cost_c}, #{supplier_alive}
+    </foreach>
+  </insert>
 </mapper>

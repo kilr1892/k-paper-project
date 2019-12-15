@@ -218,6 +218,7 @@
       </if>
     </trim>
   </insert>
+
   <select id="countByExample" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamicExample" resultType="java.lang.Integer" >
     select count(*) from tb_engine_factory_dynamic
     <if test="_parameter != null" >
@@ -356,4 +357,20 @@
       engine_factory_capacity_utilization = #{engineFactoryCapacityUtilization,jdbcType=DOUBLE}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+
+
+
+
+
+
+  <insert id="insertList" parameterType="java.util.List">
+    INSERT INTO tb_engine_factory_dynamic
+    (`cycle_times`, `engine_factory_id`, `engine_factory_total_assets_p`, `engine_factory_credit_h`, `engine_factory_capacity_m`, `engine_factory_price_p_l`, `engine_factory_price_p_u`, `engine_factory_quality_q`, `engine_factory_demand_forecast_d`, `engine_factory_actual_number_m`, `engine_factory_actual_price_ap`, `engine_factory_actual_quality_aq`, `engine_factory_capacity_utilization`)
+    VALUES
+    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+      #{cycle_times}, #{engine_factory_id}, #{engine_factory_total_assets_p}, #{engine_factory_credit_h}, #{engine_factory_capacity_m}, #{engine_factory_price_p_l}, #{engine_factory_price_p_u}, #{engine_factory_quality_q}, #{engine_factory_demand_forecast_d}, #{engine_factory_actual_number_m}, #{engine_factory_actual_price_ap}, #{engine_factory_actual_quality_aq}, #{engine_factory_capacity_utilization}
+    </foreach>
+  </insert>
 </mapper>

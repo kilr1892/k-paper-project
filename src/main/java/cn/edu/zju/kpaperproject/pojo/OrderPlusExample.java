@@ -3,14 +3,14 @@ package cn.edu.zju.kpaperproject.pojo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TbOrderExample {
+public class OrderPlusExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public TbOrderExample() {
+    public OrderPlusExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -961,6 +961,546 @@ public class TbOrderExample {
 
         public Criteria andSupplierToEngineFactoryScoreNotBetween(Integer value1, Integer value2) {
             addCriterion("supplier_to_engine_factory_score not between", value1, value2, "supplierToEngineFactoryScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInitCreditIsNull() {
+            addCriterion("engine_factory_init_credit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInitCreditIsNotNull() {
+            addCriterion("engine_factory_init_credit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInitCreditEqualTo(Double value) {
+            addCriterion("engine_factory_init_credit =", value, "engineFactoryInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInitCreditNotEqualTo(Double value) {
+            addCriterion("engine_factory_init_credit <>", value, "engineFactoryInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInitCreditGreaterThan(Double value) {
+            addCriterion("engine_factory_init_credit >", value, "engineFactoryInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInitCreditGreaterThanOrEqualTo(Double value) {
+            addCriterion("engine_factory_init_credit >=", value, "engineFactoryInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInitCreditLessThan(Double value) {
+            addCriterion("engine_factory_init_credit <", value, "engineFactoryInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInitCreditLessThanOrEqualTo(Double value) {
+            addCriterion("engine_factory_init_credit <=", value, "engineFactoryInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInitCreditIn(List<Double> values) {
+            addCriterion("engine_factory_init_credit in", values, "engineFactoryInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInitCreditNotIn(List<Double> values) {
+            addCriterion("engine_factory_init_credit not in", values, "engineFactoryInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInitCreditBetween(Double value1, Double value2) {
+            addCriterion("engine_factory_init_credit between", value1, value2, "engineFactoryInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInitCreditNotBetween(Double value1, Double value2) {
+            addCriterion("engine_factory_init_credit not between", value1, value2, "engineFactoryInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryNewCreditIsNull() {
+            addCriterion("engine_factory_new_credit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryNewCreditIsNotNull() {
+            addCriterion("engine_factory_new_credit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryNewCreditEqualTo(Double value) {
+            addCriterion("engine_factory_new_credit =", value, "engineFactoryNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryNewCreditNotEqualTo(Double value) {
+            addCriterion("engine_factory_new_credit <>", value, "engineFactoryNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryNewCreditGreaterThan(Double value) {
+            addCriterion("engine_factory_new_credit >", value, "engineFactoryNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryNewCreditGreaterThanOrEqualTo(Double value) {
+            addCriterion("engine_factory_new_credit >=", value, "engineFactoryNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryNewCreditLessThan(Double value) {
+            addCriterion("engine_factory_new_credit <", value, "engineFactoryNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryNewCreditLessThanOrEqualTo(Double value) {
+            addCriterion("engine_factory_new_credit <=", value, "engineFactoryNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryNewCreditIn(List<Double> values) {
+            addCriterion("engine_factory_new_credit in", values, "engineFactoryNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryNewCreditNotIn(List<Double> values) {
+            addCriterion("engine_factory_new_credit not in", values, "engineFactoryNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryNewCreditBetween(Double value1, Double value2) {
+            addCriterion("engine_factory_new_credit between", value1, value2, "engineFactoryNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryNewCreditNotBetween(Double value1, Double value2) {
+            addCriterion("engine_factory_new_credit not between", value1, value2, "engineFactoryNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceLowIsNull() {
+            addCriterion("engine_factory_to_service_offer_price_low is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceLowIsNotNull() {
+            addCriterion("engine_factory_to_service_offer_price_low is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceLowEqualTo(Integer value) {
+            addCriterion("engine_factory_to_service_offer_price_low =", value, "engineFactoryToServiceOfferPriceLow");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceLowNotEqualTo(Integer value) {
+            addCriterion("engine_factory_to_service_offer_price_low <>", value, "engineFactoryToServiceOfferPriceLow");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceLowGreaterThan(Integer value) {
+            addCriterion("engine_factory_to_service_offer_price_low >", value, "engineFactoryToServiceOfferPriceLow");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceLowGreaterThanOrEqualTo(Integer value) {
+            addCriterion("engine_factory_to_service_offer_price_low >=", value, "engineFactoryToServiceOfferPriceLow");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceLowLessThan(Integer value) {
+            addCriterion("engine_factory_to_service_offer_price_low <", value, "engineFactoryToServiceOfferPriceLow");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceLowLessThanOrEqualTo(Integer value) {
+            addCriterion("engine_factory_to_service_offer_price_low <=", value, "engineFactoryToServiceOfferPriceLow");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceLowIn(List<Integer> values) {
+            addCriterion("engine_factory_to_service_offer_price_low in", values, "engineFactoryToServiceOfferPriceLow");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceLowNotIn(List<Integer> values) {
+            addCriterion("engine_factory_to_service_offer_price_low not in", values, "engineFactoryToServiceOfferPriceLow");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceLowBetween(Integer value1, Integer value2) {
+            addCriterion("engine_factory_to_service_offer_price_low between", value1, value2, "engineFactoryToServiceOfferPriceLow");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceLowNotBetween(Integer value1, Integer value2) {
+            addCriterion("engine_factory_to_service_offer_price_low not between", value1, value2, "engineFactoryToServiceOfferPriceLow");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceUpperIsNull() {
+            addCriterion("engine_factory_to_service_offer_price_upper is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceUpperIsNotNull() {
+            addCriterion("engine_factory_to_service_offer_price_upper is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceUpperEqualTo(Integer value) {
+            addCriterion("engine_factory_to_service_offer_price_upper =", value, "engineFactoryToServiceOfferPriceUpper");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceUpperNotEqualTo(Integer value) {
+            addCriterion("engine_factory_to_service_offer_price_upper <>", value, "engineFactoryToServiceOfferPriceUpper");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceUpperGreaterThan(Integer value) {
+            addCriterion("engine_factory_to_service_offer_price_upper >", value, "engineFactoryToServiceOfferPriceUpper");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceUpperGreaterThanOrEqualTo(Integer value) {
+            addCriterion("engine_factory_to_service_offer_price_upper >=", value, "engineFactoryToServiceOfferPriceUpper");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceUpperLessThan(Integer value) {
+            addCriterion("engine_factory_to_service_offer_price_upper <", value, "engineFactoryToServiceOfferPriceUpper");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceUpperLessThanOrEqualTo(Integer value) {
+            addCriterion("engine_factory_to_service_offer_price_upper <=", value, "engineFactoryToServiceOfferPriceUpper");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceUpperIn(List<Integer> values) {
+            addCriterion("engine_factory_to_service_offer_price_upper in", values, "engineFactoryToServiceOfferPriceUpper");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceUpperNotIn(List<Integer> values) {
+            addCriterion("engine_factory_to_service_offer_price_upper not in", values, "engineFactoryToServiceOfferPriceUpper");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceUpperBetween(Integer value1, Integer value2) {
+            addCriterion("engine_factory_to_service_offer_price_upper between", value1, value2, "engineFactoryToServiceOfferPriceUpper");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryToServiceOfferPriceUpperNotBetween(Integer value1, Integer value2) {
+            addCriterion("engine_factory_to_service_offer_price_upper not between", value1, value2, "engineFactoryToServiceOfferPriceUpper");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInitCreditIsNull() {
+            addCriterion("supplier_init_credit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInitCreditIsNotNull() {
+            addCriterion("supplier_init_credit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInitCreditEqualTo(Double value) {
+            addCriterion("supplier_init_credit =", value, "supplierInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInitCreditNotEqualTo(Double value) {
+            addCriterion("supplier_init_credit <>", value, "supplierInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInitCreditGreaterThan(Double value) {
+            addCriterion("supplier_init_credit >", value, "supplierInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInitCreditGreaterThanOrEqualTo(Double value) {
+            addCriterion("supplier_init_credit >=", value, "supplierInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInitCreditLessThan(Double value) {
+            addCriterion("supplier_init_credit <", value, "supplierInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInitCreditLessThanOrEqualTo(Double value) {
+            addCriterion("supplier_init_credit <=", value, "supplierInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInitCreditIn(List<Double> values) {
+            addCriterion("supplier_init_credit in", values, "supplierInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInitCreditNotIn(List<Double> values) {
+            addCriterion("supplier_init_credit not in", values, "supplierInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInitCreditBetween(Double value1, Double value2) {
+            addCriterion("supplier_init_credit between", value1, value2, "supplierInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInitCreditNotBetween(Double value1, Double value2) {
+            addCriterion("supplier_init_credit not between", value1, value2, "supplierInitCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierNewCreditIsNull() {
+            addCriterion("supplier_new_credit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierNewCreditIsNotNull() {
+            addCriterion("supplier_new_credit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierNewCreditEqualTo(Double value) {
+            addCriterion("supplier_new_credit =", value, "supplierNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierNewCreditNotEqualTo(Double value) {
+            addCriterion("supplier_new_credit <>", value, "supplierNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierNewCreditGreaterThan(Double value) {
+            addCriterion("supplier_new_credit >", value, "supplierNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierNewCreditGreaterThanOrEqualTo(Double value) {
+            addCriterion("supplier_new_credit >=", value, "supplierNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierNewCreditLessThan(Double value) {
+            addCriterion("supplier_new_credit <", value, "supplierNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierNewCreditLessThanOrEqualTo(Double value) {
+            addCriterion("supplier_new_credit <=", value, "supplierNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierNewCreditIn(List<Double> values) {
+            addCriterion("supplier_new_credit in", values, "supplierNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierNewCreditNotIn(List<Double> values) {
+            addCriterion("supplier_new_credit not in", values, "supplierNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierNewCreditBetween(Double value1, Double value2) {
+            addCriterion("supplier_new_credit between", value1, value2, "supplierNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierNewCreditNotBetween(Double value1, Double value2) {
+            addCriterion("supplier_new_credit not between", value1, value2, "supplierNewCredit");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationshipStrengthIsNull() {
+            addCriterion("relationship_strength is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationshipStrengthIsNotNull() {
+            addCriterion("relationship_strength is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationshipStrengthEqualTo(Double value) {
+            addCriterion("relationship_strength =", value, "relationshipStrength");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationshipStrengthNotEqualTo(Double value) {
+            addCriterion("relationship_strength <>", value, "relationshipStrength");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationshipStrengthGreaterThan(Double value) {
+            addCriterion("relationship_strength >", value, "relationshipStrength");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationshipStrengthGreaterThanOrEqualTo(Double value) {
+            addCriterion("relationship_strength >=", value, "relationshipStrength");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationshipStrengthLessThan(Double value) {
+            addCriterion("relationship_strength <", value, "relationshipStrength");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationshipStrengthLessThanOrEqualTo(Double value) {
+            addCriterion("relationship_strength <=", value, "relationshipStrength");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationshipStrengthIn(List<Double> values) {
+            addCriterion("relationship_strength in", values, "relationshipStrength");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationshipStrengthNotIn(List<Double> values) {
+            addCriterion("relationship_strength not in", values, "relationshipStrength");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationshipStrengthBetween(Double value1, Double value2) {
+            addCriterion("relationship_strength between", value1, value2, "relationshipStrength");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelationshipStrengthNotBetween(Double value1, Double value2) {
+            addCriterion("relationship_strength not between", value1, value2, "relationshipStrength");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryProfitIsNull() {
+            addCriterion("engine_factory_profit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryProfitIsNotNull() {
+            addCriterion("engine_factory_profit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryProfitEqualTo(Integer value) {
+            addCriterion("engine_factory_profit =", value, "engineFactoryProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryProfitNotEqualTo(Integer value) {
+            addCriterion("engine_factory_profit <>", value, "engineFactoryProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryProfitGreaterThan(Integer value) {
+            addCriterion("engine_factory_profit >", value, "engineFactoryProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryProfitGreaterThanOrEqualTo(Integer value) {
+            addCriterion("engine_factory_profit >=", value, "engineFactoryProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryProfitLessThan(Integer value) {
+            addCriterion("engine_factory_profit <", value, "engineFactoryProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryProfitLessThanOrEqualTo(Integer value) {
+            addCriterion("engine_factory_profit <=", value, "engineFactoryProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryProfitIn(List<Integer> values) {
+            addCriterion("engine_factory_profit in", values, "engineFactoryProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryProfitNotIn(List<Integer> values) {
+            addCriterion("engine_factory_profit not in", values, "engineFactoryProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryProfitBetween(Integer value1, Integer value2) {
+            addCriterion("engine_factory_profit between", value1, value2, "engineFactoryProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryProfitNotBetween(Integer value1, Integer value2) {
+            addCriterion("engine_factory_profit not between", value1, value2, "engineFactoryProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierProfitIsNull() {
+            addCriterion("supplier_profit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierProfitIsNotNull() {
+            addCriterion("supplier_profit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierProfitEqualTo(Integer value) {
+            addCriterion("supplier_profit =", value, "supplierProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierProfitNotEqualTo(Integer value) {
+            addCriterion("supplier_profit <>", value, "supplierProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierProfitGreaterThan(Integer value) {
+            addCriterion("supplier_profit >", value, "supplierProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierProfitGreaterThanOrEqualTo(Integer value) {
+            addCriterion("supplier_profit >=", value, "supplierProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierProfitLessThan(Integer value) {
+            addCriterion("supplier_profit <", value, "supplierProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierProfitLessThanOrEqualTo(Integer value) {
+            addCriterion("supplier_profit <=", value, "supplierProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierProfitIn(List<Integer> values) {
+            addCriterion("supplier_profit in", values, "supplierProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierProfitNotIn(List<Integer> values) {
+            addCriterion("supplier_profit not in", values, "supplierProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierProfitBetween(Integer value1, Integer value2) {
+            addCriterion("supplier_profit between", value1, value2, "supplierProfit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierProfitNotBetween(Integer value1, Integer value2) {
+            addCriterion("supplier_profit not between", value1, value2, "supplierProfit");
             return (Criteria) this;
         }
     }

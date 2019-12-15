@@ -1,6 +1,6 @@
 package cn.edu.zju.kpaperproject.pojo;
 
-public class TbOrder {
+public class OrderPlus {
     private Integer id;
 
     private Integer experimentsNumber;
@@ -28,6 +28,24 @@ public class TbOrder {
     private Integer engineFactoryToSupplierScore;
 
     private Integer supplierToEngineFactoryScore;
+
+    private Double engineFactoryInitCredit;
+
+    private Double engineFactoryNewCredit;
+
+    private Integer engineFactoryToServiceOfferPriceLow;
+
+    private Integer engineFactoryToServiceOfferPriceUpper;
+
+    private Double supplierInitCredit;
+
+    private Double supplierNewCredit;
+
+    private Double relationshipStrength;
+
+    private Integer engineFactoryProfit;
+
+    private Integer supplierProfit;
 
     public Integer getId() {
         return id;
@@ -139,5 +157,77 @@ public class TbOrder {
 
     public void setSupplierToEngineFactoryScore(Integer supplierToEngineFactoryScore) {
         this.supplierToEngineFactoryScore = supplierToEngineFactoryScore;
+    }
+
+    public Double getEngineFactoryInitCredit() {
+        return engineFactoryInitCredit;
+    }
+
+    public void setEngineFactoryInitCredit(Double engineFactoryInitCredit) {
+        this.engineFactoryInitCredit = engineFactoryInitCredit;
+    }
+
+    public Double getEngineFactoryNewCredit() {
+        return engineFactoryNewCredit;
+    }
+
+    public void setEngineFactoryNewCredit(Double engineFactoryNewCredit) {
+        this.engineFactoryNewCredit = engineFactoryNewCredit;
+    }
+
+    public Integer getEngineFactoryToServiceOfferPriceLow() {
+        return engineFactoryToServiceOfferPriceLow;
+    }
+
+    public void setEngineFactoryToServiceOfferPriceLow(Integer engineFactoryToServiceOfferPriceLow) {
+        this.engineFactoryToServiceOfferPriceLow = engineFactoryToServiceOfferPriceLow;
+    }
+
+    public Integer getEngineFactoryToServiceOfferPriceUpper() {
+        return engineFactoryToServiceOfferPriceUpper;
+    }
+
+    public void setEngineFactoryToServiceOfferPriceUpper(Integer engineFactoryToServiceOfferPriceUpper) {
+        this.engineFactoryToServiceOfferPriceUpper = engineFactoryToServiceOfferPriceUpper;
+    }
+
+    public Double getSupplierInitCredit() {
+        return supplierInitCredit;
+    }
+
+    public void setSupplierInitCredit(Double supplierInitCredit) {
+        this.supplierInitCredit = supplierInitCredit;
+    }
+
+    public Double getSupplierNewCredit() {
+        return supplierNewCredit;
+    }
+
+    public void setSupplierNewCredit(Double supplierNewCredit) {
+        this.supplierNewCredit = supplierNewCredit;
+    }
+
+    public Double getRelationshipStrength() {
+        return relationshipStrength;
+    }
+
+    public void setRelationshipStrength(Double relationshipStrength) {
+        this.relationshipStrength = relationshipStrength;
+    }
+
+    public Integer getEngineFactoryProfit() {
+        return engineFactoryProfit;
+    }
+
+    public void setEngineFactoryProfit(Integer engineFactoryProfit) {
+        this.engineFactoryProfit = engineFactoryProfit;
+    }
+
+    public Integer getSupplierProfit() {
+        return supplierProfit;
+    }
+
+    public void setSupplierProfit(Integer supplierProfit) {
+        this.supplierProfit = supplierProfit;
     }
 }

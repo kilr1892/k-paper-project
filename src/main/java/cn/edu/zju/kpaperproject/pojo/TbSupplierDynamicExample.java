@@ -773,6 +773,186 @@ public class TbSupplierDynamicExample {
             addCriterion("supplier_type not between", value1, value2, "supplierType");
             return (Criteria) this;
         }
+
+        public Criteria andAvgPriceIsNull() {
+            addCriterion("avg_price is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgPriceIsNotNull() {
+            addCriterion("avg_price is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgPriceEqualTo(Integer value) {
+            addCriterion("avg_price =", value, "avgPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgPriceNotEqualTo(Integer value) {
+            addCriterion("avg_price <>", value, "avgPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgPriceGreaterThan(Integer value) {
+            addCriterion("avg_price >", value, "avgPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgPriceGreaterThanOrEqualTo(Integer value) {
+            addCriterion("avg_price >=", value, "avgPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgPriceLessThan(Integer value) {
+            addCriterion("avg_price <", value, "avgPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgPriceLessThanOrEqualTo(Integer value) {
+            addCriterion("avg_price <=", value, "avgPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgPriceIn(List<Integer> values) {
+            addCriterion("avg_price in", values, "avgPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgPriceNotIn(List<Integer> values) {
+            addCriterion("avg_price not in", values, "avgPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgPriceBetween(Integer value1, Integer value2) {
+            addCriterion("avg_price between", value1, value2, "avgPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgPriceNotBetween(Integer value1, Integer value2) {
+            addCriterion("avg_price not between", value1, value2, "avgPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgQualityIsNull() {
+            addCriterion("avg_quality is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgQualityIsNotNull() {
+            addCriterion("avg_quality is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgQualityEqualTo(Integer value) {
+            addCriterion("avg_quality =", value, "avgQuality");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgQualityNotEqualTo(Integer value) {
+            addCriterion("avg_quality <>", value, "avgQuality");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgQualityGreaterThan(Integer value) {
+            addCriterion("avg_quality >", value, "avgQuality");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgQualityGreaterThanOrEqualTo(Integer value) {
+            addCriterion("avg_quality >=", value, "avgQuality");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgQualityLessThan(Integer value) {
+            addCriterion("avg_quality <", value, "avgQuality");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgQualityLessThanOrEqualTo(Integer value) {
+            addCriterion("avg_quality <=", value, "avgQuality");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgQualityIn(List<Integer> values) {
+            addCriterion("avg_quality in", values, "avgQuality");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgQualityNotIn(List<Integer> values) {
+            addCriterion("avg_quality not in", values, "avgQuality");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgQualityBetween(Integer value1, Integer value2) {
+            addCriterion("avg_quality between", value1, value2, "avgQuality");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvgQualityNotBetween(Integer value1, Integer value2) {
+            addCriterion("avg_quality not between", value1, value2, "avgQuality");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierActualSaleNumberIsNull() {
+            addCriterion("supplier_actual_sale_number is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierActualSaleNumberIsNotNull() {
+            addCriterion("supplier_actual_sale_number is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierActualSaleNumberEqualTo(Integer value) {
+            addCriterion("supplier_actual_sale_number =", value, "supplierActualSaleNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierActualSaleNumberNotEqualTo(Integer value) {
+            addCriterion("supplier_actual_sale_number <>", value, "supplierActualSaleNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierActualSaleNumberGreaterThan(Integer value) {
+            addCriterion("supplier_actual_sale_number >", value, "supplierActualSaleNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierActualSaleNumberGreaterThanOrEqualTo(Integer value) {
+            addCriterion("supplier_actual_sale_number >=", value, "supplierActualSaleNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierActualSaleNumberLessThan(Integer value) {
+            addCriterion("supplier_actual_sale_number <", value, "supplierActualSaleNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierActualSaleNumberLessThanOrEqualTo(Integer value) {
+            addCriterion("supplier_actual_sale_number <=", value, "supplierActualSaleNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierActualSaleNumberIn(List<Integer> values) {
+            addCriterion("supplier_actual_sale_number in", values, "supplierActualSaleNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierActualSaleNumberNotIn(List<Integer> values) {
+            addCriterion("supplier_actual_sale_number not in", values, "supplierActualSaleNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierActualSaleNumberBetween(Integer value1, Integer value2) {
+            addCriterion("supplier_actual_sale_number between", value1, value2, "supplierActualSaleNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierActualSaleNumberNotBetween(Integer value1, Integer value2) {
+            addCriterion("supplier_actual_sale_number not between", value1, value2, "supplierActualSaleNumber");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

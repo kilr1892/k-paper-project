@@ -3,13 +3,14 @@ package cn.edu.zju.kpaperproject.mapper;
 import cn.edu.zju.kpaperproject.pojo.TbEngineFactory;
 import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryExample;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface TbEngineFactoryMapper {
-    //-------------------------------------------------------------
-    void insertList(List<TbEngineFactory> listEngineFactory);
-    //-------------------------------------------------------------
+
+
     int countByExample(TbEngineFactoryExample example);
 
     int deleteByExample(TbEngineFactoryExample example);
@@ -32,4 +33,6 @@ public interface TbEngineFactoryMapper {
 
     int updateByPrimaryKey(TbEngineFactory record);
 
+    //-------------------------------------------------------------------
+    void insertList(List<TbEngineFactory> listEngineFactory);
 }
