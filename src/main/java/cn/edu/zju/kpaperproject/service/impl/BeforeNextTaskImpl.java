@@ -160,28 +160,6 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         }
         // 所有存活主机厂平均信誉度
         double aveEngineFactoryCredit = sumEngineFactoryCreditWithAlive / engineFactoryIsAliveNumber;
-//        TbEngineFactoryDynamic engineFactoryDynamicWithHighestCredit = listEngineFactoryDynamic.get(0);
-//        double sumEngineFactoryCreditWithAlive = engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH();
-//        int engineFactoryIsAliveNumber = 1;
-//        for (int i = 1; i < listEngineFactoryDynamic.size(); i++) {
-//            TbEngineFactoryDynamic tmp = listEngineFactoryDynamic.get(i);
-//            String engineFactoryId = tmp.getEngineFactoryId();
-//            TbEngineFactory tbEngineFactory = mapEngineFactory.get(engineFactoryId);
-//            if (tbEngineFactory.getEngineFactoryAlive()) {
-//                // 存活才算
-//                engineFactoryIsAliveNumber++;
-//                double engineFactoryCreditH = tmp.getEngineFactoryCreditH();
-//                sumEngineFactoryCreditWithAlive += engineFactoryCreditH;
-//                if (engineFactoryCreditH > engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()) {
-//                    engineFactoryDynamicWithHighestCredit = tmp;
-//                } else if (engineFactoryCreditH == engineFactoryDynamicWithHighestCredit.getEngineFactoryCreditH()){
-//                    // 信誉度相同, 要出价高的
-//                    if (tmp.getEngineFactoryPricePU() > engineFactoryDynamicWithHighestCredit.getEngineFactoryPricePU()) {
-//                        engineFactoryDynamicWithHighestCredit = tmp;
-//                    }
-//                }
-//            }
-//        }
 
         // 求出供应商信誉的最高的
         // 供应商信誉度
@@ -213,29 +191,6 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         }
         // 所有存活供应商平均信誉度
         double aveSupplierCredit = sumEngineFactoryCreditWithAlive / engineFactoryIsAliveNumber;
-
-//        TbSupplierDynamic supplierDynamicWithHighestCredit = listSupplierDynamics.get(0);
-//        double sumSupplierCreditWithAlive = supplierDynamicWithHighestCredit.getSupplierCreditA();
-//        int supplierIsAliveNumber = 1;
-//        for (int i = 1; i < listSupplierDynamics.size(); i++) {
-//            TbSupplierDynamic tmp = listSupplierDynamics.get(i);
-//            String supplierId = tmp.getSupplierId();
-//            TbSupplier tbSupplier = mapSupplier.get(supplierId);
-//            if (tbSupplier.getSupplierAlive()) {
-//                // 存活才算
-//                supplierIsAliveNumber++;
-//                double supplierCreditA = tmp.getSupplierCreditA();
-//                sumSupplierCreditWithAlive += supplierCreditA;
-//                if (supplierCreditA > supplierDynamicWithHighestCredit.getSupplierCreditA()) {
-//                    supplierDynamicWithHighestCredit = tmp;
-//                }else if (supplierCreditA == supplierDynamicWithHighestCredit.getSupplierCreditA()){
-//                    // 信誉度相同, 要出价高的
-//                    if (tmp.getSupplierPricePU() > supplierDynamicWithHighestCredit.getSupplierPricePU()) {
-//                        supplierDynamicWithHighestCredit = tmp;
-//                    }
-//                }
-//            }
-//        }
 
         // 主机厂的退出
         TbEngineFactory tbEngineFactory = null;
@@ -273,7 +228,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
         // 用来存新生成的主机厂id, 和信誉度最高的供应商id        supplierDynamicWithHighestCredit.getSupplierId();
 
-        Map<String, String> mapNewEngineFactoryIdVsSupplierIdWithHighestCredit = new HashMap<>();
+        Map<String, String> mapNewEngineFactoryIdVsSupplierIdWithHighestCredit = new HashMap<>(3);
         EngineFactoryFinalProvision engineFactoryFinalProvision = listEngineFactoryFinalProvisions.get(0);
         int marketNeedNumber = engineFactoryFinalProvision.getMarketNeedNumber();
         TbEngineFactoryDynamic tbEngineFactoryDynamic;
@@ -330,7 +285,6 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 mapEngineFactory.put(engineFactoryId, tbEngineFactory);
                 listEngineFactoryDynamic.add(tbEngineFactoryDynamic);
             }
-//TODO 关系矩阵还没写, 看看是不是都用了存活的
         }
 
 
@@ -414,7 +368,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             }
         }
         // 用来存储新生成的供应商ID
-        Map<String, String> mapNewSupplierIdVsEngineFactoryIdWithHighestCredit = new HashMap<>();
+        Map<String, String> mapNewSupplierIdVsEngineFactoryIdWithHighestCredit = new HashMap<>(15);
         // 随机生成供应商
         for (int i = 0; i < 4; i++) {
             double aveSupplierCreditTmp = sumArrSupplierCreditWithAlive[i] * 1D / sumArrSupplierIsAlive[i];
@@ -472,23 +426,28 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         }
 
 
-        // TODO 关系强度, 都是重新生成的, 每个阶段生成, 历史数据用map读出来,
+        // 关系强度, 都是重新生成的, 每个阶段生成, 历史数据用map读出来,
         // 下一个阶段要用的关系矩阵
         List<TbRelationMatrix> listNewRelationMatrix = new ArrayList<>();
         // 两个循环生成关系矩阵
-        TbRelationMatrix tbRelationMatrix = new TbRelationMatrix();
-        tbRelationMatrix.setExperimentsNumber(experimentsNumber);
-        tbRelationMatrix.setCycleTimes(cycleTime);
         for (TbEngineFactory aTbEngineFactory : listEngineFactory) {
             if (aTbEngineFactory.getEngineFactoryAlive()) {
+
                 String engineFactoryId = aTbEngineFactory.getEngineFactoryId();
-                tbRelationMatrix.setEngineFactoryId(engineFactoryId);
                 for (TbSupplier aTbSupplier : listSupplier) {
+
+                    TbRelationMatrix tbRelationMatrix = new TbRelationMatrix();
+                    tbRelationMatrix.setExperimentsNumber(experimentsNumber);
+                    tbRelationMatrix.setCycleTimes(cycleTime);
+                    tbRelationMatrix.setEngineFactoryId(engineFactoryId);
+
                     if (aTbSupplier.getSupplierAlive()) {
                         String supplierId = aTbSupplier.getSupplierId();
                         tbRelationMatrix.setSupplierId(supplierId);
                         // 获取之前的数据
-                        TbRelationMatrix oldRelationMatrix = mapRelationshipMatrix2WithTbRelationMatrix.get(engineFactoryId + supplierId);
+                        String mapKey = engineFactoryId + supplierId;
+                        tbRelationMatrix.setMapKey(mapKey);
+                        TbRelationMatrix oldRelationMatrix = mapRelationshipMatrix2WithTbRelationMatrix.get(mapKey);
                         if (oldRelationMatrix != null) {
                             // 原来有的
                             tbRelationMatrix.setRelationScore(oldRelationMatrix.getRelationScore());
@@ -526,8 +485,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                             tbRelationMatrix.setAccumulativeTotalScore(0);
                             tbRelationMatrix.setTransactionNumber(0);
                         }
-                        listNewRelationMatrix.add(tbRelationMatrix);
                     }
+                    listNewRelationMatrix.add(tbRelationMatrix);
                 }
             }
         }
@@ -1017,8 +976,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         int[] res = new int[2];
         int x = arrPosition[0];
         int y = arrPosition[1];
-        int newX = RandomUtils.nextInt(x - 2, x + 3);
-        int newY = RandomUtils.nextInt(y - 2, y + 3);
+        int x2 = x - 2 > 0 ? x - 2 : 0;
+        int y2 = y - 2 > 0 ? y - 2 : 0;
+        int newX = RandomUtils.nextInt(x2, x + 3);
+        int newY = RandomUtils.nextInt(y2, y + 3);
         newX = newX < 0 ? 0 : newX;
         newX = newX > 20 ? 20 : newX;
         newY = newY < 0 ? 0 : newY;
@@ -1126,6 +1087,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
         int pa = RandomUtils.nextInt(EngineFactoryEnum.engineFactoryInitPriceLow, EngineFactoryEnum.engineFactoryInitPriceUpper + 1);
         int qa = RandomUtils.nextInt(EngineFactoryEnum.engineFactoryInitQualityLow, EngineFactoryEnum.engineFactoryInitQualityUpper + 1);
-        return (int) Math.round((k1 - k2 * pa / qa) * cm);
+        int res = (int) Math.round((k1 - k2 * pa / qa) * cm);
+        return res > 0 ? res : 0;
     }
 }
