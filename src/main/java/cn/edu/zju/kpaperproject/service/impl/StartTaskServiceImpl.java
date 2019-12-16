@@ -114,10 +114,10 @@ public class StartTaskServiceImpl implements StartTaskService {
     public ArrayList<ArrayList<SupplierTask>> genSupplierTask(int experimentsNumber, int cycleTime, List<TbSupplier> listSuppliers, List<TbSupplierDynamic> listSupplierDynamic) {
 
         // 返回值, 索引0~4 就是210~205的集合
-        ArrayList<ArrayList<SupplierTask>> res = new ArrayList<>(5);
+        ArrayList<ArrayList<SupplierTask>> listListSupplierTask = new ArrayList<>(5);
         int resSize = 5;
         for (int i = 0; i < resSize; i++) {
-            res.add(new ArrayList<>());
+            listListSupplierTask.add(new ArrayList<>());
         }
         // 查询出所有活着的供应商
 //        listSuppliers = getListTbSuppliersWithAlive(experimentsNumber,cycleTime);
@@ -160,26 +160,26 @@ public class StartTaskServiceImpl implements StartTaskService {
             // 选择对应点的集合存入供应商任务模型
             switch (supplierType) {
                 case 210:
-                    res.get(0).add(supplierTask);
+                    listListSupplierTask.get(0).add(supplierTask);
                     break;
                 case 220:
-                    res.get(1).add(supplierTask);
+                    listListSupplierTask.get(1).add(supplierTask);
                     break;
                 case 230:
-                    res.get(2).add(supplierTask);
+                    listListSupplierTask.get(2).add(supplierTask);
                     break;
                 case 240:
-                    res.get(3).add(supplierTask);
+                    listListSupplierTask.get(3).add(supplierTask);
                     break;
                 case 250:
-                    res.get(4).add(supplierTask);
+                    listListSupplierTask.get(4).add(supplierTask);
                     break;
                 default:
                     throw new RuntimeException("供应商类型错误");
             }
         }
 
-        return res;
+        return listListSupplierTask;
     }
 
     /**

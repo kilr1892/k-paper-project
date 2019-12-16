@@ -6,6 +6,7 @@ import cn.edu.zju.kpaperproject.dto.SupplierTask;
 import cn.edu.zju.kpaperproject.enums.CalculationEnum;
 import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
 import cn.edu.zju.kpaperproject.enums.NumberEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ import java.util.Map;
  * @version v1.0
  */
 @Component
+@Slf4j
 public class CalculationUtils {
 
     /**
@@ -120,6 +122,9 @@ public class CalculationUtils {
      */
     private static double getRelationshipStrength(Map<String, Double> mapRelationshipMatrix, EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask) {
         String key = engineFactoryManufacturingTask.getEngineFactoryId() + supplierTask.getSupplierId();
+//        log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//        log.info(key +"::::"+mapRelationshipMatrix.get(key));
+//        log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         return mapRelationshipMatrix.get(key);
     }
 

@@ -10,6 +10,7 @@ import cn.edu.zju.kpaperproject.mapper.*;
 import cn.edu.zju.kpaperproject.pojo.*;
 import cn.edu.zju.kpaperproject.service.BeforeNextTask;
 import cn.edu.zju.kpaperproject.utils.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import java.util.Map;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
+@Slf4j
 public class BeforeNextTaskImpl implements BeforeNextTask {
 
     @Autowired
@@ -185,7 +187,12 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             }
         }
         // 所有存活主机厂平均信誉度
-        double aveEngineFactoryCredit = sumEngineFactoryCreditWithAlive / engineFactoryIsAliveNumber;
+        double aveEngineFactoryCredit = 0d;
+        if (engineFactoryIsAliveNumber != 0) {
+            aveEngineFactoryCredit = sumEngineFactoryCreditWithAlive / engineFactoryIsAliveNumber;
+        } else {
+            aveEngineFactoryCredit = 1;
+        }
 
         // 求出供应商信誉的最高的
         // 供应商信誉度
@@ -216,7 +223,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             }
         }
         // 所有存活供应商平均信誉度
-        double aveSupplierCredit = sumEngineFactoryCreditWithAlive / engineFactoryIsAliveNumber;
+        double aveSupplierCredit = sumSupplierCreditWithAlive / supplierIsAliveNumber;
 
         // 主机厂的退出
         TbEngineFactory tbEngineFactory = null;
@@ -273,6 +280,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 // 工厂id
                 String engineFactoryId = CommonUtils.genId();
                 tbEngineFactory.setEngineFactoryId(engineFactoryId);
+                if (supplierDynamicWithHighestCredit == null) {
+                    throw new RuntimeException("供应商信誉度最高的是NULL");
+                }
+
                 mapNewEngineFactoryIdVsSupplierIdWithHighestCredit.put(engineFactoryId, supplierDynamicWithHighestCredit.getSupplierId());
 
                 // 地理位置
@@ -310,6 +321,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 listEngineFactory.add(tbEngineFactory);
                 mapEngineFactory.put(engineFactoryId, tbEngineFactory);
                 listEngineFactoryDynamic.add(tbEngineFactoryDynamic);
+                mapEngineFactoryDynamic.put(engineFactoryId, tbEngineFactoryDynamic);
             }
         }
 
@@ -324,33 +336,56 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         for (TransactionContract aTransactionContract : listTransactionContract) {
             String supplierId = aTransactionContract.getSupplierId();
             TbSupplier tmpSupplier = mapSupplier.get(supplierId);
+            int taskType = aTransactionContract.getTaskType();
+            int engineFactoryNeedServiceNumber = aTransactionContract.getEngineFactoryNeedServiceNumber();
+
+            // 订单中按类分的主机厂需求
+            switch (taskType) {
+                case 210:
+                    sumArrEngineFactoryNeedServiceNumberWithAlive[0] += engineFactoryNeedServiceNumber;
+                    break;
+                case 220:
+                    sumArrEngineFactoryNeedServiceNumberWithAlive[1] += engineFactoryNeedServiceNumber;
+                    break;
+                case 230:
+                    sumArrEngineFactoryNeedServiceNumberWithAlive[2] += engineFactoryNeedServiceNumber;
+                    break;
+                case 240:
+                    sumArrEngineFactoryNeedServiceNumberWithAlive[3] += engineFactoryNeedServiceNumber;
+                    break;
+                case 250:
+                    sumArrEngineFactoryNeedServiceNumberWithAlive[4] += engineFactoryNeedServiceNumber;
+                    break;
+                default:
+                    throw new RuntimeException("no such type");
+            }
+
+            // 存活的供应商中, 信誉度之和 存活个数计算
             if (tmpSupplier.getSupplierAlive()) {
-                int taskType = aTransactionContract.getTaskType();
-                int engineFactoryNeedServiceNumber = aTransactionContract.getEngineFactoryNeedServiceNumber();
                 double supplierCredit = aTransactionContract.getSupplierCredit();
                 switch (taskType) {
                     case 210:
-                        sumArrEngineFactoryNeedServiceNumberWithAlive[0] += engineFactoryNeedServiceNumber;
+//                        sumArrEngineFactoryNeedServiceNumberWithAlive[0] += engineFactoryNeedServiceNumber;
                         sumArrSupplierCreditWithAlive[0] += supplierCredit;
                         sumArrSupplierIsAlive[0]++;
                         break;
                     case 220:
-                        sumArrEngineFactoryNeedServiceNumberWithAlive[1] += engineFactoryNeedServiceNumber;
+//                        sumArrEngineFactoryNeedServiceNumberWithAlive[1] += engineFactoryNeedServiceNumber;
                         sumArrSupplierCreditWithAlive[1] += supplierCredit;
                         sumArrSupplierIsAlive[1]++;
                         break;
                     case 230:
-                        sumArrEngineFactoryNeedServiceNumberWithAlive[2] += engineFactoryNeedServiceNumber;
+//                        sumArrEngineFactoryNeedServiceNumberWithAlive[2] += engineFactoryNeedServiceNumber;
                         sumArrSupplierCreditWithAlive[2] += supplierCredit;
                         sumArrSupplierIsAlive[2]++;
                         break;
                     case 240:
-                        sumArrEngineFactoryNeedServiceNumberWithAlive[3] += engineFactoryNeedServiceNumber;
+//                        sumArrEngineFactoryNeedServiceNumberWithAlive[3] += engineFactoryNeedServiceNumber;
                         sumArrSupplierCreditWithAlive[3] += supplierCredit;
                         sumArrSupplierIsAlive[3]++;
                         break;
                     case 250:
-                        sumArrEngineFactoryNeedServiceNumberWithAlive[4] += engineFactoryNeedServiceNumber;
+//                        sumArrEngineFactoryNeedServiceNumberWithAlive[4] += engineFactoryNeedServiceNumber;
                         sumArrSupplierCreditWithAlive[4] += supplierCredit;
                         sumArrSupplierIsAlive[4]++;
                         break;
@@ -366,10 +401,18 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 , SupplierEnum.supplierType240, SupplierEnum.supplierType250};
 
         int[] sumArrSupplierCapacity = new int[5];
+
+        // 这个用来给某类供应商都死亡后的信誉度平均值
+        double sumSupplierCapacityAllWithAlive = 0D;
+        int sumSupplierNumberAllWithAlive = 0;
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
             String supplierId = aSupplierDynamic.getSupplierId();
             TbSupplier tmpSupplier = mapSupplier.get(supplierId);
             if (tmpSupplier.getSupplierAlive()) {
+                // 还活着的供应商
+                sumSupplierCapacityAllWithAlive += aSupplierDynamic.getSupplierCreditA();
+                sumSupplierNumberAllWithAlive++;
+
                 int type = tmpSupplier.getSupplierType();
                 int supplierCapacity = aSupplierDynamic.getSupplierCapacityM();
                 switch (type) {
@@ -393,14 +436,33 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 }
             }
         }
+        // 如果某类供应商都没了, 新生成的信誉度用这个
+        double avgSupplierCapacityAllWithAlive = 0D;
+        if (sumSupplierNumberAllWithAlive != 0) {
+            // 还有活的供应商
+            avgSupplierCapacityAllWithAlive = sumSupplierCapacityAllWithAlive / sumSupplierNumberAllWithAlive;
+        } else {
+            // 全都死了
+            avgSupplierCapacityAllWithAlive = 1;
+        }
         // 用来存储新生成的供应商ID
-        Map<String, String> mapNewSupplierIdVsEngineFactoryIdWithHighestCredit = new HashMap<>(15);
+        Map<String, String> mapNewSupplierIdVsEngineFactoryIdWithHighestCredit = new HashMap<>(50);
         // 随机生成供应商
-        for (int i = 0; i < 4; i++) {
-            double aveSupplierCreditTmp = sumArrSupplierCreditWithAlive[i] * 1D / sumArrSupplierIsAlive[i];
+        for (int i = 0; i < 5; i++) {
+            double aveSupplierCreditTmp = 0;
+            if (sumArrSupplierIsAlive[i] != 0) {
+                // 某类供应商数量不为0
+                aveSupplierCreditTmp = sumArrSupplierCreditWithAlive[i] * 1D / sumArrSupplierIsAlive[i];
+            } else {
+                aveSupplierCreditTmp = avgSupplierCapacityAllWithAlive;
+            }
 
             int engineFactoryNeedServiceNumberWithAlive = sumArrEngineFactoryNeedServiceNumberWithAlive[i];
             int supplierCapacity = sumArrSupplierCapacity[i];
+            log.info("++++++++++++++++++++++++++++++++++++++");
+            log.info("supplierCapacity : " + supplierCapacity);
+            log.info("engineFactoryNeedServiceNumberWithAlive : " + engineFactoryNeedServiceNumberWithAlive);
+            log.info("++++++++++++++++++++++++++++++++++++++");
             if (supplierCapacity < engineFactoryNeedServiceNumberWithAlive) {
                 // 供应商产能 < 主机厂对该类服务的需求
                 int tmp = RandomUtils.nextInt(1, 4);
@@ -414,6 +476,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                     // 供应商id
                     String supplierId = CommonUtils.genId();
                     tbSupplier.setSupplierId(supplierId);
+                    if (engineFactoryDynamicWithHighestCredit == null) {
+                        throw new RuntimeException("主机厂信誉度最高的是NULL");
+                    }
+
                     mapNewSupplierIdVsEngineFactoryIdWithHighestCredit.put(supplierId, engineFactoryDynamicWithHighestCredit.getEngineFactoryId());
 
                     // 地理位置
@@ -443,10 +509,13 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                     // 质量
                     tbSupplierDynamic.setSupplierQualityQs(InitSupplierUtils.initQuality());
 
+                    // 动态数据里的type
+                    tbSupplierDynamic.setSupplierType(InitSupplierUtils.initType(supplierTypeCode[i]));
                     // 加入集合中
                     listSupplier.add(tbSupplier);
                     mapSupplier.put(supplierId, tbSupplier);
                     listSupplierDynamics.add(tbSupplierDynamic);
+                    mapSupplierDynamic.put(supplierId, tbSupplierDynamic);
                 }
             }
         }
@@ -458,18 +527,18 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 两个循环生成关系矩阵
         for (TbEngineFactory aTbEngineFactory : listEngineFactory) {
             if (aTbEngineFactory.getEngineFactoryAlive()) {
+                // 主机厂是活着的
                 // TODO 更新主机厂的静态数据的循环次数
                 aTbEngineFactory.setCycleTimes(cycleTime);
-
+                // 主机厂id
                 String engineFactoryId = aTbEngineFactory.getEngineFactoryId();
                 for (TbSupplier aTbSupplier : listSupplier) {
-
-                    TbRelationMatrix tbRelationMatrix = new TbRelationMatrix();
-                    tbRelationMatrix.setExperimentsNumber(experimentsNumber);
-                    tbRelationMatrix.setCycleTimes(cycleTime);
-                    tbRelationMatrix.setEngineFactoryId(engineFactoryId);
-
+                    // 供应商是活着的
                     if (aTbSupplier.getSupplierAlive()) {
+                        TbRelationMatrix tbRelationMatrix = new TbRelationMatrix();
+                        tbRelationMatrix.setExperimentsNumber(experimentsNumber);
+                        tbRelationMatrix.setCycleTimes(cycleTime);
+                        tbRelationMatrix.setEngineFactoryId(engineFactoryId);
                         // TODO 更新供应商的静态数据的循环次数
                         aTbSupplier.setCycleTimes(cycleTime);
                         String supplierId = aTbSupplier.getSupplierId();
@@ -489,7 +558,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                             if (mapNewEngineFactoryIdVsSupplierIdWithHighestCredit.containsKey(engineFactoryId)) {
                                 // 工厂是新增的
                                 if (supplierId.equals(mapNewEngineFactoryIdVsSupplierIdWithHighestCredit.get(engineFactoryId))) {
-                                    // 供应商id 与 信誉度最高的供应商id相同
+                                    // 供应商id 与 信誉度最高的供应商id相同, 设定初始值为0.2  (1~3个工厂会有0.2)
                                     tbRelationMatrix.setRelationScore(0.2);
                                     tbRelationMatrix.setInitialRelationalDegree(0.2);
                                 } else {
@@ -501,7 +570,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                             } else {
                                 // 供应商是新增的
                                 if (engineFactoryId.equals(mapNewSupplierIdVsEngineFactoryIdWithHighestCredit.get(supplierId))) {
-                                    // 主机厂id 与 信誉度最高的主机厂id相同
+                                    // 主机厂id 与 信誉度最高的主机厂id相同   (1~3个供应商会有0.2)  (只有新生的工厂或新生的供应商有0.2)
                                     tbRelationMatrix.setRelationScore(0.2);
                                     tbRelationMatrix.setInitialRelationalDegree(0.2);
                                 } else {
@@ -515,8 +584,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                             tbRelationMatrix.setAccumulativeTotalScore(0);
                             tbRelationMatrix.setTransactionNumber(0);
                         }
+                        listNewRelationMatrix.add(tbRelationMatrix);
                     }
-                    listNewRelationMatrix.add(tbRelationMatrix);
                 }
             }
         }
@@ -548,6 +617,9 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             }
         }
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
+//            log.info("++++++++++++++++++");
+//            log.info("sumNewSupplierCreditWithAlive   " + sumNewSupplierCreditWithAlive);
+//            log.info("++++++++++++++++++");
             aSupplierDynamic.setSupplierCreditA(aSupplierDynamic.getSupplierCreditA() / sumNewSupplierCreditWithAlive);
         }
 

@@ -10,6 +10,7 @@ import cn.edu.zju.kpaperproject.pojo.OrderPlus;
 import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
 import cn.edu.zju.kpaperproject.service.ProcessTaskService;
 import cn.edu.zju.kpaperproject.utils.CalculationUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import java.util.*;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
+@Slf4j
 public class ProcessTaskServiceImpl implements ProcessTaskService {
 
     @Autowired
@@ -109,12 +111,13 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             orderPlus.setEngineFactoryProfit(profit[0]);
             orderPlus.setSupplierProfit(profit[1]);
 
-            listOrderPlus.add(orderPlus);
             // 初始信誉度
             orderPlus.setEngineFactoryInitCredit(aTransactionContract.getEngineFactoryCredit());
             orderPlus.setSupplierInitCredit(aTransactionContract.getSupplierCredit());
             // 计算交易后的信誉度, 放在map里先
             addMapForCredit(orderPlus, mapEngineFactoryCredit, mapSupplierCredit);
+
+            listOrderPlus.add(orderPlus);
         }
         // 计算信誉度
         for (OrderPlus aOrderPlus : listOrderPlus) {
@@ -509,8 +512,8 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // 加入匹配成功集合
             listMapEngineFactoryTaskVsSupplierTask.add(mapEngineTaskVsSupplierTask);
         }
-        ArrayList<TransactionContract> listRes = genTransactionContracts(listMapEngineFactoryTaskVsSupplierTask);
-        return listRes;
+        ArrayList<TransactionContract> listTransactionContract = genTransactionContracts(listMapEngineFactoryTaskVsSupplierTask);
+        return listTransactionContract;
     }
 
     /**
@@ -651,6 +654,11 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 
             // 任务要求产量<=服务剩余产能
             if (engineFactoryNeedServiceNumber < supplierRestCapacity) {
+//                log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//                log.info("engineFactoryNeedServiceNumber :  " + engineFactoryNeedServiceNumber);
+//                log.info("supplierRestCapacity  :  " + supplierRestCapacity);
+//                log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
                 // 供应商用供应能力, 一定能匹配上
                 boolean flag = false;
                 while (!flag) {
@@ -660,14 +668,20 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                             ? engineFactoryExpectedQuality + CalculationEnum.unassignedTaskRq : engineFactoryExpectedQuality;
                     // 主机厂价格区间 * 1.1 取整
                     int[] engineFactory2ServiceOfferPrice = engineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice();
+
                     engineFactory2ServiceOfferPrice = new int[]{
-                            (int) (engineFactory2ServiceOfferPrice[NumberEnum.PRICE_LOW_ARRAY_INDEX] * CalculationEnum.unassignedTaskRc)
-                            , (int) (engineFactory2ServiceOfferPrice[NumberEnum.PRICE_UPPER_ARRAY_INDEX] * CalculationEnum.unassignedTaskRc)};
+                            ((int) (engineFactory2ServiceOfferPrice[NumberEnum.PRICE_LOW_ARRAY_INDEX] * CalculationEnum.unassignedTaskRc) + 1)
+                            , ((int) (engineFactory2ServiceOfferPrice[NumberEnum.PRICE_UPPER_ARRAY_INDEX] * CalculationEnum.unassignedTaskRc) + 1)};
 
                     engineFactoryManufacturingTask.setEngineFactoryExpectedQuality(engineFactoryExpectedQuality);
                     engineFactoryManufacturingTask.setEngineFactory2ServiceOfferPrice(engineFactory2ServiceOfferPrice);
                     // 有匹配的就加
                     // 任务期望质量<=服务质量
+
+//                    log.info("+++++++++++++++++++++++++++++++++++++++++++++");
+//                    log.info("engineFactory2ServiceOfferPrice  :  " + engineFactory2ServiceOfferPrice[0] + "   "+engineFactory2ServiceOfferPrice[1]);
+//                    log.info("getSupplierPriceRange  :  " + supplierTask.getSupplierPriceRange()[0] + "   "+supplierTask.getSupplierPriceRange()[1]);
+//                    log.info("+++++++++++++++++++++++++++++++++++++++++++++");
 
                     if (engineFactoryManufacturingTask.getEngineFactoryExpectedQuality() <= supplierTask.getSupplierQuality()) {
                         // 两者期望价格有交集 或者 主机厂的价格下限大于供应商的价格上限
