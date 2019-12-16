@@ -10,6 +10,7 @@ import cn.edu.zju.kpaperproject.pojo.*;
 import cn.edu.zju.kpaperproject.service.StartTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import java.util.Map;
  * @version v1.0
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class StartTaskServiceImpl implements StartTaskService {
 
     @Autowired

@@ -13,6 +13,7 @@ import cn.edu.zju.kpaperproject.utils.CalculationUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -23,6 +24,7 @@ import java.util.*;
  * @version v1.0
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class ProcessTaskServiceImpl implements ProcessTaskService {
 
     @Autowired
@@ -134,7 +136,9 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 
         // # 把orderPlus存入数据库
         orderPlusMapper.insertList(listOrderPlus);
-
+//        for (OrderPlus orderPlus : listOrderPlus) {
+//            orderPlusMapper.insertSelective(orderPlus);
+//        }
         return listOrderPlus;
     }
 
