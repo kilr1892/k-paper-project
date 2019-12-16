@@ -296,10 +296,13 @@
 
 
   <insert id="insertList" parameterType="java.util.List">
-    INSERT INTO `tb_relation_matrix`( `experiments_number`, `cycle_times`, `engine_factory_id`, `supplier_id`, `map_key`, `relation_score`, `initial_relational_degree`, `accumulative_total_score`, `transaction_number`)
+    INSERT INTO `tb_relation_matrix`(id, `experiments_number`, `cycle_times`, `engine_factory_id`, `supplier_id`, `map_key`, `relation_score`, `initial_relational_degree`, `accumulative_total_score`, `transaction_number`)
     VALUES
-    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-      #{experiments_number}, #{cycle_times}, #{engine_factory_id}, #{supplier_id}, #{map_key}, #{relation_score}, #{initial_relational_degree}, #{accumulative_total_score}, #{transaction_number}
+    <foreach collection="list" item="item" index="index" separator=",">
+      (NULL, #{item.experimentsNumber,jdbcType=INTEGER}, #{item.cycleTimes,jdbcType=INTEGER},
+      #{item.engineFactoryId,jdbcType=VARCHAR}, #{item.supplierId,jdbcType=VARCHAR}, #{item.mapKey,jdbcType=VARCHAR},
+      #{item.relationScore,jdbcType=DOUBLE}, #{item.initialRelationalDegree,jdbcType=DOUBLE}, #{item.accumulativeTotalScore,jdbcType=INTEGER},
+      #{item.transactionNumber,jdbcType=INTEGER})
     </foreach>
   </insert>
 </mapper>

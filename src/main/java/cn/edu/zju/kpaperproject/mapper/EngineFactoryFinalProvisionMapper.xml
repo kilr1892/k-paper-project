@@ -277,13 +277,18 @@
 
 
 
-  <insert id="insertList" parameterType="java.util.List">
+  <insert id="insertList" parameterType="list">
     INSERT INTO `engine_factory_final_provision`(
-    `experiments_number`, `cycle_times`, `engine_factory_id`, `final_product_number`, `final_market_price`, `final_market_quality`, `market_need_number`, `actual_sale_number`
+   `id`, `experiments_number`, `cycle_times`, `engine_factory_id`, `final_product_number`, `final_market_price`, `final_market_quality`, `market_need_number`, `actual_sale_number`
     )
     VALUES
-    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-      #{experiments_number}, #{cycle_times}, #{engine_factory_id}, #{final_product_number}, #{final_market_price}, #{final_market_quality}, #{market_need_number}, #{actual_sale_number}
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      NULL,
+      #{item.experimentsNumber,jdbcType=INTEGER}, #{item.cycleTimes,jdbcType=INTEGER},
+      #{item.engineFactoryId,jdbcType=VARCHAR}, #{item.finalProductNumber,jdbcType=INTEGER}, #{item.finalMarketPrice,jdbcType=INTEGER},
+      #{item.finalMarketQuality,jdbcType=INTEGER}, #{item.marketNeedNumber,jdbcType=INTEGER}, #{item.actualSaleNumber,jdbcType=INTEGER}
+      )
     </foreach>
   </insert>
 

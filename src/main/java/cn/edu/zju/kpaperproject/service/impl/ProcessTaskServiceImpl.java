@@ -374,7 +374,9 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         double apLm5 = CalculationEnum.apLm5;
         double relationshipValue = mapRelationshipMatrix.get(key);
         double engineFactoryPerformanceProbability = apLm1 * engineFactoryCredit + apLm2 * relationshipValue;
+        engineFactoryPerformanceProbability = engineFactoryPerformanceProbability >= 0 ? engineFactoryPerformanceProbability : 0;
         double supplierPerformanceProbability = apLm3 * supplierCredit + apLm4 * relationshipValue + apLm5 * RandomUtils.nextDouble(0D, 1D);
+        supplierPerformanceProbability = supplierPerformanceProbability >= 0 ? supplierPerformanceProbability : 0;
         return new double[]{engineFactoryPerformanceProbability, supplierPerformanceProbability};
     }
 

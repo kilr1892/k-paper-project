@@ -235,11 +235,14 @@
 
   <insert id="insertList" parameterType="java.util.List">
     INSERT INTO `tb_supplier_type_avg`(
-    `experiments_number`, `cycle_times`, `supplier_type`, `avg_acture_price`, `avg_acture_quality`
+    `id`, `experiments_number`, `cycle_times`, `supplier_type`, `avg_acture_price`, `avg_acture_quality`
     )
     VALUES
-    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-      #{experiments_number}, #{cycle_times}, #{supplier_type}, #{avg_acture_price}, #{avg_acture_quality}
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      NULL, #{item.experimentsNumber,jdbcType=INTEGER}, #{item.cycleTimes,jdbcType=INTEGER},
+      #{item.supplierType,jdbcType=INTEGER}, #{item.avgActurePrice,jdbcType=INTEGER}, #{item.avgActureQuality,jdbcType=INTEGER}
+      )
     </foreach>
   </insert>
 

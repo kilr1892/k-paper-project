@@ -278,10 +278,13 @@
 
   <insert id="insertList" parameterType="java.util.List">
     INSERT INTO `tb_supplier`
-    (`experiments_number`, `cycle_times`, `supplier_id`, `supplier_location_g_x`, `supplier_location_g_y`, `supplier_type`, `supplier_fixed_cost_c`, `supplier_alive`)
+    (id, `experiments_number`, `cycle_times`, `supplier_id`, `supplier_location_g_x`, `supplier_location_g_y`, `supplier_type`, `supplier_fixed_cost_c`, `supplier_alive`)
     VALUES
-    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-      #{experiments_number}, #{cycle_times}, #{supplier_id}, #{supplier_location_g_x}, #{supplier_location_g_y}, #{supplier_type}, #{supplier_fixed_cost_c}, #{supplier_alive}
+    <foreach collection="list" item="item" index="index" separator=",">
+      (NULL , #{item.experimentsNumber,jdbcType=INTEGER}, #{item.cycleTimes,jdbcType=INTEGER},
+      #{item.supplierId,jdbcType=VARCHAR}, #{item.supplierLocationGX,jdbcType=INTEGER}, #{item.supplierLocationGY,jdbcType=INTEGER},
+      #{item.supplierType,jdbcType=INTEGER}, #{item.supplierFixedCostC,jdbcType=INTEGER}, #{item.supplierAlive,jdbcType=BIT}
+      )
     </foreach>
   </insert>
 </mapper>

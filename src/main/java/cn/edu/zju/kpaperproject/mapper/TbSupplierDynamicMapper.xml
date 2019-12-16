@@ -359,11 +359,16 @@
   <insert id="insertList" parameterType="java.util.List">
     INSERT INTO `tb_supplier_dynamic`
     (
-     `cycle_times`, `supplier_id`, `supplier_total_assets_p`, `supplier_credit_a`, `supplier_capacity_m`, `supplier_price_p_l`, `supplier_price_p_u`, `supplier_quality_qs`, `supplier_capacity_utilization`, `supplier_type`, `avg_price`, `avg_quality`, `supplier_actual_sale_number`
+    id, `cycle_times`, `supplier_id`, `supplier_total_assets_p`, `supplier_credit_a`, `supplier_capacity_m`, `supplier_price_p_l`, `supplier_price_p_u`, `supplier_quality_qs`, `supplier_capacity_utilization`, `supplier_type`, `avg_price`, `avg_quality`, `supplier_actual_sale_number`
     )
     VALUES
-    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-      #{cycle_times}, #{supplier_id}, #{supplier_total_assets_p}, #{supplier_credit_a}, #{supplier_capacity_m}, #{supplier_price_p_l}, #{supplier_price_p_u}, #{supplier_quality_qs}, #{supplier_capacity_utilization}, #{supplier_type}, #{avg_price}, #{avg_quality}, #{supplier_actual_sale_number}
+    <foreach collection="list" item="item" index="index" separator=",">
+      (NULL, #{item.cycleTimes,jdbcType=INTEGER}, #{item.supplierId,jdbcType=VARCHAR},
+      #{item.supplierTotalAssetsP,jdbcType=INTEGER}, #{item.supplierCreditA,jdbcType=DOUBLE}, #{item.supplierCapacityM,jdbcType=INTEGER},
+      #{item.supplierPricePL,jdbcType=INTEGER}, #{item.supplierPricePU,jdbcType=INTEGER}, #{item.supplierQualityQs,jdbcType=INTEGER},
+      #{item.supplierCapacityUtilization,jdbcType=DOUBLE}, #{item.supplierType,jdbcType=INTEGER},
+      #{item.avgPrice,jdbcType=INTEGER}, #{item.avgQuality,jdbcType=INTEGER}, #{item.supplierActualSaleNumber,jdbcType=INTEGER}
+      )
     </foreach>
   </insert>
 </mapper>

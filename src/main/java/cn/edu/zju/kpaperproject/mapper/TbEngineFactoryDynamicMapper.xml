@@ -367,10 +367,16 @@
 
   <insert id="insertList" parameterType="java.util.List">
     INSERT INTO tb_engine_factory_dynamic
-    (`cycle_times`, `engine_factory_id`, `engine_factory_total_assets_p`, `engine_factory_credit_h`, `engine_factory_capacity_m`, `engine_factory_price_p_l`, `engine_factory_price_p_u`, `engine_factory_quality_q`, `engine_factory_demand_forecast_d`, `engine_factory_actual_number_m`, `engine_factory_actual_price_ap`, `engine_factory_actual_quality_aq`, `engine_factory_capacity_utilization`)
+    (id,`cycle_times`, `engine_factory_id`, `engine_factory_total_assets_p`, `engine_factory_credit_h`, `engine_factory_capacity_m`, `engine_factory_price_p_l`, `engine_factory_price_p_u`, `engine_factory_quality_q`, `engine_factory_demand_forecast_d`, `engine_factory_actual_number_m`, `engine_factory_actual_price_ap`, `engine_factory_actual_quality_aq`, `engine_factory_capacity_utilization`)
     VALUES
-    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-      #{cycle_times}, #{engine_factory_id}, #{engine_factory_total_assets_p}, #{engine_factory_credit_h}, #{engine_factory_capacity_m}, #{engine_factory_price_p_l}, #{engine_factory_price_p_u}, #{engine_factory_quality_q}, #{engine_factory_demand_forecast_d}, #{engine_factory_actual_number_m}, #{engine_factory_actual_price_ap}, #{engine_factory_actual_quality_aq}, #{engine_factory_capacity_utilization}
+    <foreach collection="list" item="item" index="index" separator=",">
+      (NULL, #{item.cycleTimes,jdbcType=INTEGER}, #{item.engineFactoryId,jdbcType=VARCHAR},
+      #{item.engineFactoryTotalAssetsP,jdbcType=INTEGER}, #{item.engineFactoryCreditH,jdbcType=DOUBLE},
+      #{item.engineFactoryCapacityM,jdbcType=INTEGER}, #{item.engineFactoryPricePL,jdbcType=INTEGER},
+      #{item.engineFactoryPricePU,jdbcType=INTEGER}, #{item.engineFactoryQualityQ,jdbcType=INTEGER},
+      #{item.engineFactoryDemandForecastD,jdbcType=INTEGER}, #{item.engineFactoryActualNumberM,jdbcType=INTEGER},
+      #{item.engineFactoryActualPriceAp,jdbcType=INTEGER}, #{item.engineFactoryActualQualityAq,jdbcType=INTEGER},
+      #{item.engineFactoryCapacityUtilization,jdbcType=DOUBLE})
     </foreach>
   </insert>
 </mapper>

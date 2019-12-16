@@ -458,6 +458,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 两个循环生成关系矩阵
         for (TbEngineFactory aTbEngineFactory : listEngineFactory) {
             if (aTbEngineFactory.getEngineFactoryAlive()) {
+                // TODO 更新主机厂的静态数据的循环次数
+                aTbEngineFactory.setCycleTimes(cycleTime);
 
                 String engineFactoryId = aTbEngineFactory.getEngineFactoryId();
                 for (TbSupplier aTbSupplier : listSupplier) {
@@ -468,6 +470,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                     tbRelationMatrix.setEngineFactoryId(engineFactoryId);
 
                     if (aTbSupplier.getSupplierAlive()) {
+                        // TODO 更新供应商的静态数据的循环次数
+                        aTbSupplier.setCycleTimes(cycleTime);
                         String supplierId = aTbSupplier.getSupplierId();
                         tbRelationMatrix.setSupplierId(supplierId);
                         // 获取之前的数据
@@ -539,6 +543,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             String supplierId = aSupplierDynamic.getSupplierId();
             if (mapSupplier.get(supplierId).getSupplierAlive()) {
                 sumNewSupplierCreditWithAlive += aSupplierDynamic.getSupplierCreditA();
+                // TODO 更新供应商的动态数据循环次数
+                aSupplierDynamic.setCycleTimes(cycleTime);
             }
         }
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
@@ -588,6 +594,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             TbEngineFactory engineFactory = mapEngineFactory.get(engineFactoryId);
             if (engineFactory.getEngineFactoryAlive()) {
                 sumEngineFactoryCapacity += aEngineFactoryDynamic.getEngineFactoryCapacityM();
+                // TODO 主机厂动态数据, 更新循环标识, 好像不该放这里
+                aEngineFactoryDynamic.setCycleTimes(cycleTime);
             }
         }
         tbBalance.setEngineFactoryBalance(sumEngineFactoryCapacity * 1.0 / sumEngineFactoryCapacity);
@@ -631,6 +639,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             TbSupplier tbSupplier = mapSupplier.get(supplierId);
             int supplierType = tbSupplier.getSupplierType();
 
+            mapTmpPriceSum.putIfAbsent(supplierType, 0);
+            mapTmpQualitySum.putIfAbsent(supplierType, 0);
+            mapTmpNumberSum.putIfAbsent(supplierType, 0);
+
             int priceSum = mapTmpPriceSum.get(supplierType);
             int qualitySum = mapTmpQualitySum.get(supplierType);
             int numberSum = mapTmpNumberSum.get(supplierType);
@@ -658,7 +670,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             tbSupplierTypeAvg.setSupplierType(supplierType);
             tbSupplierTypeAvg.setAvgActurePrice((int) (priceSum * 1.0 / numberSum));
             tbSupplierTypeAvg.setAvgActureQuality((int) (qualitySum * 1.0 / numberSum));
+
+            listSupplierTypeAvgArray.add(tbSupplierTypeAvg);
         }
+
 
         tbSupplierTypeAvgMapper.insertList(listSupplierTypeAvgArray);
     }
@@ -679,6 +694,12 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         Map<String, Integer> mapTmpNumberSum = new HashMap<>(listOrderPlus.size());
         for (OrderPlus orderPlus : listOrderPlus) {
             String supplierId = orderPlus.getSupplierId();
+
+            mapTmpPriceSum.putIfAbsent(supplierId, 0);
+            mapTmpQualitySum.putIfAbsent(supplierId, 0);
+            mapTmpNumberSum.putIfAbsent(supplierId, 0);
+
+
             int priceSum = mapTmpPriceSum.get(supplierId);
             int qualitySum = mapTmpQualitySum.get(supplierId);
             int numberSum = mapTmpNumberSum.get(supplierId);
@@ -696,7 +717,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
             String supplierId = aSupplierDynamic.getSupplierId();
             TbSupplierDynamic supplierDynamic = mapSupplierDynamic.get(supplierId);
-            if (supplierDynamic != null) {
+            if (mapTmpPriceSum.containsKey(supplierId)) {
                 int priceSum = mapTmpPriceSum.get(supplierId);
                 int qualitySum = mapTmpQualitySum.get(supplierId);
                 int numberSum = mapTmpNumberSum.get(supplierId);

@@ -253,16 +253,13 @@
 
   <insert id="insertList" parameterType="java.util.List">
     INSERT INTO tb_engine_factory
-    (`experiments_number`, `cycle_times`, `engine_factory_id`, `engine_factory_location_g_x`, `engine_factory_location_g_y`, `engine_factory_alive`)
+    (id, `experiments_number`, `cycle_times`, `engine_factory_id`, `engine_factory_location_g_x`, `engine_factory_location_g_y`, `engine_factory_alive`)
     VALUES
-    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-      #{experiments_number}
-      , #{cycle_times}
-      , #{engine_factory_id}
-      , #{engine_factory_location_g_x}
-      , #{engine_factory_location_g_y}
-      , #{engine_factory_alive}
-
+    <foreach collection="list" item="item" index="index" separator=",">
+      (NULL, #{item.experimentsNumber,jdbcType=INTEGER}, #{item.cycleTimes,jdbcType=INTEGER},
+      #{item.engineFactoryId,jdbcType=VARCHAR}, #{item.engineFactoryLocationGX,jdbcType=INTEGER},
+      #{item.engineFactoryLocationGY,jdbcType=INTEGER}, #{item.engineFactoryAlive,jdbcType=BIT}
+      )
     </foreach>
   </insert>
 
