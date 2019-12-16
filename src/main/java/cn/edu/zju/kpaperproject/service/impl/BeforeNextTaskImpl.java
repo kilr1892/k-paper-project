@@ -103,6 +103,25 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
         // 用来存id, 看是否有交易
         HashMap<String, OrderPlus> mapEngineIdVsOrderPlus = new HashMap<>(100);
+        // 供应商对应所有的订单映射
+        HashMap<String, List<TransactionContract>> mapSupplierIdVsTransactionContract = new HashMap<>(100);
+
+        for (TransactionContract aTransactionContract : listTransactionContract) {
+            String supplierId = aTransactionContract.getSupplierId();
+            if (!mapSupplierIdVsTransactionContract.containsKey(supplierId)) {
+                // 无
+                List<TransactionContract> listTmp = new ArrayList<>();
+                listTmp.add(aTransactionContract);
+                mapSupplierIdVsTransactionContract.put(supplierId, listTmp);
+            } else {
+                // 有
+                List<TransactionContract> listTmp = mapSupplierIdVsTransactionContract.get(supplierId);
+                listTmp.add(aTransactionContract);
+            }
+
+        }
+
+
         // 算出各主机厂与供应商之间的交易利润和,并加入到各自对应的map集合中
         setMapEngineFactoryAndSupplierProfitSum(listOrderPlus, mapEngineFactoryProfitSum, mapSupplierProfitSum, mapEngineIdVsOrderPlus, mapEngineFactoryDynamic, mapSupplierDynamic);
 
@@ -154,7 +173,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
 
         // 计算供应商的产能利用率
-        calAndSetSupplierCapacityUtilizationAndAdjustCapacityPriceQuality(listSupplierDynamics, avgFinalMarketPrice, sumArrSupplierOrderNumber, avgArrSupplierOrderNumber, avgArrSupplierQuality);
+        calAndSetSupplierCapacityUtilizationAndAdjustCapacityPriceQuality(listSupplierDynamics, avgFinalMarketPrice, avgArrSupplierQuality,mapSupplierIdVsTransactionContract);
 
         // # 企业进入与退出
         // 主机厂信誉度最高的
@@ -459,10 +478,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
             int engineFactoryNeedServiceNumberWithAlive = sumArrEngineFactoryNeedServiceNumberWithAlive[i];
             int supplierCapacity = sumArrSupplierCapacity[i];
-            log.info("++++++++++++++++++++++++++++++++++++++");
-            log.info("supplierCapacity : " + supplierCapacity);
-            log.info("engineFactoryNeedServiceNumberWithAlive : " + engineFactoryNeedServiceNumberWithAlive);
-            log.info("++++++++++++++++++++++++++++++++++++++");
+//            log.info("++++++++++++++++++++++++++++++++++++++");
+//            log.info("supplierCapacity : " + supplierCapacity);
+//            log.info("engineFactoryNeedServiceNumberWithAlive : " + engineFactoryNeedServiceNumberWithAlive);
+//            log.info("++++++++++++++++++++++++++++++++++++++");
             if (supplierCapacity < engineFactoryNeedServiceNumberWithAlive) {
                 // 供应商产能 < 主机厂对该类服务的需求
                 int tmp = RandomUtils.nextInt(1, 4);
@@ -670,7 +689,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 aEngineFactoryDynamic.setCycleTimes(cycleTime);
             }
         }
-        tbBalance.setEngineFactoryBalance(sumEngineFactoryCapacity * 1.0 / sumEngineFactoryCapacity);
+        tbBalance.setEngineFactoryBalance(sumActualSaleNumber * 1.0 / sumEngineFactoryCapacity);
         // 二级市场供需平衡
         int sumSupplierActualNumber = 0;
         for (OrderPlus aOrderPlus : listOrderPlus) {
@@ -879,26 +898,24 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
     /**
      * 对供应商计算并设置产能利用率,
      * 调整产能/价格/质量
-     *
      * @param listSupplierDynamics      供应商动态数据集合
      * @param avgFinalMarketPrice       平均市场价
-     * @param sumArrSupplierOrderNumber 主机厂对服务需求量总和
-     * @param avgArrSupplierOrderNumber 主机厂对服务平均需求量
      * @param avgArrSupplierQuality     平均质量数组
+     * @param mapSupplierIdVsTransactionContract
      */
     private void calAndSetSupplierCapacityUtilizationAndAdjustCapacityPriceQuality(
             List<TbSupplierDynamic> listSupplierDynamics
             , double avgFinalMarketPrice
-            , int[] sumArrSupplierOrderNumber
-            , double[] avgArrSupplierOrderNumber
-            , int[] avgArrSupplierQuality) {
+            , int[] avgArrSupplierQuality
+            , HashMap<String, List<TransactionContract>> mapSupplierIdVsTransactionContract) {
 
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
             // 阶段开始时初始产能
             int initSupplierCapacity = aSupplierDynamic.getSupplierCapacityM();
             // 计算利用率并更新
             // 某类供应总需求
-            int sumSupplierOrderNumber;
+            int sumSupplierOrderNumber = 0;;
+
             // 某类平均需求数量
             double avgSupplierOrderNumber = 0;
             // 某类供应质量
@@ -906,34 +923,30 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             int supplierType = aSupplierDynamic.getSupplierType();
             switch (supplierType) {
                 case 210:
-                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[0];
-                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[0];
                     avgSupplierQuality = avgArrSupplierQuality[0];
                     break;
                 case 220:
-                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[1];
-                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[1];
                     avgSupplierQuality = avgArrSupplierQuality[1];
                     break;
                 case 230:
-                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[2];
-                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[2];
                     avgSupplierQuality = avgArrSupplierQuality[2];
                     break;
                 case 240:
-                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[3];
-                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[3];
                     avgSupplierQuality = avgArrSupplierQuality[3];
                     break;
                 case 250:
-                    sumSupplierOrderNumber = sumArrSupplierOrderNumber[4];
-                    avgSupplierOrderNumber = avgArrSupplierOrderNumber[4];
                     avgSupplierQuality = avgArrSupplierQuality[4];
                     break;
                 default:
                     throw new RuntimeException("no such type");
             }
-
+            String supplierId = aSupplierDynamic.getSupplierId();
+            if (mapSupplierIdVsTransactionContract.containsKey(supplierId)) {
+                List<TransactionContract> listTransactionContract = mapSupplierIdVsTransactionContract.get(supplierId);
+                for (TransactionContract aTransactionContract : listTransactionContract) {
+                    sumSupplierOrderNumber += aTransactionContract.getEngineFactoryNeedServiceNumber();
+                }
+            }
 
             // 计算产能利用率
             double supplierCapacityUtilization = sumSupplierOrderNumber * 1D / aSupplierDynamic.getSupplierCapacityM();
@@ -1215,8 +1228,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
      * 算出各主机厂与供应商之间的交易利润和,
      * 并加入到各自对应的map集合中
      * 并把主机厂和供应商的信誉度补全
-     *
-     * @param listOrderPlus             交易结算集合
+     *  @param listOrderPlus             交易结算集合
      * @param mapEngineFactoryProfitSum 主机厂利润集合(主机厂id, 和供应商交易好后的利润), 算好后put该处
      * @param mapSupplierProfitSum      供应商利润集合(供应商id, 和主机厂交易好后的利润), 算好后put该处
      * @param mapEngineIdVsOrderPlus    存放主机厂id对应的订单, 后续处理需要

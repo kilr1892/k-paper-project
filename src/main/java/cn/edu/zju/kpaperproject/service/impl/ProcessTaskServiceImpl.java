@@ -412,13 +412,15 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // 一个主机厂一个Map
             LinkedHashMap<EngineFactoryManufacturingTask, SupplierTask> mapEngineTaskVsSupplierTask = new LinkedHashMap<>();
 
+            log.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            log.info("getEngineFactoryId   " + listEngineFactoryTask.get(0).getEngineFactoryId());
+            log.info("engineFactoryNeedServiceNumber :  " + listEngineFactoryTask.get(0).getEngineFactoryNeedServiceNumber());
 
             // 匹配
             // 每个任务都进行粗, 再匹配, 精匹配(里面是剩余产能够的), 成功加入, 不成功删除
             for (EngineFactoryManufacturingTask aEngineFactoryManufacturingTask : listEngineFactoryTask) {
                 // 每个循环是一个主机厂的一个任务
                 // 一个任务要走完所有流程
-
                 // 每个主机厂任务 aEngineFactoryManufacturingTask
 
                 // # 条件
@@ -642,7 +644,8 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         if (engineFactoryManufacturingTask.getEngineFactoryNeedServiceNumber() == 0) {
             return listRes;
         }
-
+        log.info("+++++++++++++++");
+        log.info("getSupplierType" + listSupplierTask.get(0).getSupplierType());
         // 用供应商集合
         for (SupplierTask supplierTask : listSupplierTask) {
             // 每个循环是供应商的能提供的任务
@@ -653,11 +656,9 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             int supplierRestCapacity = supplierTask.getSupplierRestCapacity();
 
             // 任务要求产量<=服务剩余产能
+            log.info("supplierRestCapacity  :  " + supplierRestCapacity);
+            log.info("engineFactoryNeedServiceNumber < supplierRestCapacity   " + (engineFactoryNeedServiceNumber < supplierRestCapacity));
             if (engineFactoryNeedServiceNumber < supplierRestCapacity) {
-//                log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-//                log.info("engineFactoryNeedServiceNumber :  " + engineFactoryNeedServiceNumber);
-//                log.info("supplierRestCapacity  :  " + supplierRestCapacity);
-//                log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
                 // 供应商用供应能力, 一定能匹配上
                 boolean flag = false;
@@ -677,12 +678,6 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                     engineFactoryManufacturingTask.setEngineFactory2ServiceOfferPrice(engineFactory2ServiceOfferPrice);
                     // 有匹配的就加
                     // 任务期望质量<=服务质量
-
-//                    log.info("+++++++++++++++++++++++++++++++++++++++++++++");
-//                    log.info("engineFactory2ServiceOfferPrice  :  " + engineFactory2ServiceOfferPrice[0] + "   "+engineFactory2ServiceOfferPrice[1]);
-//                    log.info("getSupplierPriceRange  :  " + supplierTask.getSupplierPriceRange()[0] + "   "+supplierTask.getSupplierPriceRange()[1]);
-//                    log.info("+++++++++++++++++++++++++++++++++++++++++++++");
-
                     if (engineFactoryManufacturingTask.getEngineFactoryExpectedQuality() <= supplierTask.getSupplierQuality()) {
                         // 两者期望价格有交集 或者 主机厂的价格下限大于供应商的价格上限
                         if (CalculationUtils.whetherPriceIntersection(engineFactoryManufacturingTask, supplierTask)
