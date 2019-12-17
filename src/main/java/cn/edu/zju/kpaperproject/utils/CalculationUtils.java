@@ -41,11 +41,29 @@ public class CalculationUtils {
         k1 = k1 + cycleTimes * k1Step;
         k2 = k2 + cycleTimes * k2Step;
 
-        int price = RandomUtils.nextInt(priceLow, priceUpper + NumberEnum.QUALITY_STEP);
+//        int price = RandomUtils.nextInt(priceLow, priceUpper + NumberEnum.QUALITY_STEP);
+//
+//        int demandForecast = (int) Math.round(k1 - k2 * price / quality);
+        int price;
+        int demandForecast = 0;
 
-        int demandForecast = (int) Math.round(k1 - k2 * price / quality);
+        if (k1 - k2 * priceUpper / quality > 0) {
+            while (demandForecast <= 0) {
+                price = RandomUtils.nextInt(priceLow, priceUpper + 1);
+                demandForecast = (int) Math.round(k1 - k2 * price / quality);
+            }
+        }
 
-        return demandForecast >= 0 ? demandForecast : 0;
+//        for (int i = 0; i < 100; i++) {
+//            price = RandomUtils.nextInt(priceLow, priceUpper + 1);
+//            demandForecast = (int) Math.round(k1 - k2 * price / quality);
+//            if (demandForecast > 0) {
+//                break;
+//            }
+//        }
+        log.error("demandForecast : " + demandForecast);
+//        return demandForecast >= 0 ? demandForecast : 0;
+        return demandForecast;
     }
 
     /**
@@ -198,8 +216,8 @@ public class CalculationUtils {
      * 计算两地距离
      * 直接使用两地坐标
      *
-     * @param engineFactoryLocationXY   主机厂位置坐标
-     * @param supplierLocationXY        供应商位置坐标
+     * @param engineFactoryLocationXY 主机厂位置坐标
+     * @param supplierLocationXY      供应商位置坐标
      * @return 两地间的距离
      */
     public static double calDistance(int[] engineFactoryLocationXY, int[] supplierLocationXY) {
@@ -214,14 +232,13 @@ public class CalculationUtils {
     }
 
 
-
     /**
      * 获取订单价格
      *
-     * @param engineFactoryManufacturingTask    主机厂任务
-     * @param supplierTask                      匹配上的唯一服务
-     * @param flag                              是否有交集
-     * @return                                  订单价格
+     * @param engineFactoryManufacturingTask 主机厂任务
+     * @param supplierTask                   匹配上的唯一服务
+     * @param flag                           是否有交集
+     * @return 订单价格
      */
     public static int genTransactionContractOrderPrice(EngineFactoryManufacturingTask engineFactoryManufacturingTask, SupplierTask supplierTask, boolean flag) {
         int[] engineFactory2ServiceOfferPrice = engineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice();

@@ -45,7 +45,11 @@ public class MainController {
 //        int cycleTimesMax = 20;
         log.info("!!!!START++++++++++++++++++++++++++");
         while (cycleTime < cycleTimesMax) {
-            log.info("#cycleTime  = " + cycleTime);
+            log.info("  ");
+            log.info("  ");
+            log.info("#########################cycleTime  = " + cycleTime + " #########################");
+            log.info("  ");
+            log.info("  ");
             List<TbEngineFactory> listEngineFactory = listEngineFactory = startTaskService.getListEngineFactoryWithAlive(experimentsNumber, cycleTime);
 
             List<TbEngineFactoryDynamic> listEngineFactoryDynamic = new ArrayList<>();

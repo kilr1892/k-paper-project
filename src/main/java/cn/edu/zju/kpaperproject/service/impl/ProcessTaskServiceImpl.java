@@ -259,7 +259,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         res[0] = absJKI * orderPrice * engineFactoryNeedServiceNumber + (absIJK - 1) * orderPrice * actualTransactionsNumber;
         // 两地距离
         int distance = (int) Math.round(CalculationUtils.calDistance(transactionContract.getEngineFactoryLocationXY(), transactionContract.getSupplierLocationXY()));
-        res[1] = absIJK * engineFactoryNeedServiceNumber + (1 + absJKI) * orderPrice * actualTransactionsNumber - distance * CalculationEnum.freight;
+        res[1] = absIJK * orderPrice*engineFactoryNeedServiceNumber + (1 + absJKI) * orderPrice * actualTransactionsNumber - distance * CalculationEnum.freight;
         return res;
     }
 
@@ -377,9 +377,11 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         double apLm5 = CalculationEnum.apLm5;
         double relationshipValue = mapRelationshipMatrix.get(key);
         double engineFactoryPerformanceProbability = apLm1 * engineFactoryCredit + apLm2 * relationshipValue;
-        engineFactoryPerformanceProbability = engineFactoryPerformanceProbability >= 0 ? engineFactoryPerformanceProbability : 0;
+        engineFactoryPerformanceProbability = engineFactoryPerformanceProbability >= 0 ? engineFactoryPerformanceProbability : 0.4;
+        engineFactoryPerformanceProbability = engineFactoryPerformanceProbability <= 1 ? engineFactoryPerformanceProbability : 0.8;
         double supplierPerformanceProbability = apLm3 * supplierCredit + apLm4 * relationshipValue + apLm5 * RandomUtils.nextDouble(0D, 1D);
-        supplierPerformanceProbability = supplierPerformanceProbability >= 0 ? supplierPerformanceProbability : 0;
+        supplierPerformanceProbability = supplierPerformanceProbability >= 0 ? supplierPerformanceProbability : 0.4;
+        supplierPerformanceProbability = supplierPerformanceProbability <= 1 ? supplierPerformanceProbability : 0.8;
         return new double[]{engineFactoryPerformanceProbability, supplierPerformanceProbability};
     }
 
@@ -412,7 +414,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // 一个主机厂一个Map
             LinkedHashMap<EngineFactoryManufacturingTask, SupplierTask> mapEngineTaskVsSupplierTask = new LinkedHashMap<>();
 
-            log.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            log.error("~~~~~~~~~~~~~~~~~listEngineFactoryTask~~~START~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             log.info("getEngineFactoryId   " + listEngineFactoryTask.get(0).getEngineFactoryId());
             log.info("engineFactoryNeedServiceNumber :  " + listEngineFactoryTask.get(0).getEngineFactoryNeedServiceNumber());
 
@@ -644,8 +646,11 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         if (engineFactoryManufacturingTask.getEngineFactoryNeedServiceNumber() == 0) {
             return listRes;
         }
-        log.info("+++++++++++++++");
-        log.info("getSupplierType" + listSupplierTask.get(0).getSupplierType());
+        if (listSupplierTask.size() != 0) {
+            log.info("+++++++++++++++" + listSupplierTask.get(0).getSupplierType());
+        } else {
+            log.info("+++++++++++++++供应商任务分解为0");
+        }
         // 用供应商集合
         for (SupplierTask supplierTask : listSupplierTask) {
             // 每个循环是供应商的能提供的任务
