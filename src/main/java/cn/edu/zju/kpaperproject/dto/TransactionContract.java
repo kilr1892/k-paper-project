@@ -34,4 +34,6 @@ public class TransactionContract {
     private int orderPrice;
     /** 成交质量 */
     private int orderQuality;
+    /** 匹配度 */
+    private double matchDegree;
 }

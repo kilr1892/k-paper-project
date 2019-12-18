@@ -64,6 +64,8 @@ public class MainController {
             Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix = startTaskService.getMapRelationshipMatrix2WithTbRelationMatrix(experimentsNumber, cycleTime);
 //            log.info("+++processTaskService.getTransactionContracts!!!!!");
             ArrayList<TransactionContract> listTransactionContract = processTaskService.getTransactionContracts(listListEngineFactoryTaskDecomposition, listListSupplierTask, mapRelationshipMatrix);
+
+
 //            log.info("+++processTaskService.getTransactionSettlement!!!!!");
             List<OrderPlus> listOrderPlus = processTaskService.getTransactionSettlement(experimentsNumber, cycleTime, listTransactionContract, mapRelationshipMatrix, mapRelationshipMatrix2WithTbRelationMatrix);
 //            log.info("+++beforeNextTask.getListEngineFactoryFinalProvision!!!!!!");

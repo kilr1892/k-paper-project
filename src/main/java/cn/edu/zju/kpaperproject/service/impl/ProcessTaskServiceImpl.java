@@ -414,9 +414,9 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             // 一个主机厂一个Map
             LinkedHashMap<EngineFactoryManufacturingTask, SupplierTask> mapEngineTaskVsSupplierTask = new LinkedHashMap<>();
 
-            log.error("~~~~~~~~~~~~~~~~~listEngineFactoryTask~~~START~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            log.info("getEngineFactoryId   " + listEngineFactoryTask.get(0).getEngineFactoryId());
-            log.info("engineFactoryNeedServiceNumber :  " + listEngineFactoryTask.get(0).getEngineFactoryNeedServiceNumber());
+//            log.error("~~~~~~~~~~~~~~~~~listEngineFactoryTask~~~START~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//            log.info("getEngineFactoryId   " + listEngineFactoryTask.get(0).getEngineFactoryId());
+//            log.info("engineFactoryNeedServiceNumber :  " + listEngineFactoryTask.get(0).getEngineFactoryNeedServiceNumber());
 
             // 匹配
             // 每个任务都进行粗, 再匹配, 精匹配(里面是剩余产能够的), 成功加入, 不成功删除
@@ -493,6 +493,9 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                     // 看看有没有匹配上的flag
                     boolean flag = false;
                     for (Map.Entry<Double, SupplierTask> doubleSupplierTaskEntry : mapTmp.entrySet()) {
+                        // 匹配度
+                        Double matchDegree = doubleSupplierTaskEntry.getKey();
+
                         // 供应商
                         supplierTask = doubleSupplierTaskEntry.getValue();
                         // 主机厂需要量
@@ -501,6 +504,9 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                         supplierRestCapacity = supplierTask.getSupplierRestCapacity();
                         // 判断供应商是否有产能
                         if (supplierRestCapacity > engineFactoryNeedServiceNumber) {
+                            // 匹配上了
+                            aEngineFactoryManufacturingTask.setMatchDegree(matchDegree);
+
                             // 还有产能
                             // 供应商的剩余产能为: 相减
                             supplierRestCapacity = supplierRestCapacity - engineFactoryNeedServiceNumber;
@@ -595,6 +601,8 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                 transactionContract.setEngineFactoryNeedServiceNumber(engineFactoryManufacturingTask.getEngineFactoryNeedServiceNumber());
                 transactionContract.setOrderPrice(genTransactionContractOrderPrice(engineFactoryManufacturingTask, supplierTask));
                 transactionContract.setOrderQuality(supplierTask.getSupplierQuality());
+                // 匹配度
+                transactionContract.setMatchDegree(engineFactoryManufacturingTask.getMatchDegree());
 
                 // 初始期望价格
                 transactionContract.setEngineFactory2ServiceOfferPrice(engineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice());
@@ -646,11 +654,11 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         if (engineFactoryManufacturingTask.getEngineFactoryNeedServiceNumber() == 0) {
             return listRes;
         }
-        if (listSupplierTask.size() != 0) {
-            log.info("+++++++++++++++" + listSupplierTask.get(0).getSupplierType());
-        } else {
-            log.info("+++++++++++++++供应商任务分解为0");
-        }
+//        if (listSupplierTask.size() != 0) {
+//            log.info("+++++++++++++++" + listSupplierTask.get(0).getSupplierType());
+//        } else {
+//            log.info("+++++++++++++++供应商任务分解为0");
+//        }
         // 用供应商集合
         for (SupplierTask supplierTask : listSupplierTask) {
             // 每个循环是供应商的能提供的任务
@@ -661,8 +669,8 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             int supplierRestCapacity = supplierTask.getSupplierRestCapacity();
 
             // 任务要求产量<=服务剩余产能
-            log.info("supplierRestCapacity  :  " + supplierRestCapacity);
-            log.info("engineFactoryNeedServiceNumber < supplierRestCapacity   " + (engineFactoryNeedServiceNumber < supplierRestCapacity));
+//            log.info("supplierRestCapacity  :  " + supplierRestCapacity);
+//            log.info("engineFactoryNeedServiceNumber < supplierRestCapacity   " + (engineFactoryNeedServiceNumber < supplierRestCapacity));
             if (engineFactoryNeedServiceNumber < supplierRestCapacity) {
 
                 // 供应商用供应能力, 一定能匹配上

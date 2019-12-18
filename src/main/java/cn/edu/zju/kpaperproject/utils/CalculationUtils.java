@@ -50,6 +50,7 @@ public class CalculationUtils {
         if (k1 - k2 * priceUpper / quality > 0) {
             while (demandForecast <= 0) {
                 price = RandomUtils.nextInt(priceLow, priceUpper + 1);
+//                price = RandomUtils.nextInt(priceLow, (int)(quality * k1 / k2));
                 demandForecast = (int) Math.round(k1 - k2 * price / quality);
             }
         }
@@ -61,7 +62,7 @@ public class CalculationUtils {
 //                break;
 //            }
 //        }
-        log.error("demandForecast : " + demandForecast);
+//        log.error("demandForecast : " + demandForecast);
 //        return demandForecast >= 0 ? demandForecast : 0;
         return demandForecast;
     }

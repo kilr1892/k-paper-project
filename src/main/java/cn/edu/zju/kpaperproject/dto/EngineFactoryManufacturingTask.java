@@ -30,6 +30,8 @@ public class EngineFactoryManufacturingTask {
     private int engineFactoryExpectedQuality;
     /** 位置坐标 */
     private int[] engineFactoryLocationXY;
+    /** 匹配度 */
+    private double matchDegree;
 
     public EngineFactoryManufacturingTask(String engineFactoryId, double engineFactoryCredit,int[] engineFactoryLocationXY) {
         this.engineFactoryId = engineFactoryId;
