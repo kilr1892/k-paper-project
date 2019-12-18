@@ -85,7 +85,7 @@ public class CalculationUtils {
      * @param supplierPriceRange      供应商价格区间
      * @return 是否有交集
      */
-    private static boolean whetherPriceIntersection(int[] engineFactoryPriceRange, int[] supplierPriceRange) {
+    public static boolean whetherPriceIntersection(int[] engineFactoryPriceRange, int[] supplierPriceRange) {
         int enPriLow = engineFactoryPriceRange[0];
         int enPriUpper = engineFactoryPriceRange[1];
         int supPriLow = supplierPriceRange[0];

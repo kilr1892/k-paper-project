@@ -381,11 +381,15 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         double apLm5 = CalculationEnum.apLm5;
         double relationshipValue = mapRelationshipMatrix.get(key);
         double engineFactoryPerformanceProbability = apLm1 * engineFactoryCredit + apLm2 * relationshipValue;
-        engineFactoryPerformanceProbability = engineFactoryPerformanceProbability >= 0 ? engineFactoryPerformanceProbability : 0.4;
-        engineFactoryPerformanceProbability = engineFactoryPerformanceProbability <= 1 ? engineFactoryPerformanceProbability : 0.8;
+//        engineFactoryPerformanceProbability = engineFactoryPerformanceProbability >= 0 ? engineFactoryPerformanceProbability : 0.4;
+        engineFactoryPerformanceProbability = engineFactoryPerformanceProbability >= 0.3 ? engineFactoryPerformanceProbability : 0.3;
+//        engineFactoryPerformanceProbability = engineFactoryPerformanceProbability <= 1 ? engineFactoryPerformanceProbability : 0.8;
+        engineFactoryPerformanceProbability = engineFactoryPerformanceProbability <= 0.8 ? engineFactoryPerformanceProbability : 0.8;
         double supplierPerformanceProbability = apLm3 * supplierCredit + apLm4 * relationshipValue + apLm5 * RandomUtils.nextDouble(0D, 1D);
-        supplierPerformanceProbability = supplierPerformanceProbability >= 0 ? supplierPerformanceProbability : 0.4;
-        supplierPerformanceProbability = supplierPerformanceProbability <= 1 ? supplierPerformanceProbability : 0.8;
+//        supplierPerformanceProbability = supplierPerformanceProbability >= 0 ? supplierPerformanceProbability : 0.4;
+        supplierPerformanceProbability = supplierPerformanceProbability >= 0.3 ? supplierPerformanceProbability : 0.3;
+//        supplierPerformanceProbability = supplierPerformanceProbability <= 1 ? supplierPerformanceProbability : 0.8;
+        supplierPerformanceProbability = supplierPerformanceProbability <= 0.8 ? supplierPerformanceProbability : 0.8;
         return new double[]{engineFactoryPerformanceProbability, supplierPerformanceProbability};
     }
 
@@ -677,32 +681,56 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 //            log.info("engineFactoryNeedServiceNumber < supplierRestCapacity   " + (engineFactoryNeedServiceNumber < supplierRestCapacity));
             if (engineFactoryNeedServiceNumber < supplierRestCapacity) {
 
+                //
+                int engineFactoryExpectedQuality = engineFactoryManufacturingTask.getEngineFactoryExpectedQuality();
+                //
+                int[] engineFactory2ServiceOfferPrice = engineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice();
+//                log.error("#START  ####engineFactory2ServiceOfferPrice####");
+//                log.info(engineFactory2ServiceOfferPrice[0] + "  " + engineFactory2ServiceOfferPrice[1]);
+//                log.info("  ");
+//                log.info("#START  quality");
+//                log.info(engineFactoryExpectedQuality+" ");
+//                log.info("  ");
+//                log.info("###供应商质量  " + supplierTask.getSupplierQuality());
+//                log.info("###供应商出价  " + supplierTask.getSupplierPriceRange()[0] + "  " + supplierTask.getSupplierPriceRange()[1]);
+
                 // 供应商用供应能力, 一定能匹配上
                 boolean flag = false;
                 while (!flag) {
                     // 主机厂质量 +(-1)
-                    int engineFactoryExpectedQuality = engineFactoryManufacturingTask.getEngineFactoryExpectedQuality();
+//                    int engineFactoryExpectedQuality = engineFactoryManufacturingTask.getEngineFactoryExpectedQuality();
                     engineFactoryExpectedQuality = engineFactoryExpectedQuality >= NumberEnum.QUALITY_LOW_LIMIT
                             ? engineFactoryExpectedQuality + CalculationEnum.unassignedTaskRq : engineFactoryExpectedQuality;
                     // 主机厂价格区间 * 1.1 取整
-                    int[] engineFactory2ServiceOfferPrice = engineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice();
+//                    int[] engineFactory2ServiceOfferPrice = engineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice();
+
+
+//                    log.info(engineFactory2ServiceOfferPrice[0] + "  " + engineFactory2ServiceOfferPrice[1]);
+
 
                     engineFactory2ServiceOfferPrice = new int[]{
                             ((int) (engineFactory2ServiceOfferPrice[NumberEnum.PRICE_LOW_ARRAY_INDEX] * CalculationEnum.unassignedTaskRc) + 1)
                             , ((int) (engineFactory2ServiceOfferPrice[NumberEnum.PRICE_UPPER_ARRAY_INDEX] * CalculationEnum.unassignedTaskRc) + 1)};
 
-                    engineFactoryManufacturingTask.setEngineFactoryExpectedQuality(engineFactoryExpectedQuality);
-                    engineFactoryManufacturingTask.setEngineFactory2ServiceOfferPrice(engineFactory2ServiceOfferPrice);
+//                    engineFactoryManufacturingTask.setEngineFactoryExpectedQuality(engineFactoryExpectedQuality);
+//                    engineFactoryManufacturingTask.setEngineFactory2ServiceOfferPrice(engineFactory2ServiceOfferPrice);
                     // 有匹配的就加
                     // 任务期望质量<=服务质量
-                    if (engineFactoryManufacturingTask.getEngineFactoryExpectedQuality() <= supplierTask.getSupplierQuality()) {
+                    if (engineFactoryExpectedQuality <= supplierTask.getSupplierQuality()) {
                         // 两者期望价格有交集 或者 主机厂的价格下限大于供应商的价格上限
-                        if (CalculationUtils.whetherPriceIntersection(engineFactoryManufacturingTask, supplierTask)
-                                || engineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice()[NumberEnum.PRICE_LOW_ARRAY_INDEX]
+//                        if (CalculationUtils.whetherPriceIntersection(engineFactoryManufacturingTask, supplierTask)
+//                           || engineFactoryManufacturingTask.getEngineFactory2ServiceOfferPrice()[NumberEnum.PRICE_LOW_ARRAY_INDEX]
+//                                >= supplierTask.getSupplierPriceRange()[NumberEnum.PRICE_UPPER_ARRAY_INDEX]) {
+
+                            if (CalculationUtils.whetherPriceIntersection(engineFactory2ServiceOfferPrice, supplierTask.getSupplierPriceRange())
+                                || engineFactory2ServiceOfferPrice[NumberEnum.PRICE_LOW_ARRAY_INDEX]
                                 >= supplierTask.getSupplierPriceRange()[NumberEnum.PRICE_UPPER_ARRAY_INDEX]) {
 
                             // 三个条件都满足, 加入匹配上的数组里
                             listRes.add(supplierTask);
+//                            log.info("  end  " + engineFactory2ServiceOfferPrice[0] + "  " + engineFactory2ServiceOfferPrice[1]);
+//                            log.info("  end  " + engineFactoryExpectedQuality);
+
                             flag = true;
                         }
                     }

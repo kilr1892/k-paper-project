@@ -1,6 +1,7 @@
 package cn.edu.zju.kpaperproject.service.impl;
 
 
+import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
 import cn.edu.zju.kpaperproject.dto.TransactionContract;
 import cn.edu.zju.kpaperproject.enums.CalculationEnum;
 import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
@@ -90,7 +91,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             , List<TbEngineFactoryDynamic> listEngineFactoryDynamic
             , List<TbSupplier> listSupplier
             , List<TbSupplierDynamic> listSupplierDynamics
-            , Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix) {
+            , Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix
+            , ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTaskDecomposition) {
 
         // 填充map数据
         Map<String, TbEngineFactory> mapEngineFactory = getMapEngineFactoryIdVsEngineFactory(listEngineFactory);
@@ -177,7 +179,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
 
         // 计算供应商的产能利用率
-        calAndSetSupplierCapacityUtilizationAndAdjustCapacityPriceQuality(listSupplierDynamics, avgFinalMarketPrice, avgArrSupplierQuality, mapSupplierIdVsTransactionContract);
+        calAndSetSupplierCapacityUtilizationAndAdjustCapacityPriceQuality(listSupplierDynamics, avgFinalMarketPrice, avgArrSupplierQuality, mapSupplierIdVsTransactionContract, listListEngineFactoryTaskDecomposition);
 
         // # 企业进入与退出
         // 主机厂信誉度最高的
@@ -360,32 +362,41 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 一类服务, 供应商存活的数量
         int[] sumArrSupplierIsAlive = new int[5];
 
-        for (TransactionContract aTransactionContract : listTransactionContract) {
-            String supplierId = aTransactionContract.getSupplierId();
-            TbSupplier tmpSupplier = mapSupplier.get(supplierId);
-            int taskType = aTransactionContract.getTaskType();
-            int engineFactoryNeedServiceNumber = aTransactionContract.getEngineFactoryNeedServiceNumber();
+
+//        for (TransactionContract aTransactionContract : listTransactionContract) {
+        for (TbEngineFactory aEngineFactory : listEngineFactory) {
+//            String supplierId = aTransactionContract.getSupplierId();
+//            TbSupplier tmpSupplier = mapSupplier.get(supplierId);
+//            int taskType = aTransactionContract.getTaskType();
+//            int engineFactoryNeedServiceNumber = aTransactionContract.getEngineFactoryNeedServiceNumber();
+            String engineFactoryId = aEngineFactory.getEngineFactoryId();
+            int engineFactoryDemandForecastD = mapEngineFactoryDynamic.get(engineFactoryId).getEngineFactoryDemandForecastD();
+            sumArrEngineFactoryNeedServiceNumberWithAlive[0] += engineFactoryDemandForecastD;
+            sumArrEngineFactoryNeedServiceNumberWithAlive[1] += engineFactoryDemandForecastD;
+            sumArrEngineFactoryNeedServiceNumberWithAlive[2] += engineFactoryDemandForecastD;
+            sumArrEngineFactoryNeedServiceNumberWithAlive[3] += engineFactoryDemandForecastD;
+            sumArrEngineFactoryNeedServiceNumberWithAlive[4] += engineFactoryDemandForecastD;
 
             // 订单中按类分的主机厂需求
-            switch (taskType) {
-                case 210:
-                    sumArrEngineFactoryNeedServiceNumberWithAlive[0] += engineFactoryNeedServiceNumber;
-                    break;
-                case 220:
-                    sumArrEngineFactoryNeedServiceNumberWithAlive[1] += engineFactoryNeedServiceNumber;
-                    break;
-                case 230:
-                    sumArrEngineFactoryNeedServiceNumberWithAlive[2] += engineFactoryNeedServiceNumber;
-                    break;
-                case 240:
-                    sumArrEngineFactoryNeedServiceNumberWithAlive[3] += engineFactoryNeedServiceNumber;
-                    break;
-                case 250:
-                    sumArrEngineFactoryNeedServiceNumberWithAlive[4] += engineFactoryNeedServiceNumber;
-                    break;
-                default:
-                    throw new RuntimeException("no such type");
-            }
+//            switch (taskType) {
+//                case 210:
+//                    sumArrEngineFactoryNeedServiceNumberWithAlive[0] += engineFactoryNeedServiceNumber;
+//                    break;
+//                case 220:
+//                    sumArrEngineFactoryNeedServiceNumberWithAlive[1] += engineFactoryNeedServiceNumber;
+//                    break;
+//                case 230:
+//                    sumArrEngineFactoryNeedServiceNumberWithAlive[2] += engineFactoryNeedServiceNumber;
+//                    break;
+//                case 240:
+//                    sumArrEngineFactoryNeedServiceNumberWithAlive[3] += engineFactoryNeedServiceNumber;
+//                    break;
+//                case 250:
+//                    sumArrEngineFactoryNeedServiceNumberWithAlive[4] += engineFactoryNeedServiceNumber;
+//                    break;
+//                default:
+//                    throw new RuntimeException("no such type");
+//            }
         }
 
         // 存活的供应商中, 信誉度之和 存活个数计算
@@ -492,7 +503,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 // 某类供应商数量不为0
                 aveSupplierCreditTmp = sumArrSupplierCreditWithAlive[i] * 1D / sumArrSupplierIsAlive[i];
             } else {
-                aveSupplierCreditTmp = avgSupplierCapacityAllWithAlive;
+                aveSupplierCreditTmp = 1;
             }
 
             int engineFactoryNeedServiceNumberWithAlive = sumArrEngineFactoryNeedServiceNumberWithAlive[i];
@@ -694,17 +705,17 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 //        }
         for (TbEngineFactory aEngineFactory : listEngineFactory) {
             aEngineFactory.setCycleTimes(cycleTime);
-            if (aEngineFactory.getEngineFactoryAlive()) {
-                // 主机厂静态数据
-                // 主机厂动态数据
-                mapEngineFactoryDynamic.get(aEngineFactory.getEngineFactoryId()).setCycleTimes(cycleTime);
-            }
+//            if (aEngineFactory.getEngineFactoryAlive()) {
+            // 主机厂静态数据
+            // 主机厂动态数据
+            mapEngineFactoryDynamic.get(aEngineFactory.getEngineFactoryId()).setCycleTimes(cycleTime);
+//            }
         }
         for (TbSupplier aSupplier : listSupplier) {
             aSupplier.setCycleTimes(cycleTime);
-            if (aSupplier.getSupplierAlive()) {
-                mapSupplierDynamic.get(aSupplier.getSupplierId()).setCycleTimes(cycleTime);
-            }
+//            if (aSupplier.getSupplierAlive()) {
+            mapSupplierDynamic.get(aSupplier.getSupplierId()).setCycleTimes(cycleTime);
+//            }
         }
 
         storeTransactionContract(experimentsNumber, cycleTime, listTransactionContract);
@@ -722,14 +733,16 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
      * @param listTransactionContract 交易契约集合
      */
     private void storeTransactionContract(int experimentsNumber, int cycleTime, ArrayList<TransactionContract> listTransactionContract) {
+        List<TbTransactionContract> listRes = new ArrayList<>();
         for (TransactionContract aTransactionContract : listTransactionContract) {
             TbTransactionContract tbTransactionContract = new TbTransactionContract();
             BeanUtils.copyProperties(aTransactionContract, tbTransactionContract);
             tbTransactionContract.setExperimentsNumber(experimentsNumber);
             tbTransactionContract.setCycleTimes(cycleTime);
-//            tbTransactionContract.setEnginefactoryid(aTransactionContract.getEngineFactoryId());
-            tbTransactionContractMapper.insertSelective(tbTransactionContract);
+            listRes.add(tbTransactionContract);
+//        tbTransactionContractMapper.insertSelective(tbTransactionContract);
         }
+        tbTransactionContractMapper.insertList(listRes);
     }
 
     /**
@@ -759,8 +772,6 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             TbEngineFactory engineFactory = mapEngineFactory.get(engineFactoryId);
             if (engineFactory.getEngineFactoryAlive()) {
                 sumEngineFactoryCapacity += aEngineFactoryDynamic.getEngineFactoryCapacityM();
-                // TODO 主机厂动态数据, 更新循环标识, 好像不该放这里
-//                aEngineFactoryDynamic.setCycleTimes(cycleTime);
             }
         }
         tbBalance.setEngineFactoryBalance(sumActualSaleNumber * 1.0 / sumEngineFactoryCapacity);
@@ -973,16 +984,30 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
      * 对供应商计算并设置产能利用率,
      * 调整产能/价格/质量
      *
-     * @param listSupplierDynamics               供应商动态数据集合
-     * @param avgFinalMarketPrice                平均市场价
-     * @param avgArrSupplierQuality              平均质量数组
+     * @param listSupplierDynamics                   供应商动态数据集合
+     * @param avgFinalMarketPrice                    平均市场价
+     * @param avgArrSupplierQuality                  平均质量数组
      * @param mapSupplierIdVsTransactionContract
+     * @param listListEngineFactoryTaskDecomposition
      */
     private void calAndSetSupplierCapacityUtilizationAndAdjustCapacityPriceQuality(
             List<TbSupplierDynamic> listSupplierDynamics
             , double avgFinalMarketPrice
             , int[] avgArrSupplierQuality
-            , HashMap<String, List<TransactionContract>> mapSupplierIdVsTransactionContract) {
+            , HashMap<String, List<TransactionContract>> mapSupplierIdVsTransactionContract
+            , ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTaskDecomposition) {
+
+        // 主机厂任务量最小值(发布任务之前的)
+        int minEngineFactoryNeedServiceNumber = Integer.MAX_VALUE;
+
+        for (ArrayList<EngineFactoryManufacturingTask> aEngineFactoryManufacturingTaskArrayList : listListEngineFactoryTaskDecomposition) {
+            for (EngineFactoryManufacturingTask aFactoryManufacturingTask : aEngineFactoryManufacturingTaskArrayList) {
+                int engineFactoryNeedServiceNumber = aFactoryManufacturingTask.getEngineFactoryNeedServiceNumber();
+                // 算出主机厂任务量最小值
+                minEngineFactoryNeedServiceNumber = Math.min(minEngineFactoryNeedServiceNumber, engineFactoryNeedServiceNumber);
+            }
+        }
+
 
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
             // 阶段开始时初始产能
@@ -990,7 +1015,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             // 计算利用率并更新
             // 某类供应总需求
             int sumSupplierOrderNumber = 0;
-            ;
+
 
             // 某类平均需求数量
             double avgSupplierOrderNumber = 0;
@@ -1020,7 +1045,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             if (mapSupplierIdVsTransactionContract.containsKey(supplierId)) {
                 List<TransactionContract> listTransactionContract = mapSupplierIdVsTransactionContract.get(supplierId);
                 for (TransactionContract aTransactionContract : listTransactionContract) {
-                    sumSupplierOrderNumber += aTransactionContract.getEngineFactoryNeedServiceNumber();
+                    int engineFactoryNeedServiceNumber = aTransactionContract.getEngineFactoryNeedServiceNumber();
+                    sumSupplierOrderNumber += engineFactoryNeedServiceNumber;
                 }
             }
 
@@ -1062,33 +1088,41 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 }
             } else {
                 // 利用率 < 1(供过于求)
-                if (initAvgSupplierPrice >= avgFinalMarketPrice) {
-                    // 初始价格的平均价 >= 所有成交价格的平均值
-                    if (supplierPricePL < initAvgSupplierPrice) {
-                        aSupplierDynamic.setSupplierPricePL(RandomUtils.nextInt(supplierPricePL, (int) initAvgSupplierPrice + 1));
-                        aSupplierDynamic.setSupplierPricePU(RandomUtils.nextInt((int) initAvgSupplierPrice, supplierPricePU + 1));
+                if (minEngineFactoryNeedServiceNumber <= supplierCapacity) {
+                    // 主机厂最小的任务量 <= 供应商产能
+                    if (initAvgSupplierPrice >= avgFinalMarketPrice) {
+                        // 初始价格的平均价 >= 所有成交价格的平均值
+                        if (supplierPricePL < initAvgSupplierPrice) {
+                            aSupplierDynamic.setSupplierPricePL(RandomUtils.nextInt(supplierPricePL, (int) initAvgSupplierPrice + 1));
+                            aSupplierDynamic.setSupplierPricePU(RandomUtils.nextInt((int) initAvgSupplierPrice, supplierPricePU + 1));
+                        } else {
+                            aSupplierDynamic.setSupplierPricePL((int) Math.round(initAvgSupplierPrice / 2.0));
+                            aSupplierDynamic.setSupplierPricePU((int) Math.round(initAvgSupplierPrice * 1.5));
+                        }
                     } else {
-                        aSupplierDynamic.setSupplierPricePL((int) Math.round(initAvgSupplierPrice / 2.0));
-                        aSupplierDynamic.setSupplierPricePU((int) Math.round(initAvgSupplierPrice * 1.5));
-                    }
-                } else {
-                    // 初始价格的平均价 < 所有成交价格的平均值
-                    int supplierQuality = aSupplierDynamic.getSupplierQualityQs();
-                    if (supplierQuality >= avgSupplierQuality) {
-                        // 质量 >= 平均质量
-                        // 调整产能
-                        supplierCapacity = (int) Math.round(supplierCapacity * 0.9);
-                        // 更新下一阶段的产能
-                        aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
-                    } else {
-                        // 质量 < 平均质量
-                        if (supplierQuality < 10) {
-                            supplierQuality++;
-                            aSupplierDynamic.setSupplierQualityQs(supplierQuality);
-                            // 更新总资产
-                            aSupplierDynamic.setSupplierTotalAssetsP((int) Math.round(aSupplierDynamic.getSupplierTotalAssetsP() * 0.9));
+                        // 初始价格的平均价 < 所有成交价格的平均值
+                        int supplierQuality = aSupplierDynamic.getSupplierQualityQs();
+                        if (supplierQuality >= avgSupplierQuality) {
+                            // 质量 >= 平均质量
+                            // 调整产能
+                            supplierCapacity = (int) Math.round(supplierCapacity * 0.9);
+                            // 更新下一阶段的产能
+                            aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
+                        } else {
+                            // 质量 < 平均质量
+                            if (supplierQuality < 10) {
+                                supplierQuality++;
+                                aSupplierDynamic.setSupplierQualityQs(supplierQuality);
+                                // 更新总资产
+                                aSupplierDynamic.setSupplierTotalAssetsP((int) Math.round(aSupplierDynamic.getSupplierTotalAssetsP() * 0.9));
+                            }
                         }
                     }
+                } else {
+                    // 供应商产能 * 1.1
+                    supplierCapacity = (int) Math.round(supplierCapacity * 1.1);
+                    // 更新下一阶段的产能
+                    aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
                 }
             }
         }
