@@ -291,7 +291,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         if (marketNeedNumber > sumFinalProductNumberWithAlive) {
             // 真实需求 > 所有主机厂的(阶段结束, 实际能提供的产品)之和
             // 随机生成1~3个主机厂
-            int tmp = RandomUtils.nextInt(5, 11);
+            int tmp = RandomUtils.nextInt(1, 4);
             for (int i = 0; i < tmp; i++) {
                 tbEngineFactory = new TbEngineFactory();
                 tbEngineFactoryDynamic = new TbEngineFactoryDynamic();
@@ -502,7 +502,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 //            log.error("|||supplierCapacity < engineFactoryNeedServiceNumberWithAlive : "+(supplierCapacity < engineFactoryNeedServiceNumberWithAlive));
             if (supplierCapacity < engineFactoryNeedServiceNumberWithAlive) {
                 // 供应商产能 < 主机厂对该类服务的需求
-                int tmp = RandomUtils.nextInt(3, 6);
+                int tmp = RandomUtils.nextInt(1, 4);
 //                log.info(supplierTypeCode[i]+" 生成供应商个数 "+tmp);
                 for (int j = 0; j < tmp; j++) {
                     tbSupplier = new TbSupplier();
@@ -1344,15 +1344,19 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             // 主机厂与供应商交易后的利润
             if (mapEngineFactoryProfitSum.containsKey(engineFactoryId)) {
                 tmpEngineFactoryProfit = mapEngineFactoryProfitSum.get(engineFactoryId);
+            } else {
+                tmpEngineFactoryProfit = 0;
             }
             tmpEngineFactoryProfit += orderPlus.getEngineFactoryProfit();
             mapEngineFactoryProfitSum.put(engineFactoryId, tmpEngineFactoryProfit);
             // 供应商与主机厂交易后的利润
             if (mapSupplierProfitSum.containsKey(supplierId)) {
                 tmpSupplierProfit = mapSupplierProfitSum.get(supplierId);
+            } else {
+                tmpSupplierProfit = 0;
             }
             tmpSupplierProfit += orderPlus.getSupplierProfit();
-            mapSupplierProfitSum.put(supplierId, tmpEngineFactoryProfit);
+            mapSupplierProfitSum.put(supplierId, tmpSupplierProfit);
         }
     }
 
@@ -1441,7 +1445,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 // 最终产品数量
                 engineFactoryFinalProvision.setFinalProductNumber(actualProductNumber);
                 // 最终面向市场价格
-                actualPrice = Math.min(actualPrice, tmpPrice);
+                tmpPrice = (int) (tmpPrice * CalculationEnum.saleProductsCp);
+                actualPrice = Math.max(actualPrice, tmpPrice);
                 engineFactoryFinalProvision.setFinalMarketPrice(actualPrice);
 
                 // 最终质量
@@ -1475,10 +1480,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         double k2 = EngineFactoryEnum.engineFactoryDemandForecastInitK2;
         int k1Step = EngineFactoryEnum.engineFactoryDemandForecastK1Step;
         double k2Step = EngineFactoryEnum.engineFactoryDemandForecastK2Step;
-        int cm = CalculationEnum.saleProductsInitCm;
+        double cm = CalculationEnum.saleProductsInitCm;
         k1 = k1 + (cycleTimes - 1) * k1Step;
         k2 = k2 + (cycleTimes - 1) * k2Step;
-        cm = cm + (cycleTimes - 1);
+        cm = cm + (cycleTimes - 1) * 0.2;
 
         int pa = RandomUtils.nextInt(EngineFactoryEnum.engineFactoryInitPriceLow, EngineFactoryEnum.engineFactoryInitPriceUpper + 1);
         int qa = RandomUtils.nextInt(EngineFactoryEnum.engineFactoryInitQualityLow, EngineFactoryEnum.engineFactoryInitQualityUpper + 1);

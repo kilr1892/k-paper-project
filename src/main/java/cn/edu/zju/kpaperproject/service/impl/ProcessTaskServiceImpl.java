@@ -244,11 +244,15 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         } else if (engineIsPerformContract) {
             // 1 0
             absJKI = 2;
+//            absJKI = 1;
             absIJK = -2;
+//            absIJK = -1;
         } else {
             // 0 1
             absJKI = -2;
+//            absJKI = -1;
             absIJK = 2;
+//            absIJK = 1;
         }
         // 合同价
         int orderPrice = transactionContract.getOrderPrice();
