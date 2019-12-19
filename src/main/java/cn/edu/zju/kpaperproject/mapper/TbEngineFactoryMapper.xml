@@ -270,7 +270,7 @@
       (NULL, #{item.experimentsNumber,jdbcType=INTEGER}, #{item.cycleTimes,jdbcType=INTEGER},
       #{item.engineFactoryId,jdbcType=VARCHAR}, #{item.engineFactoryLocationGX,jdbcType=INTEGER},
       #{item.engineFactoryLocationGY,jdbcType=INTEGER}, #{item.engineFactoryAlive,jdbcType=BIT},
-      #{engineFactoryAliveTimes,jdbcType=INTEGER})
+      #{item.engineFactoryAliveTimes,jdbcType=INTEGER})
     </foreach>
   </insert>
 

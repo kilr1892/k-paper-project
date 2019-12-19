@@ -329,6 +329,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 tbEngineFactory.setEngineFactoryLocationGY(position[NumberEnum.POSITION_Y_ARRAY_INDEX]);
                 // 存活
                 tbEngineFactory.setEngineFactoryAlive(true);
+                // 存活次数初始化
+                tbEngineFactory.setEngineFactoryAliveTimes(0);
 
                 // 工厂动态数据------------------
                 tbEngineFactoryDynamic.setCycleTimes(cycleTime);
@@ -523,6 +525,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 for (int j = 0; j < tmp; j++) {
                     tbSupplier = new TbSupplier();
                     tbSupplier.setExperimentsNumber(experimentsNumber);
+                    // 存活次数初始化
+                    tbSupplier.setSupplierAliveTimes(0);
                     tbSupplier.setCycleTimes(cycleTime);
                     TbSupplierDynamic tbSupplierDynamic = new TbSupplierDynamic();
                     tbSupplierDynamic.setCycleTimes(cycleTime);
@@ -666,8 +670,6 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             String supplierId = aSupplierDynamic.getSupplierId();
             if (mapSupplier.get(supplierId).getSupplierAlive()) {
                 sumNewSupplierCreditWithAlive += aSupplierDynamic.getSupplierCreditA();
-                // TODO 更新供应商的动态数据循环次数
-//                aSupplierDynamic.setCycleTimes(cycleTime);
             }
         }
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
@@ -714,17 +716,13 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 //        }
         for (TbEngineFactory aEngineFactory : listEngineFactory) {
             aEngineFactory.setCycleTimes(cycleTime);
-//            if (aEngineFactory.getEngineFactoryAlive()) {
-            // 主机厂静态数据
-            // 主机厂动态数据
+            aEngineFactory.setEngineFactoryAliveTimes(aEngineFactory.getEngineFactoryAliveTimes() + 1);
             mapEngineFactoryDynamic.get(aEngineFactory.getEngineFactoryId()).setCycleTimes(cycleTime);
-//            }
         }
         for (TbSupplier aSupplier : listSupplier) {
             aSupplier.setCycleTimes(cycleTime);
-//            if (aSupplier.getSupplierAlive()) {
+            aSupplier.setSupplierAliveTimes(aSupplier.getSupplierAliveTimes() + 1);
             mapSupplierDynamic.get(aSupplier.getSupplierId()).setCycleTimes(cycleTime);
-//            }
         }
 
         storeTransactionContract(experimentsNumber, cycleTime, listTransactionContract);

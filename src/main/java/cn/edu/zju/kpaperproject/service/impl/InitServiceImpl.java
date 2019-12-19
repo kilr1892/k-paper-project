@@ -77,7 +77,7 @@ public class InitServiceImpl implements InitService {
             // 存活
             tbEngineFactory.setEngineFactoryAlive(true);
             // 存活次数
-
+            tbEngineFactory.setEngineFactoryAliveTimes(0);
             // 单条插入
             tbEngineFactoryMapper.insertSelective(tbEngineFactory);
 
@@ -158,6 +158,8 @@ public class InitServiceImpl implements InitService {
         // 每阶段固定成本
         tbSupplier.setSupplierFixedCostC(InitSupplierUtils.initFixedCost());
         tbSupplier.setSupplierAlive(true);
+        // 存活次数
+        tbSupplier.setSupplierAliveTimes(0);
         // 动态数据----------------
         tbSupplierDynamic.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
         // 供应商id
