@@ -164,6 +164,66 @@ public class TbEngineFactoryDynamicExample {
             return (Criteria) this;
         }
 
+        public Criteria andExperimentsNumberIsNull() {
+            addCriterion("experiments_number is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberIsNotNull() {
+            addCriterion("experiments_number is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberEqualTo(Integer value) {
+            addCriterion("experiments_number =", value, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberNotEqualTo(Integer value) {
+            addCriterion("experiments_number <>", value, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberGreaterThan(Integer value) {
+            addCriterion("experiments_number >", value, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberGreaterThanOrEqualTo(Integer value) {
+            addCriterion("experiments_number >=", value, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberLessThan(Integer value) {
+            addCriterion("experiments_number <", value, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberLessThanOrEqualTo(Integer value) {
+            addCriterion("experiments_number <=", value, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberIn(List<Integer> values) {
+            addCriterion("experiments_number in", values, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberNotIn(List<Integer> values) {
+            addCriterion("experiments_number not in", values, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberBetween(Integer value1, Integer value2) {
+            addCriterion("experiments_number between", value1, value2, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberNotBetween(Integer value1, Integer value2) {
+            addCriterion("experiments_number not between", value1, value2, "experimentsNumber");
+            return (Criteria) this;
+        }
+
         public Criteria andCycleTimesIsNull() {
             addCriterion("cycle_times is null");
             return (Criteria) this;
@@ -714,186 +774,6 @@ public class TbEngineFactoryDynamicExample {
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryActualNumberMIsNull() {
-            addCriterion("engine_factory_actual_number_m is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualNumberMIsNotNull() {
-            addCriterion("engine_factory_actual_number_m is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualNumberMEqualTo(Integer value) {
-            addCriterion("engine_factory_actual_number_m =", value, "engineFactoryActualNumberM");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualNumberMNotEqualTo(Integer value) {
-            addCriterion("engine_factory_actual_number_m <>", value, "engineFactoryActualNumberM");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualNumberMGreaterThan(Integer value) {
-            addCriterion("engine_factory_actual_number_m >", value, "engineFactoryActualNumberM");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualNumberMGreaterThanOrEqualTo(Integer value) {
-            addCriterion("engine_factory_actual_number_m >=", value, "engineFactoryActualNumberM");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualNumberMLessThan(Integer value) {
-            addCriterion("engine_factory_actual_number_m <", value, "engineFactoryActualNumberM");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualNumberMLessThanOrEqualTo(Integer value) {
-            addCriterion("engine_factory_actual_number_m <=", value, "engineFactoryActualNumberM");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualNumberMIn(List<Integer> values) {
-            addCriterion("engine_factory_actual_number_m in", values, "engineFactoryActualNumberM");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualNumberMNotIn(List<Integer> values) {
-            addCriterion("engine_factory_actual_number_m not in", values, "engineFactoryActualNumberM");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualNumberMBetween(Integer value1, Integer value2) {
-            addCriterion("engine_factory_actual_number_m between", value1, value2, "engineFactoryActualNumberM");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualNumberMNotBetween(Integer value1, Integer value2) {
-            addCriterion("engine_factory_actual_number_m not between", value1, value2, "engineFactoryActualNumberM");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualPriceApIsNull() {
-            addCriterion("engine_factory_actual_price_ap is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualPriceApIsNotNull() {
-            addCriterion("engine_factory_actual_price_ap is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualPriceApEqualTo(Integer value) {
-            addCriterion("engine_factory_actual_price_ap =", value, "engineFactoryActualPriceAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualPriceApNotEqualTo(Integer value) {
-            addCriterion("engine_factory_actual_price_ap <>", value, "engineFactoryActualPriceAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualPriceApGreaterThan(Integer value) {
-            addCriterion("engine_factory_actual_price_ap >", value, "engineFactoryActualPriceAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualPriceApGreaterThanOrEqualTo(Integer value) {
-            addCriterion("engine_factory_actual_price_ap >=", value, "engineFactoryActualPriceAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualPriceApLessThan(Integer value) {
-            addCriterion("engine_factory_actual_price_ap <", value, "engineFactoryActualPriceAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualPriceApLessThanOrEqualTo(Integer value) {
-            addCriterion("engine_factory_actual_price_ap <=", value, "engineFactoryActualPriceAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualPriceApIn(List<Integer> values) {
-            addCriterion("engine_factory_actual_price_ap in", values, "engineFactoryActualPriceAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualPriceApNotIn(List<Integer> values) {
-            addCriterion("engine_factory_actual_price_ap not in", values, "engineFactoryActualPriceAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualPriceApBetween(Integer value1, Integer value2) {
-            addCriterion("engine_factory_actual_price_ap between", value1, value2, "engineFactoryActualPriceAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualPriceApNotBetween(Integer value1, Integer value2) {
-            addCriterion("engine_factory_actual_price_ap not between", value1, value2, "engineFactoryActualPriceAp");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualQualityAqIsNull() {
-            addCriterion("engine_factory_actual_quality_aq is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualQualityAqIsNotNull() {
-            addCriterion("engine_factory_actual_quality_aq is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualQualityAqEqualTo(Integer value) {
-            addCriterion("engine_factory_actual_quality_aq =", value, "engineFactoryActualQualityAq");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualQualityAqNotEqualTo(Integer value) {
-            addCriterion("engine_factory_actual_quality_aq <>", value, "engineFactoryActualQualityAq");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualQualityAqGreaterThan(Integer value) {
-            addCriterion("engine_factory_actual_quality_aq >", value, "engineFactoryActualQualityAq");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualQualityAqGreaterThanOrEqualTo(Integer value) {
-            addCriterion("engine_factory_actual_quality_aq >=", value, "engineFactoryActualQualityAq");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualQualityAqLessThan(Integer value) {
-            addCriterion("engine_factory_actual_quality_aq <", value, "engineFactoryActualQualityAq");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualQualityAqLessThanOrEqualTo(Integer value) {
-            addCriterion("engine_factory_actual_quality_aq <=", value, "engineFactoryActualQualityAq");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualQualityAqIn(List<Integer> values) {
-            addCriterion("engine_factory_actual_quality_aq in", values, "engineFactoryActualQualityAq");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualQualityAqNotIn(List<Integer> values) {
-            addCriterion("engine_factory_actual_quality_aq not in", values, "engineFactoryActualQualityAq");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualQualityAqBetween(Integer value1, Integer value2) {
-            addCriterion("engine_factory_actual_quality_aq between", value1, value2, "engineFactoryActualQualityAq");
-            return (Criteria) this;
-        }
-
-        public Criteria andEngineFactoryActualQualityAqNotBetween(Integer value1, Integer value2) {
-            addCriterion("engine_factory_actual_quality_aq not between", value1, value2, "engineFactoryActualQualityAq");
-            return (Criteria) this;
-        }
-
         public Criteria andEngineFactoryCapacityUtilizationIsNull() {
             addCriterion("engine_factory_capacity_utilization is null");
             return (Criteria) this;
@@ -951,6 +831,186 @@ public class TbEngineFactoryDynamicExample {
 
         public Criteria andEngineFactoryCapacityUtilizationNotBetween(Double value1, Double value2) {
             addCriterion("engine_factory_capacity_utilization not between", value1, value2, "engineFactoryCapacityUtilization");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationProbabilityIsNull() {
+            addCriterion("engine_factory_innovation_probability is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationProbabilityIsNotNull() {
+            addCriterion("engine_factory_innovation_probability is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationProbabilityEqualTo(Double value) {
+            addCriterion("engine_factory_innovation_probability =", value, "engineFactoryInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationProbabilityNotEqualTo(Double value) {
+            addCriterion("engine_factory_innovation_probability <>", value, "engineFactoryInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationProbabilityGreaterThan(Double value) {
+            addCriterion("engine_factory_innovation_probability >", value, "engineFactoryInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationProbabilityGreaterThanOrEqualTo(Double value) {
+            addCriterion("engine_factory_innovation_probability >=", value, "engineFactoryInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationProbabilityLessThan(Double value) {
+            addCriterion("engine_factory_innovation_probability <", value, "engineFactoryInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationProbabilityLessThanOrEqualTo(Double value) {
+            addCriterion("engine_factory_innovation_probability <=", value, "engineFactoryInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationProbabilityIn(List<Double> values) {
+            addCriterion("engine_factory_innovation_probability in", values, "engineFactoryInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationProbabilityNotIn(List<Double> values) {
+            addCriterion("engine_factory_innovation_probability not in", values, "engineFactoryInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationProbabilityBetween(Double value1, Double value2) {
+            addCriterion("engine_factory_innovation_probability between", value1, value2, "engineFactoryInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationProbabilityNotBetween(Double value1, Double value2) {
+            addCriterion("engine_factory_innovation_probability not between", value1, value2, "engineFactoryInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryWhetherInnovationIsNull() {
+            addCriterion("engine_factory_whether_innovation is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryWhetherInnovationIsNotNull() {
+            addCriterion("engine_factory_whether_innovation is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryWhetherInnovationEqualTo(Boolean value) {
+            addCriterion("engine_factory_whether_innovation =", value, "engineFactoryWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryWhetherInnovationNotEqualTo(Boolean value) {
+            addCriterion("engine_factory_whether_innovation <>", value, "engineFactoryWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryWhetherInnovationGreaterThan(Boolean value) {
+            addCriterion("engine_factory_whether_innovation >", value, "engineFactoryWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryWhetherInnovationGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("engine_factory_whether_innovation >=", value, "engineFactoryWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryWhetherInnovationLessThan(Boolean value) {
+            addCriterion("engine_factory_whether_innovation <", value, "engineFactoryWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryWhetherInnovationLessThanOrEqualTo(Boolean value) {
+            addCriterion("engine_factory_whether_innovation <=", value, "engineFactoryWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryWhetherInnovationIn(List<Boolean> values) {
+            addCriterion("engine_factory_whether_innovation in", values, "engineFactoryWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryWhetherInnovationNotIn(List<Boolean> values) {
+            addCriterion("engine_factory_whether_innovation not in", values, "engineFactoryWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryWhetherInnovationBetween(Boolean value1, Boolean value2) {
+            addCriterion("engine_factory_whether_innovation between", value1, value2, "engineFactoryWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryWhetherInnovationNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("engine_factory_whether_innovation not between", value1, value2, "engineFactoryWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationTimesIsNull() {
+            addCriterion("engine_factory_innovation_times is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationTimesIsNotNull() {
+            addCriterion("engine_factory_innovation_times is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationTimesEqualTo(Integer value) {
+            addCriterion("engine_factory_innovation_times =", value, "engineFactoryInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationTimesNotEqualTo(Integer value) {
+            addCriterion("engine_factory_innovation_times <>", value, "engineFactoryInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationTimesGreaterThan(Integer value) {
+            addCriterion("engine_factory_innovation_times >", value, "engineFactoryInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationTimesGreaterThanOrEqualTo(Integer value) {
+            addCriterion("engine_factory_innovation_times >=", value, "engineFactoryInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationTimesLessThan(Integer value) {
+            addCriterion("engine_factory_innovation_times <", value, "engineFactoryInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationTimesLessThanOrEqualTo(Integer value) {
+            addCriterion("engine_factory_innovation_times <=", value, "engineFactoryInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationTimesIn(List<Integer> values) {
+            addCriterion("engine_factory_innovation_times in", values, "engineFactoryInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationTimesNotIn(List<Integer> values) {
+            addCriterion("engine_factory_innovation_times not in", values, "engineFactoryInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationTimesBetween(Integer value1, Integer value2) {
+            addCriterion("engine_factory_innovation_times between", value1, value2, "engineFactoryInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryInnovationTimesNotBetween(Integer value1, Integer value2) {
+            addCriterion("engine_factory_innovation_times not between", value1, value2, "engineFactoryInnovationTimes");
             return (Criteria) this;
         }
     }

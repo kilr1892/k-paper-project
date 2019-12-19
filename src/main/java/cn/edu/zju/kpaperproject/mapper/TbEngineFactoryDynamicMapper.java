@@ -3,11 +3,9 @@ package cn.edu.zju.kpaperproject.mapper;
 import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamic;
 import cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamicExample;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public interface TbEngineFactoryDynamicMapper {
     int countByExample(TbEngineFactoryDynamicExample example);
 
@@ -30,8 +28,6 @@ public interface TbEngineFactoryDynamicMapper {
     int updateByPrimaryKeySelective(TbEngineFactoryDynamic record);
 
     int updateByPrimaryKey(TbEngineFactoryDynamic record);
-
-
-//-------------------------------------------------------
+    //-------------------------------------------------------
     void insertList(List<TbEngineFactoryDynamic> listEngineFactoryDynamic);
 }

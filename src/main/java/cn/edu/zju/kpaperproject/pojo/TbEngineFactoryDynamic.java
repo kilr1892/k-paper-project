@@ -3,6 +3,8 @@ package cn.edu.zju.kpaperproject.pojo;
 public class TbEngineFactoryDynamic {
     private Integer id;
 
+    private Integer experimentsNumber;
+
     private Integer cycleTimes;
 
     private String engineFactoryId;
@@ -21,13 +23,13 @@ public class TbEngineFactoryDynamic {
 
     private Integer engineFactoryDemandForecastD;
 
-    private Integer engineFactoryActualNumberM;
-
-    private Integer engineFactoryActualPriceAp;
-
-    private Integer engineFactoryActualQualityAq;
-
     private Double engineFactoryCapacityUtilization;
+
+    private Double engineFactoryInnovationProbability;
+
+    private Boolean engineFactoryWhetherInnovation;
+
+    private Integer engineFactoryInnovationTimes;
 
     public Integer getId() {
         return id;
@@ -35,6 +37,14 @@ public class TbEngineFactoryDynamic {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getExperimentsNumber() {
+        return experimentsNumber;
+    }
+
+    public void setExperimentsNumber(Integer experimentsNumber) {
+        this.experimentsNumber = experimentsNumber;
     }
 
     public Integer getCycleTimes() {
@@ -109,35 +119,35 @@ public class TbEngineFactoryDynamic {
         this.engineFactoryDemandForecastD = engineFactoryDemandForecastD;
     }
 
-    public Integer getEngineFactoryActualNumberM() {
-        return engineFactoryActualNumberM;
-    }
-
-    public void setEngineFactoryActualNumberM(Integer engineFactoryActualNumberM) {
-        this.engineFactoryActualNumberM = engineFactoryActualNumberM;
-    }
-
-    public Integer getEngineFactoryActualPriceAp() {
-        return engineFactoryActualPriceAp;
-    }
-
-    public void setEngineFactoryActualPriceAp(Integer engineFactoryActualPriceAp) {
-        this.engineFactoryActualPriceAp = engineFactoryActualPriceAp;
-    }
-
-    public Integer getEngineFactoryActualQualityAq() {
-        return engineFactoryActualQualityAq;
-    }
-
-    public void setEngineFactoryActualQualityAq(Integer engineFactoryActualQualityAq) {
-        this.engineFactoryActualQualityAq = engineFactoryActualQualityAq;
-    }
-
     public Double getEngineFactoryCapacityUtilization() {
         return engineFactoryCapacityUtilization;
     }
 
     public void setEngineFactoryCapacityUtilization(Double engineFactoryCapacityUtilization) {
         this.engineFactoryCapacityUtilization = engineFactoryCapacityUtilization;
+    }
+
+    public Double getEngineFactoryInnovationProbability() {
+        return engineFactoryInnovationProbability;
+    }
+
+    public void setEngineFactoryInnovationProbability(Double engineFactoryInnovationProbability) {
+        this.engineFactoryInnovationProbability = engineFactoryInnovationProbability;
+    }
+
+    public Boolean getEngineFactoryWhetherInnovation() {
+        return engineFactoryWhetherInnovation;
+    }
+
+    public void setEngineFactoryWhetherInnovation(Boolean engineFactoryWhetherInnovation) {
+        this.engineFactoryWhetherInnovation = engineFactoryWhetherInnovation;
+    }
+
+    public Integer getEngineFactoryInnovationTimes() {
+        return engineFactoryInnovationTimes;
+    }
+
+    public void setEngineFactoryInnovationTimes(Integer engineFactoryInnovationTimes) {
+        this.engineFactoryInnovationTimes = engineFactoryInnovationTimes;
     }
 }

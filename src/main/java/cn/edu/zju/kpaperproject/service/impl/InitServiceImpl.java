@@ -7,6 +7,7 @@ import cn.edu.zju.kpaperproject.mapper.*;
 import cn.edu.zju.kpaperproject.pojo.*;
 import cn.edu.zju.kpaperproject.service.InitService;
 import cn.edu.zju.kpaperproject.utils.*;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +63,8 @@ public class InitServiceImpl implements InitService {
         // 0 代表初始化
         tbEngineFactory.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
         tbEngineFactoryDynamic.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
+        // 实验次数
+        tbEngineFactoryDynamic.setExperimentsNumber(experimentsNumber);
 
         for (int i = 0; i < EngineFactoryEnum.engineFactoryInitSum; i++) {
             // 工厂id
@@ -71,9 +74,6 @@ public class InitServiceImpl implements InitService {
             int[] position = InitEngineFactoryUtils.initPosition();
             tbEngineFactory.setEngineFactoryLocationGX(position[NumberEnum.POSITION_X_ARRAY_INDEX]);
             tbEngineFactory.setEngineFactoryLocationGY(position[NumberEnum.POSITION_Y_ARRAY_INDEX]);
-            // 每阶段固定成本
-            // TODO 感觉这个没用= =
-//            tbEngineFactory.setEngineFactoryFixedCostC(InitEngineFactoryUtils.initFixedCost());
             // 存活
             tbEngineFactory.setEngineFactoryAlive(true);
             // 存活次数
@@ -99,6 +99,9 @@ public class InitServiceImpl implements InitService {
             // 需求预测
             tbEngineFactoryDynamic.setEngineFactoryDemandForecastD(CalculationUtils.demandForecast((NumberEnum.CYCLE_TIME_INIT)
                     , price[NumberEnum.PRICE_LOW_ARRAY_INDEX], price[NumberEnum.PRICE_UPPER_ARRAY_INDEX], quality));
+            // 创新概率
+            tbEngineFactoryDynamic.setEngineFactoryInnovationProbability(RandomUtils.nextDouble(0, 1));
+            tbEngineFactoryDynamic.setEngineFactoryInnovationTimes(0);
             // 插入数据库
             tbEngineFactoryDynamicMapper.insertSelective(tbEngineFactoryDynamic);
         }

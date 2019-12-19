@@ -352,7 +352,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 // 需求预测
                 tbEngineFactoryDynamic.setEngineFactoryDemandForecastD(CalculationUtils.demandForecast(cycleTime
                         , price[NumberEnum.PRICE_LOW_ARRAY_INDEX], price[NumberEnum.PRICE_UPPER_ARRAY_INDEX], quality));
-
+                tbEngineFactoryDynamic.setEngineFactoryInnovationProbability(RandomUtils.nextDouble(0, 1));
+                tbEngineFactoryDynamic.setEngineFactoryInnovationTimes(0);
                 // 加入集合中
                 listEngineFactory.add(tbEngineFactory);
                 mapEngineFactory.put(engineFactoryId, tbEngineFactory);
@@ -582,19 +583,34 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             }
         }
 
+        // 主机厂创新
+        for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
+            String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
+            if (mapEngineFactory.get(engineFactoryId).getEngineFactoryAlive()) {
+                double engineFactoryInnovationProbability = aEngineFactoryDynamic.getEngineFactoryInnovationProbability();
+                if (RandomUtils.nextDouble(0, 1) < engineFactoryInnovationProbability) {
+                    // 有创新
+                    aEngineFactoryDynamic.setEngineFactoryWhetherInnovation(true);
+                    aEngineFactoryDynamic.setEngineFactoryInnovationTimes(aEngineFactoryDynamic.getEngineFactoryInnovationTimes() + 1);
+                    // 质量改变
+                    int newEngineFactoryQuality = aEngineFactoryDynamic.getEngineFactoryQualityQ() + RandomUtils.nextInt(-2, 3);
+                    // 质量限
+                    newEngineFactoryQuality = newEngineFactoryQuality > 10 ? 10 : (newEngineFactoryQuality < 1 ? 1 : newEngineFactoryQuality);
+                    aEngineFactoryDynamic.setEngineFactoryQualityQ(newEngineFactoryQuality);
+                }
+            }
+        }
 
         // 关系强度, 都是重新生成的, 每个阶段生成, 历史数据用map读出来,
         // 下一个阶段要用的关系矩阵
         List<TbRelationMatrix> listNewRelationMatrix = new ArrayList<>();
         // 两个循环生成关系矩阵
         for (TbEngineFactory aTbEngineFactory : listEngineFactory) {
-//            if (aTbEngineFactory.getEngineFactoryAlive()) {
             // 主机厂是活着的
             // 主机厂id
             String engineFactoryId = aTbEngineFactory.getEngineFactoryId();
             for (TbSupplier aTbSupplier : listSupplier) {
                 // 供应商是活着的
-//                    if (aTbSupplier.getSupplierAlive()) {
                 TbRelationMatrix tbRelationMatrix = new TbRelationMatrix();
                 tbRelationMatrix.setExperimentsNumber(experimentsNumber);
                 tbRelationMatrix.setCycleTimes(cycleTime);
@@ -644,8 +660,6 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 }
                 listNewRelationMatrix.add(tbRelationMatrix);
             }
-//                }
-//            }
         }
 
 
