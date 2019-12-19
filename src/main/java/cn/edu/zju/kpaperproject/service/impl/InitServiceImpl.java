@@ -76,6 +76,8 @@ public class InitServiceImpl implements InitService {
 //            tbEngineFactory.setEngineFactoryFixedCostC(InitEngineFactoryUtils.initFixedCost());
             // 存活
             tbEngineFactory.setEngineFactoryAlive(true);
+            // 存活次数
+
             // 单条插入
             tbEngineFactoryMapper.insertSelective(tbEngineFactory);
 

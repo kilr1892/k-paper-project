@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.edu.zju.kpaperproject.mapper.TbEngineFactoryMapper" >
-  <resultMap id="BaseResultMap" type="cn.edu.zju.kpaperproject.pojo.TbEngineFactory" >
+<mapper namespace="cn.edu.zju.kpaperproject.mapper.TbTransactionContractMapper" >
+  <resultMap id="BaseResultMap" type="cn.edu.zju.kpaperproject.pojo.TbTransactionContract" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="experiments_number" property="experimentsNumber" jdbcType="INTEGER" />
     <result column="cycle_times" property="cycleTimes" jdbcType="INTEGER" />
     <result column="engine_factory_id" property="engineFactoryId" jdbcType="VARCHAR" />
-    <result column="engine_factory_location_g_x" property="engineFactoryLocationGX" jdbcType="INTEGER" />
-    <result column="engine_factory_location_g_y" property="engineFactoryLocationGY" jdbcType="INTEGER" />
-    <result column="engine_factory_alive" property="engineFactoryAlive" jdbcType="BIT" />
-    <result column="engine_factory_alive_times" property="engineFactoryAliveTimes" jdbcType="INTEGER" />
+    <result column="supplier_id" property="supplierId" jdbcType="VARCHAR" />
+    <result column="engine_factory_need_service_number" property="engineFactoryNeedServiceNumber" jdbcType="INTEGER" />
+    <result column="order_price" property="orderPrice" jdbcType="INTEGER" />
+    <result column="order_quality" property="orderQuality" jdbcType="INTEGER" />
+    <result column="match_degree" property="matchDegree" jdbcType="DOUBLE" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -70,16 +71,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, experiments_number, cycle_times, engine_factory_id, engine_factory_location_g_x, 
-    engine_factory_location_g_y, engine_factory_alive, engine_factory_alive_times
+    id, experiments_number, cycle_times, engine_factory_id, supplier_id, engine_factory_need_service_number, 
+    order_price, order_quality, match_degree
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactoryExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.zju.kpaperproject.pojo.TbTransactionContractExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from tb_engine_factory
+    from tb_transaction_contract
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -90,31 +91,31 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from tb_engine_factory
+    from tb_transaction_contract
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from tb_engine_factory
+    delete from tb_transaction_contract
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactoryExample" >
-    delete from tb_engine_factory
+  <delete id="deleteByExample" parameterType="cn.edu.zju.kpaperproject.pojo.TbTransactionContractExample" >
+    delete from tb_transaction_contract
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactory" >
-    insert into tb_engine_factory (id, experiments_number, cycle_times, 
-      engine_factory_id, engine_factory_location_g_x, 
-      engine_factory_location_g_y, engine_factory_alive, 
-      engine_factory_alive_times)
+  <insert id="insert" parameterType="cn.edu.zju.kpaperproject.pojo.TbTransactionContract" >
+    insert into tb_transaction_contract (id, experiments_number, cycle_times, 
+      engine_factory_id, supplier_id, engine_factory_need_service_number, 
+      order_price, order_quality, match_degree
+      )
     values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
-      #{engineFactoryId,jdbcType=VARCHAR}, #{engineFactoryLocationGX,jdbcType=INTEGER}, 
-      #{engineFactoryLocationGY,jdbcType=INTEGER}, #{engineFactoryAlive,jdbcType=BIT}, 
-      #{engineFactoryAliveTimes,jdbcType=INTEGER})
+      #{engineFactoryId,jdbcType=VARCHAR}, #{supplierId,jdbcType=VARCHAR}, #{engineFactoryNeedServiceNumber,jdbcType=INTEGER}, 
+      #{orderPrice,jdbcType=INTEGER}, #{orderQuality,jdbcType=INTEGER}, #{matchDegree,jdbcType=DOUBLE}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactory" >
-    insert into tb_engine_factory
+  <insert id="insertSelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbTransactionContract" >
+    insert into tb_transaction_contract
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -128,17 +129,20 @@
       <if test="engineFactoryId != null" >
         engine_factory_id,
       </if>
-      <if test="engineFactoryLocationGX != null" >
-        engine_factory_location_g_x,
+      <if test="supplierId != null" >
+        supplier_id,
       </if>
-      <if test="engineFactoryLocationGY != null" >
-        engine_factory_location_g_y,
+      <if test="engineFactoryNeedServiceNumber != null" >
+        engine_factory_need_service_number,
       </if>
-      <if test="engineFactoryAlive != null" >
-        engine_factory_alive,
+      <if test="orderPrice != null" >
+        order_price,
       </if>
-      <if test="engineFactoryAliveTimes != null" >
-        engine_factory_alive_times,
+      <if test="orderQuality != null" >
+        order_quality,
+      </if>
+      <if test="matchDegree != null" >
+        match_degree,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -154,28 +158,32 @@
       <if test="engineFactoryId != null" >
         #{engineFactoryId,jdbcType=VARCHAR},
       </if>
-      <if test="engineFactoryLocationGX != null" >
-        #{engineFactoryLocationGX,jdbcType=INTEGER},
+      <if test="supplierId != null" >
+        #{supplierId,jdbcType=VARCHAR},
       </if>
-      <if test="engineFactoryLocationGY != null" >
-        #{engineFactoryLocationGY,jdbcType=INTEGER},
+      <if test="engineFactoryNeedServiceNumber != null" >
+        #{engineFactoryNeedServiceNumber,jdbcType=INTEGER},
       </if>
-      <if test="engineFactoryAlive != null" >
-        #{engineFactoryAlive,jdbcType=BIT},
+      <if test="orderPrice != null" >
+        #{orderPrice,jdbcType=INTEGER},
       </if>
-      <if test="engineFactoryAliveTimes != null" >
-        #{engineFactoryAliveTimes,jdbcType=INTEGER},
+      <if test="orderQuality != null" >
+        #{orderQuality,jdbcType=INTEGER},
+      </if>
+      <if test="matchDegree != null" >
+        #{matchDegree,jdbcType=DOUBLE},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactoryExample" resultType="java.lang.Integer" >
-    select count(*) from tb_engine_factory
+
+  <select id="countByExample" parameterType="cn.edu.zju.kpaperproject.pojo.TbTransactionContractExample" resultType="java.lang.Integer" >
+    select count(*) from tb_transaction_contract
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update tb_engine_factory
+    update tb_transaction_contract
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -189,17 +197,20 @@
       <if test="record.engineFactoryId != null" >
         engine_factory_id = #{record.engineFactoryId,jdbcType=VARCHAR},
       </if>
-      <if test="record.engineFactoryLocationGX != null" >
-        engine_factory_location_g_x = #{record.engineFactoryLocationGX,jdbcType=INTEGER},
+      <if test="record.supplierId != null" >
+        supplier_id = #{record.supplierId,jdbcType=VARCHAR},
       </if>
-      <if test="record.engineFactoryLocationGY != null" >
-        engine_factory_location_g_y = #{record.engineFactoryLocationGY,jdbcType=INTEGER},
+      <if test="record.engineFactoryNeedServiceNumber != null" >
+        engine_factory_need_service_number = #{record.engineFactoryNeedServiceNumber,jdbcType=INTEGER},
       </if>
-      <if test="record.engineFactoryAlive != null" >
-        engine_factory_alive = #{record.engineFactoryAlive,jdbcType=BIT},
+      <if test="record.orderPrice != null" >
+        order_price = #{record.orderPrice,jdbcType=INTEGER},
       </if>
-      <if test="record.engineFactoryAliveTimes != null" >
-        engine_factory_alive_times = #{record.engineFactoryAliveTimes,jdbcType=INTEGER},
+      <if test="record.orderQuality != null" >
+        order_quality = #{record.orderQuality,jdbcType=INTEGER},
+      </if>
+      <if test="record.matchDegree != null" >
+        match_degree = #{record.matchDegree,jdbcType=DOUBLE},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -207,21 +218,22 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update tb_engine_factory
+    update tb_transaction_contract
     set id = #{record.id,jdbcType=INTEGER},
       experiments_number = #{record.experimentsNumber,jdbcType=INTEGER},
       cycle_times = #{record.cycleTimes,jdbcType=INTEGER},
       engine_factory_id = #{record.engineFactoryId,jdbcType=VARCHAR},
-      engine_factory_location_g_x = #{record.engineFactoryLocationGX,jdbcType=INTEGER},
-      engine_factory_location_g_y = #{record.engineFactoryLocationGY,jdbcType=INTEGER},
-      engine_factory_alive = #{record.engineFactoryAlive,jdbcType=BIT},
-      engine_factory_alive_times = #{record.engineFactoryAliveTimes,jdbcType=INTEGER}
+      supplier_id = #{record.supplierId,jdbcType=VARCHAR},
+      engine_factory_need_service_number = #{record.engineFactoryNeedServiceNumber,jdbcType=INTEGER},
+      order_price = #{record.orderPrice,jdbcType=INTEGER},
+      order_quality = #{record.orderQuality,jdbcType=INTEGER},
+      match_degree = #{record.matchDegree,jdbcType=DOUBLE}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactory" >
-    update tb_engine_factory
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbTransactionContract" >
+    update tb_transaction_contract
     <set >
       <if test="experimentsNumber != null" >
         experiments_number = #{experimentsNumber,jdbcType=INTEGER},
@@ -232,47 +244,53 @@
       <if test="engineFactoryId != null" >
         engine_factory_id = #{engineFactoryId,jdbcType=VARCHAR},
       </if>
-      <if test="engineFactoryLocationGX != null" >
-        engine_factory_location_g_x = #{engineFactoryLocationGX,jdbcType=INTEGER},
+      <if test="supplierId != null" >
+        supplier_id = #{supplierId,jdbcType=VARCHAR},
       </if>
-      <if test="engineFactoryLocationGY != null" >
-        engine_factory_location_g_y = #{engineFactoryLocationGY,jdbcType=INTEGER},
+      <if test="engineFactoryNeedServiceNumber != null" >
+        engine_factory_need_service_number = #{engineFactoryNeedServiceNumber,jdbcType=INTEGER},
       </if>
-      <if test="engineFactoryAlive != null" >
-        engine_factory_alive = #{engineFactoryAlive,jdbcType=BIT},
+      <if test="orderPrice != null" >
+        order_price = #{orderPrice,jdbcType=INTEGER},
       </if>
-      <if test="engineFactoryAliveTimes != null" >
-        engine_factory_alive_times = #{engineFactoryAliveTimes,jdbcType=INTEGER},
+      <if test="orderQuality != null" >
+        order_quality = #{orderQuality,jdbcType=INTEGER},
+      </if>
+      <if test="matchDegree != null" >
+        match_degree = #{matchDegree,jdbcType=DOUBLE},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactory" >
-    update tb_engine_factory
+  <update id="updateByPrimaryKey" parameterType="cn.edu.zju.kpaperproject.pojo.TbTransactionContract" >
+    update tb_transaction_contract
     set experiments_number = #{experimentsNumber,jdbcType=INTEGER},
       cycle_times = #{cycleTimes,jdbcType=INTEGER},
       engine_factory_id = #{engineFactoryId,jdbcType=VARCHAR},
-      engine_factory_location_g_x = #{engineFactoryLocationGX,jdbcType=INTEGER},
-      engine_factory_location_g_y = #{engineFactoryLocationGY,jdbcType=INTEGER},
-      engine_factory_alive = #{engineFactoryAlive,jdbcType=BIT},
-      engine_factory_alive_times = #{engineFactoryAliveTimes,jdbcType=INTEGER}
+      supplier_id = #{supplierId,jdbcType=VARCHAR},
+      engine_factory_need_service_number = #{engineFactoryNeedServiceNumber,jdbcType=INTEGER},
+      order_price = #{orderPrice,jdbcType=INTEGER},
+      order_quality = #{orderQuality,jdbcType=INTEGER},
+      match_degree = #{matchDegree,jdbcType=DOUBLE}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
 
+  <insert id="insertList" parameterType="list">
+    insert into tb_transaction_contract (id, experiments_number, cycle_times,
+    engine_factory_id, supplier_id, engine_factory_need_service_number,
+    order_price, order_quality, match_degree
+    )
+    values
 
-  <insert id="insertList" parameterType="java.util.List">
-    INSERT INTO tb_engine_factory
-    (id, `experiments_number`, `cycle_times`, `engine_factory_id`, `engine_factory_location_g_x`, `engine_factory_location_g_y`, `engine_factory_alive`,
-    engine_factory_alive_times)
-    VALUES
     <foreach collection="list" item="item" index="index" separator=",">
-      (NULL, #{item.experimentsNumber,jdbcType=INTEGER}, #{item.cycleTimes,jdbcType=INTEGER},
-      #{item.engineFactoryId,jdbcType=VARCHAR}, #{item.engineFactoryLocationGX,jdbcType=INTEGER},
-      #{item.engineFactoryLocationGY,jdbcType=INTEGER}, #{item.engineFactoryAlive,jdbcType=BIT},
-      #{engineFactoryAliveTimes,jdbcType=INTEGER})
+      (
+      NULL,
+      #{item.experimentsNumber,jdbcType=INTEGER}, #{item.cycleTimes,jdbcType=INTEGER},
+      #{item.engineFactoryId,jdbcType=VARCHAR}, #{item.supplierId,jdbcType=VARCHAR}, #{item.engineFactoryNeedServiceNumber,jdbcType=INTEGER},
+      #{item.orderPrice,jdbcType=INTEGER}, #{item.orderQuality,jdbcType=INTEGER}, #{item.matchDegree,jdbcType=DOUBLE}
+      )
     </foreach>
+
   </insert>
-
-
 </mapper>

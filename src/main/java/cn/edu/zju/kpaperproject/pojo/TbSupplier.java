@@ -19,6 +19,8 @@ public class TbSupplier {
 
     private Boolean supplierAlive;
 
+    private Integer supplierAliveTimes;
+
     public Integer getId() {
         return id;
     }
@@ -89,5 +91,13 @@ public class TbSupplier {
 
     public void setSupplierAlive(Boolean supplierAlive) {
         this.supplierAlive = supplierAlive;
+    }
+
+    public Integer getSupplierAliveTimes() {
+        return supplierAliveTimes;
+    }
+
+    public void setSupplierAliveTimes(Integer supplierAliveTimes) {
+        this.supplierAliveTimes = supplierAliveTimes;
     }
 }

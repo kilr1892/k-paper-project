@@ -653,6 +653,66 @@ public class TbSupplierExample {
             addCriterion("supplier_alive not between", value1, value2, "supplierAlive");
             return (Criteria) this;
         }
+
+        public Criteria andSupplierAliveTimesIsNull() {
+            addCriterion("supplier_alive_times is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierAliveTimesIsNotNull() {
+            addCriterion("supplier_alive_times is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierAliveTimesEqualTo(Integer value) {
+            addCriterion("supplier_alive_times =", value, "supplierAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierAliveTimesNotEqualTo(Integer value) {
+            addCriterion("supplier_alive_times <>", value, "supplierAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierAliveTimesGreaterThan(Integer value) {
+            addCriterion("supplier_alive_times >", value, "supplierAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierAliveTimesGreaterThanOrEqualTo(Integer value) {
+            addCriterion("supplier_alive_times >=", value, "supplierAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierAliveTimesLessThan(Integer value) {
+            addCriterion("supplier_alive_times <", value, "supplierAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierAliveTimesLessThanOrEqualTo(Integer value) {
+            addCriterion("supplier_alive_times <=", value, "supplierAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierAliveTimesIn(List<Integer> values) {
+            addCriterion("supplier_alive_times in", values, "supplierAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierAliveTimesNotIn(List<Integer> values) {
+            addCriterion("supplier_alive_times not in", values, "supplierAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierAliveTimesBetween(Integer value1, Integer value2) {
+            addCriterion("supplier_alive_times between", value1, value2, "supplierAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierAliveTimesNotBetween(Integer value1, Integer value2) {
+            addCriterion("supplier_alive_times not between", value1, value2, "supplierAliveTimes");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

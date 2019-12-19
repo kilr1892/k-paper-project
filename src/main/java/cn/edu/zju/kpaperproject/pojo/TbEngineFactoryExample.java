@@ -533,6 +533,66 @@ public class TbEngineFactoryExample {
             addCriterion("engine_factory_alive not between", value1, value2, "engineFactoryAlive");
             return (Criteria) this;
         }
+
+        public Criteria andEngineFactoryAliveTimesIsNull() {
+            addCriterion("engine_factory_alive_times is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryAliveTimesIsNotNull() {
+            addCriterion("engine_factory_alive_times is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryAliveTimesEqualTo(Integer value) {
+            addCriterion("engine_factory_alive_times =", value, "engineFactoryAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryAliveTimesNotEqualTo(Integer value) {
+            addCriterion("engine_factory_alive_times <>", value, "engineFactoryAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryAliveTimesGreaterThan(Integer value) {
+            addCriterion("engine_factory_alive_times >", value, "engineFactoryAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryAliveTimesGreaterThanOrEqualTo(Integer value) {
+            addCriterion("engine_factory_alive_times >=", value, "engineFactoryAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryAliveTimesLessThan(Integer value) {
+            addCriterion("engine_factory_alive_times <", value, "engineFactoryAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryAliveTimesLessThanOrEqualTo(Integer value) {
+            addCriterion("engine_factory_alive_times <=", value, "engineFactoryAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryAliveTimesIn(List<Integer> values) {
+            addCriterion("engine_factory_alive_times in", values, "engineFactoryAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryAliveTimesNotIn(List<Integer> values) {
+            addCriterion("engine_factory_alive_times not in", values, "engineFactoryAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryAliveTimesBetween(Integer value1, Integer value2) {
+            addCriterion("engine_factory_alive_times between", value1, value2, "engineFactoryAliveTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andEngineFactoryAliveTimesNotBetween(Integer value1, Integer value2) {
+            addCriterion("engine_factory_alive_times not between", value1, value2, "engineFactoryAliveTimes");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

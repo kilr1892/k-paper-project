@@ -15,6 +15,8 @@ public class TbEngineFactory {
 
     private Boolean engineFactoryAlive;
 
+    private Integer engineFactoryAliveTimes;
+
     public Integer getId() {
         return id;
     }
@@ -69,5 +71,13 @@ public class TbEngineFactory {
 
     public void setEngineFactoryAlive(Boolean engineFactoryAlive) {
         this.engineFactoryAlive = engineFactoryAlive;
+    }
+
+    public Integer getEngineFactoryAliveTimes() {
+        return engineFactoryAliveTimes;
+    }
+
+    public void setEngineFactoryAliveTimes(Integer engineFactoryAliveTimes) {
+        this.engineFactoryAliveTimes = engineFactoryAliveTimes;
     }
 }

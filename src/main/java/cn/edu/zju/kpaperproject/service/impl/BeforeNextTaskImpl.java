@@ -271,7 +271,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 信誉度前30的主机厂集合
         TbEngineFactoryDynamic[] arrEngineFactoryWith30HighestCredit = genEngineFactoryWith30HighestCredit(listEngineFactory, mapEngineFactoryDynamic);
         // 信誉度前30的供应商集合
-        TbSupplierDynamic[] arrSupplierDynamic = genSupplierWith30HighestCredit(listSupplier, mapSupplierDynamic);
+        TbSupplierDynamic[] arrSupplierDynamicWith30HighestCredit = genSupplierWith30HighestCredit(listSupplier, mapSupplierDynamic);
 
         // 主机厂的进入
         // 所有还存活主机厂实际供给数
@@ -315,7 +315,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 //                    throw new RuntimeException("供应商信誉度最高的是NULL");
 //                }
                 // 随机获取信誉度较大的那个供应商动态数据
-                supplierDynamicWithHighestCredit = arrSupplierDynamic[RandomUtils.nextInt(0, arrSupplierDynamic.length)];
+                supplierDynamicWithHighestCredit = arrSupplierDynamicWith30HighestCredit[RandomUtils.nextInt(0, arrSupplierDynamicWith30HighestCredit.length)];
 
 
                 mapNewEngineFactoryIdVsSupplierIdWithHighestCredit.put(engineFactoryId, supplierDynamicWithHighestCredit.getSupplierId());
@@ -744,14 +744,14 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
     private TbSupplierDynamic[] genSupplierWith30HighestCredit(List<TbSupplier> listSupplier, Map<String, TbSupplierDynamic> mapSupplierDynamic) {
         Queue<TbSupplierDynamic> queueSupplierDynamic = new PriorityQueue<>((o1, o2) -> {
             double v = o2.getSupplierCreditA() - o1.getSupplierCreditA();
-            return v >= 0 ? (v > 0 ? 1 : 0) : -1;
+            return v >= 0 ? 1 : -1;
         });
         for (TbSupplier aSupplier : listSupplier) {
             if (aSupplier.getSupplierAlive()) {
                 queueSupplierDynamic.add(mapSupplierDynamic.get(aSupplier.getSupplierId()));
             }
         }
-        int tmp = (int) (queueSupplierDynamic.size() * 0.3);
+        int tmp = (int) Math.round(queueSupplierDynamic.size() * 0.3);
         TbSupplierDynamic[] arrSupplierDynamic = new TbSupplierDynamic[tmp];
         for (int i = 0; i < tmp; i++) {
             arrSupplierDynamic[i] = queueSupplierDynamic.poll();
@@ -769,14 +769,14 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
     private TbEngineFactoryDynamic[] genEngineFactoryWith30HighestCredit(List<TbEngineFactory> listEngineFactory, Map<String, TbEngineFactoryDynamic> mapEngineFactoryDynamic) {
         Queue<TbEngineFactoryDynamic> queueEngineFactoryDynamics = new PriorityQueue<>((o1, o2) -> {
             double v = o2.getEngineFactoryCreditH() - o1.getEngineFactoryCreditH();
-            return v >= 0 ? (v > 0 ? 1 : 0) : -1;
+            return v >= 0 ? 1 : -1;
         });
         for (TbEngineFactory aEngineFactory : listEngineFactory) {
             if (aEngineFactory.getEngineFactoryAlive()) {
                 queueEngineFactoryDynamics.add(mapEngineFactoryDynamic.get(aEngineFactory.getEngineFactoryId()));
             }
         }
-        int tmp = (int) (queueEngineFactoryDynamics.size() * 0.3);
+        int tmp = (int) Math.round(queueEngineFactoryDynamics.size() * 0.3);
         TbEngineFactoryDynamic[] arrEngineFactoryDynamic = new TbEngineFactoryDynamic[tmp];
         for (int i = 0; i < tmp; i++) {
             arrEngineFactoryDynamic[i] = queueEngineFactoryDynamics.poll();
