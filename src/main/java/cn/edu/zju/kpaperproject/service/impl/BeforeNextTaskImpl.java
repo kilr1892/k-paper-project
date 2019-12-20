@@ -268,6 +268,30 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             }
         }
 
+        // 主机厂创新
+        for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
+            String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
+            if (mapEngineFactory.get(engineFactoryId).getEngineFactoryAlive()) {
+                double engineFactoryInnovationProbability = aEngineFactoryDynamic.getEngineFactoryInnovationProbability();
+                if (RandomUtils.nextDouble(0, 1) < engineFactoryInnovationProbability) {
+                    // 有创新
+                    aEngineFactoryDynamic.setEngineFactoryWhetherInnovation(true);
+                    aEngineFactoryDynamic.setEngineFactoryInnovationTimes(aEngineFactoryDynamic.getEngineFactoryInnovationTimes() + 1);
+                    // 质量改变
+                    int newEngineFactoryQuality = aEngineFactoryDynamic.getEngineFactoryQualityQ() + RandomUtils.nextInt(0, 5) - 2;
+                    // 质量限
+                    newEngineFactoryQuality = newEngineFactoryQuality > 10 ? 10 : (newEngineFactoryQuality < 1 ? 1 : newEngineFactoryQuality);
+                    aEngineFactoryDynamic.setEngineFactoryQualityQ(newEngineFactoryQuality);
+                } else {
+                    // 无创新
+                    aEngineFactoryDynamic.setEngineFactoryWhetherInnovation(false);
+                }
+            }
+        }
+
+
+
+
         // 信誉度前30的主机厂集合
         TbEngineFactoryDynamic[] arrEngineFactoryWith30HighestCredit = genEngineFactoryWith30HighestCredit(listEngineFactory, mapEngineFactoryDynamic);
         // 信誉度前30的供应商集合
@@ -583,23 +607,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             }
         }
 
-        // 主机厂创新
-        for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
-            String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
-            if (mapEngineFactory.get(engineFactoryId).getEngineFactoryAlive()) {
-                double engineFactoryInnovationProbability = aEngineFactoryDynamic.getEngineFactoryInnovationProbability();
-                if (RandomUtils.nextDouble(0, 1) < engineFactoryInnovationProbability) {
-                    // 有创新
-                    aEngineFactoryDynamic.setEngineFactoryWhetherInnovation(true);
-                    aEngineFactoryDynamic.setEngineFactoryInnovationTimes(aEngineFactoryDynamic.getEngineFactoryInnovationTimes() + 1);
-                    // 质量改变
-                    int newEngineFactoryQuality = aEngineFactoryDynamic.getEngineFactoryQualityQ() + RandomUtils.nextInt(-2, 3);
-                    // 质量限
-                    newEngineFactoryQuality = newEngineFactoryQuality > 10 ? 10 : (newEngineFactoryQuality < 1 ? 1 : newEngineFactoryQuality);
-                    aEngineFactoryDynamic.setEngineFactoryQualityQ(newEngineFactoryQuality);
-                }
-            }
-        }
+
 
         // 关系强度, 都是重新生成的, 每个阶段生成, 历史数据用map读出来,
         // 下一个阶段要用的关系矩阵
@@ -731,7 +739,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         for (TbEngineFactory aEngineFactory : listEngineFactory) {
             aEngineFactory.setCycleTimes(cycleTime);
             aEngineFactory.setEngineFactoryAliveTimes(aEngineFactory.getEngineFactoryAliveTimes() + 1);
-            mapEngineFactoryDynamic.get(aEngineFactory.getEngineFactoryId()).setCycleTimes(cycleTime);
+            TbEngineFactoryDynamic tbEngineFactoryDynamic1 = mapEngineFactoryDynamic.get(aEngineFactory.getEngineFactoryId());
+            tbEngineFactoryDynamic1.setCycleTimes(cycleTime);
+            tbEngineFactoryDynamic1.setExperimentsNumber(experimentsNumber);
+
         }
         for (TbSupplier aSupplier : listSupplier) {
             aSupplier.setCycleTimes(cycleTime);
