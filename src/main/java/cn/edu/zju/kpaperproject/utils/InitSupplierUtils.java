@@ -1,9 +1,10 @@
 package cn.edu.zju.kpaperproject.utils;
 
 import cn.edu.zju.kpaperproject.enums.SupplierEnum;
-import cn.edu.zju.kpaperproject.enums.SupplierEnum;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * .
@@ -16,12 +17,26 @@ public class InitSupplierUtils {
     /**
      * 生成供应商的地址
      *
+     * @param mapPosition 存在的地址
      * @return x y取值为0~20间的
      */
-    public static int[] initPosition() {
-        int x = RandomUtils.nextInt(SupplierEnum.supplierLocationLow, SupplierEnum.supplierLocationUpper + 1);
-        int y = RandomUtils.nextInt(SupplierEnum.supplierLocationLow, SupplierEnum.supplierLocationUpper + 1);
-        return new int[]{x, y};
+    public static double[] initPosition(Map<Double, Double> mapPosition) {
+        while (true) {
+            double x = RandomUtils.nextInt(SupplierEnum.supplierLocationLow, SupplierEnum.supplierLocationUpper);
+            double y = RandomUtils.nextInt(SupplierEnum.supplierLocationLow, SupplierEnum.supplierLocationUpper);
+            // 通过x取得y值
+            Double valueY = mapPosition.get(x);
+            if (valueY == null) {
+                // 没有x的key, 就是ok的
+                return new double[]{x, y};
+            } else {
+                // 有相同的x, 看看y一不一样
+                if (y != valueY) {
+                    mapPosition.put(x, y);
+                    return new double[]{x, y};
+                }
+            }
+        }
     }
 
     /**
@@ -53,6 +68,7 @@ public class InitSupplierUtils {
 
     /**
      * 初始化供应商类型
+     *
      * @param type 类型代码
      * @return 类型代码
      */

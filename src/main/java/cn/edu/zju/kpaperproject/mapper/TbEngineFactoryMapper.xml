@@ -6,8 +6,8 @@
     <result column="experiments_number" property="experimentsNumber" jdbcType="INTEGER" />
     <result column="cycle_times" property="cycleTimes" jdbcType="INTEGER" />
     <result column="engine_factory_id" property="engineFactoryId" jdbcType="VARCHAR" />
-    <result column="engine_factory_location_g_x" property="engineFactoryLocationGX" jdbcType="INTEGER" />
-    <result column="engine_factory_location_g_y" property="engineFactoryLocationGY" jdbcType="INTEGER" />
+    <result column="engine_factory_location_g_x" property="engineFactoryLocationGX" jdbcType="DOUBLE" />
+    <result column="engine_factory_location_g_y" property="engineFactoryLocationGY" jdbcType="DOUBLE" />
     <result column="engine_factory_alive" property="engineFactoryAlive" jdbcType="BIT" />
     <result column="engine_factory_alive_times" property="engineFactoryAliveTimes" jdbcType="INTEGER" />
   </resultMap>
@@ -109,8 +109,8 @@
       engine_factory_location_g_y, engine_factory_alive, 
       engine_factory_alive_times)
     values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
-      #{engineFactoryId,jdbcType=VARCHAR}, #{engineFactoryLocationGX,jdbcType=INTEGER}, 
-      #{engineFactoryLocationGY,jdbcType=INTEGER}, #{engineFactoryAlive,jdbcType=BIT}, 
+      #{engineFactoryId,jdbcType=VARCHAR}, #{engineFactoryLocationGX,jdbcType=DOUBLE}, 
+      #{engineFactoryLocationGY,jdbcType=DOUBLE}, #{engineFactoryAlive,jdbcType=BIT}, 
       #{engineFactoryAliveTimes,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbEngineFactory" >
@@ -155,10 +155,10 @@
         #{engineFactoryId,jdbcType=VARCHAR},
       </if>
       <if test="engineFactoryLocationGX != null" >
-        #{engineFactoryLocationGX,jdbcType=INTEGER},
+        #{engineFactoryLocationGX,jdbcType=DOUBLE},
       </if>
       <if test="engineFactoryLocationGY != null" >
-        #{engineFactoryLocationGY,jdbcType=INTEGER},
+        #{engineFactoryLocationGY,jdbcType=DOUBLE},
       </if>
       <if test="engineFactoryAlive != null" >
         #{engineFactoryAlive,jdbcType=BIT},
@@ -190,10 +190,10 @@
         engine_factory_id = #{record.engineFactoryId,jdbcType=VARCHAR},
       </if>
       <if test="record.engineFactoryLocationGX != null" >
-        engine_factory_location_g_x = #{record.engineFactoryLocationGX,jdbcType=INTEGER},
+        engine_factory_location_g_x = #{record.engineFactoryLocationGX,jdbcType=DOUBLE},
       </if>
       <if test="record.engineFactoryLocationGY != null" >
-        engine_factory_location_g_y = #{record.engineFactoryLocationGY,jdbcType=INTEGER},
+        engine_factory_location_g_y = #{record.engineFactoryLocationGY,jdbcType=DOUBLE},
       </if>
       <if test="record.engineFactoryAlive != null" >
         engine_factory_alive = #{record.engineFactoryAlive,jdbcType=BIT},
@@ -212,8 +212,8 @@
       experiments_number = #{record.experimentsNumber,jdbcType=INTEGER},
       cycle_times = #{record.cycleTimes,jdbcType=INTEGER},
       engine_factory_id = #{record.engineFactoryId,jdbcType=VARCHAR},
-      engine_factory_location_g_x = #{record.engineFactoryLocationGX,jdbcType=INTEGER},
-      engine_factory_location_g_y = #{record.engineFactoryLocationGY,jdbcType=INTEGER},
+      engine_factory_location_g_x = #{record.engineFactoryLocationGX,jdbcType=DOUBLE},
+      engine_factory_location_g_y = #{record.engineFactoryLocationGY,jdbcType=DOUBLE},
       engine_factory_alive = #{record.engineFactoryAlive,jdbcType=BIT},
       engine_factory_alive_times = #{record.engineFactoryAliveTimes,jdbcType=INTEGER}
     <if test="_parameter != null" >
@@ -233,10 +233,10 @@
         engine_factory_id = #{engineFactoryId,jdbcType=VARCHAR},
       </if>
       <if test="engineFactoryLocationGX != null" >
-        engine_factory_location_g_x = #{engineFactoryLocationGX,jdbcType=INTEGER},
+        engine_factory_location_g_x = #{engineFactoryLocationGX,jdbcType=DOUBLE},
       </if>
       <if test="engineFactoryLocationGY != null" >
-        engine_factory_location_g_y = #{engineFactoryLocationGY,jdbcType=INTEGER},
+        engine_factory_location_g_y = #{engineFactoryLocationGY,jdbcType=DOUBLE},
       </if>
       <if test="engineFactoryAlive != null" >
         engine_factory_alive = #{engineFactoryAlive,jdbcType=BIT},
@@ -252,27 +252,26 @@
     set experiments_number = #{experimentsNumber,jdbcType=INTEGER},
       cycle_times = #{cycleTimes,jdbcType=INTEGER},
       engine_factory_id = #{engineFactoryId,jdbcType=VARCHAR},
-      engine_factory_location_g_x = #{engineFactoryLocationGX,jdbcType=INTEGER},
-      engine_factory_location_g_y = #{engineFactoryLocationGY,jdbcType=INTEGER},
+      engine_factory_location_g_x = #{engineFactoryLocationGX,jdbcType=DOUBLE},
+      engine_factory_location_g_y = #{engineFactoryLocationGY,jdbcType=DOUBLE},
       engine_factory_alive = #{engineFactoryAlive,jdbcType=BIT},
       engine_factory_alive_times = #{engineFactoryAliveTimes,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
 
-
   <insert id="insertList" parameterType="java.util.List">
-    INSERT INTO tb_engine_factory
-    (id, `experiments_number`, `cycle_times`, `engine_factory_id`, `engine_factory_location_g_x`, `engine_factory_location_g_y`, `engine_factory_alive`,
-    engine_factory_alive_times)
+    INSERT INTO tb_engine_factory (id, experiments_number, cycle_times,
+      engine_factory_id, engine_factory_location_g_x,
+      engine_factory_location_g_y, engine_factory_alive,
+      engine_factory_alive_times)
     VALUES
     <foreach collection="list" item="item" index="index" separator=",">
-      (NULL, #{item.experimentsNumber,jdbcType=INTEGER}, #{item.cycleTimes,jdbcType=INTEGER},
-      #{item.engineFactoryId,jdbcType=VARCHAR}, #{item.engineFactoryLocationGX,jdbcType=INTEGER},
-      #{item.engineFactoryLocationGY,jdbcType=INTEGER}, #{item.engineFactoryAlive,jdbcType=BIT},
+      (NULL,  #{item.experimentsNumber,jdbcType=INTEGER}, #{item.cycleTimes,jdbcType=INTEGER},
+      #{item.engineFactoryId,jdbcType=VARCHAR}, #{item.engineFactoryLocationGX,jdbcType=DOUBLE},
+      #{item.engineFactoryLocationGY,jdbcType=DOUBLE}, #{item.engineFactoryAlive,jdbcType=BIT},
       #{item.engineFactoryAliveTimes,jdbcType=INTEGER})
     </foreach>
   </insert>
-
 
 </mapper>

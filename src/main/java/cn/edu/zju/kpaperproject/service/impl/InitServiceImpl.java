@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * .
@@ -40,7 +42,6 @@ public class InitServiceImpl implements InitService {
 
     @Override
     public void init(int experimentsNumber) {
-        // TODO 做个判断看是否已经初始化过了
         // 初始化 主机厂
         engineFactoryInit(experimentsNumber);
         // 初始化 供应商
@@ -55,7 +56,6 @@ public class InitServiceImpl implements InitService {
      * @param experimentsNumber 实验次数
      */
     private void engineFactoryInit(int experimentsNumber) {
-        // TODO 要判断下是否已经实验过了
         TbEngineFactory tbEngineFactory = new TbEngineFactory();
         TbEngineFactoryDynamic tbEngineFactoryDynamic = new TbEngineFactoryDynamic();
         // 第几轮实验
@@ -66,12 +66,14 @@ public class InitServiceImpl implements InitService {
         // 实验次数
         tbEngineFactoryDynamic.setExperimentsNumber(experimentsNumber);
 
+        Map<Double, Double> mapPosition = new HashMap<>(EngineFactoryEnum.engineFactoryInitSum);
+
         for (int i = 0; i < EngineFactoryEnum.engineFactoryInitSum; i++) {
             // 工厂id
             String engineFactoryId = CommonUtils.genId();
             tbEngineFactory.setEngineFactoryId(engineFactoryId);
             // 地理位置
-            int[] position = InitEngineFactoryUtils.initPosition();
+            double[] position = InitEngineFactoryUtils.initPosition(mapPosition);
             tbEngineFactory.setEngineFactoryLocationGX(position[NumberEnum.POSITION_X_ARRAY_INDEX]);
             tbEngineFactory.setEngineFactoryLocationGY(position[NumberEnum.POSITION_Y_ARRAY_INDEX]);
             // 存活
@@ -152,7 +154,8 @@ public class InitServiceImpl implements InitService {
         String supplierId = CommonUtils.genId();
         tbSupplier.setSupplierId(supplierId);
         // 地理位置
-        int[] position = InitSupplierUtils.initPosition();
+        Map<Double, Double> mapPosition = new HashMap<>(30);
+        double[] position = InitSupplierUtils.initPosition(mapPosition);
         tbSupplier.setSupplierLocationGX(position[NumberEnum.POSITION_X_ARRAY_INDEX]);
         tbSupplier.setSupplierLocationGY(position[NumberEnum.POSITION_Y_ARRAY_INDEX]);
         // 供应商代码

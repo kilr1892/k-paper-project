@@ -364,52 +364,52 @@ public class TbSupplierExample {
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGXEqualTo(Integer value) {
+        public Criteria andSupplierLocationGXEqualTo(Double value) {
             addCriterion("supplier_location_g_x =", value, "supplierLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGXNotEqualTo(Integer value) {
+        public Criteria andSupplierLocationGXNotEqualTo(Double value) {
             addCriterion("supplier_location_g_x <>", value, "supplierLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGXGreaterThan(Integer value) {
+        public Criteria andSupplierLocationGXGreaterThan(Double value) {
             addCriterion("supplier_location_g_x >", value, "supplierLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGXGreaterThanOrEqualTo(Integer value) {
+        public Criteria andSupplierLocationGXGreaterThanOrEqualTo(Double value) {
             addCriterion("supplier_location_g_x >=", value, "supplierLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGXLessThan(Integer value) {
+        public Criteria andSupplierLocationGXLessThan(Double value) {
             addCriterion("supplier_location_g_x <", value, "supplierLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGXLessThanOrEqualTo(Integer value) {
+        public Criteria andSupplierLocationGXLessThanOrEqualTo(Double value) {
             addCriterion("supplier_location_g_x <=", value, "supplierLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGXIn(List<Integer> values) {
+        public Criteria andSupplierLocationGXIn(List<Double> values) {
             addCriterion("supplier_location_g_x in", values, "supplierLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGXNotIn(List<Integer> values) {
+        public Criteria andSupplierLocationGXNotIn(List<Double> values) {
             addCriterion("supplier_location_g_x not in", values, "supplierLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGXBetween(Integer value1, Integer value2) {
+        public Criteria andSupplierLocationGXBetween(Double value1, Double value2) {
             addCriterion("supplier_location_g_x between", value1, value2, "supplierLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGXNotBetween(Integer value1, Integer value2) {
+        public Criteria andSupplierLocationGXNotBetween(Double value1, Double value2) {
             addCriterion("supplier_location_g_x not between", value1, value2, "supplierLocationGX");
             return (Criteria) this;
         }
@@ -424,52 +424,52 @@ public class TbSupplierExample {
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGYEqualTo(Integer value) {
+        public Criteria andSupplierLocationGYEqualTo(Double value) {
             addCriterion("supplier_location_g_y =", value, "supplierLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGYNotEqualTo(Integer value) {
+        public Criteria andSupplierLocationGYNotEqualTo(Double value) {
             addCriterion("supplier_location_g_y <>", value, "supplierLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGYGreaterThan(Integer value) {
+        public Criteria andSupplierLocationGYGreaterThan(Double value) {
             addCriterion("supplier_location_g_y >", value, "supplierLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGYGreaterThanOrEqualTo(Integer value) {
+        public Criteria andSupplierLocationGYGreaterThanOrEqualTo(Double value) {
             addCriterion("supplier_location_g_y >=", value, "supplierLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGYLessThan(Integer value) {
+        public Criteria andSupplierLocationGYLessThan(Double value) {
             addCriterion("supplier_location_g_y <", value, "supplierLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGYLessThanOrEqualTo(Integer value) {
+        public Criteria andSupplierLocationGYLessThanOrEqualTo(Double value) {
             addCriterion("supplier_location_g_y <=", value, "supplierLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGYIn(List<Integer> values) {
+        public Criteria andSupplierLocationGYIn(List<Double> values) {
             addCriterion("supplier_location_g_y in", values, "supplierLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGYNotIn(List<Integer> values) {
+        public Criteria andSupplierLocationGYNotIn(List<Double> values) {
             addCriterion("supplier_location_g_y not in", values, "supplierLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGYBetween(Integer value1, Integer value2) {
+        public Criteria andSupplierLocationGYBetween(Double value1, Double value2) {
             addCriterion("supplier_location_g_y between", value1, value2, "supplierLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andSupplierLocationGYNotBetween(Integer value1, Integer value2) {
+        public Criteria andSupplierLocationGYNotBetween(Double value1, Double value2) {
             addCriterion("supplier_location_g_y not between", value1, value2, "supplierLocationGY");
             return (Criteria) this;
         }

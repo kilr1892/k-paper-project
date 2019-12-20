@@ -364,52 +364,52 @@ public class TbEngineFactoryExample {
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGXEqualTo(Integer value) {
+        public Criteria andEngineFactoryLocationGXEqualTo(Double value) {
             addCriterion("engine_factory_location_g_x =", value, "engineFactoryLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGXNotEqualTo(Integer value) {
+        public Criteria andEngineFactoryLocationGXNotEqualTo(Double value) {
             addCriterion("engine_factory_location_g_x <>", value, "engineFactoryLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGXGreaterThan(Integer value) {
+        public Criteria andEngineFactoryLocationGXGreaterThan(Double value) {
             addCriterion("engine_factory_location_g_x >", value, "engineFactoryLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGXGreaterThanOrEqualTo(Integer value) {
+        public Criteria andEngineFactoryLocationGXGreaterThanOrEqualTo(Double value) {
             addCriterion("engine_factory_location_g_x >=", value, "engineFactoryLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGXLessThan(Integer value) {
+        public Criteria andEngineFactoryLocationGXLessThan(Double value) {
             addCriterion("engine_factory_location_g_x <", value, "engineFactoryLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGXLessThanOrEqualTo(Integer value) {
+        public Criteria andEngineFactoryLocationGXLessThanOrEqualTo(Double value) {
             addCriterion("engine_factory_location_g_x <=", value, "engineFactoryLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGXIn(List<Integer> values) {
+        public Criteria andEngineFactoryLocationGXIn(List<Double> values) {
             addCriterion("engine_factory_location_g_x in", values, "engineFactoryLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGXNotIn(List<Integer> values) {
+        public Criteria andEngineFactoryLocationGXNotIn(List<Double> values) {
             addCriterion("engine_factory_location_g_x not in", values, "engineFactoryLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGXBetween(Integer value1, Integer value2) {
+        public Criteria andEngineFactoryLocationGXBetween(Double value1, Double value2) {
             addCriterion("engine_factory_location_g_x between", value1, value2, "engineFactoryLocationGX");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGXNotBetween(Integer value1, Integer value2) {
+        public Criteria andEngineFactoryLocationGXNotBetween(Double value1, Double value2) {
             addCriterion("engine_factory_location_g_x not between", value1, value2, "engineFactoryLocationGX");
             return (Criteria) this;
         }
@@ -424,52 +424,52 @@ public class TbEngineFactoryExample {
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGYEqualTo(Integer value) {
+        public Criteria andEngineFactoryLocationGYEqualTo(Double value) {
             addCriterion("engine_factory_location_g_y =", value, "engineFactoryLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGYNotEqualTo(Integer value) {
+        public Criteria andEngineFactoryLocationGYNotEqualTo(Double value) {
             addCriterion("engine_factory_location_g_y <>", value, "engineFactoryLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGYGreaterThan(Integer value) {
+        public Criteria andEngineFactoryLocationGYGreaterThan(Double value) {
             addCriterion("engine_factory_location_g_y >", value, "engineFactoryLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGYGreaterThanOrEqualTo(Integer value) {
+        public Criteria andEngineFactoryLocationGYGreaterThanOrEqualTo(Double value) {
             addCriterion("engine_factory_location_g_y >=", value, "engineFactoryLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGYLessThan(Integer value) {
+        public Criteria andEngineFactoryLocationGYLessThan(Double value) {
             addCriterion("engine_factory_location_g_y <", value, "engineFactoryLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGYLessThanOrEqualTo(Integer value) {
+        public Criteria andEngineFactoryLocationGYLessThanOrEqualTo(Double value) {
             addCriterion("engine_factory_location_g_y <=", value, "engineFactoryLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGYIn(List<Integer> values) {
+        public Criteria andEngineFactoryLocationGYIn(List<Double> values) {
             addCriterion("engine_factory_location_g_y in", values, "engineFactoryLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGYNotIn(List<Integer> values) {
+        public Criteria andEngineFactoryLocationGYNotIn(List<Double> values) {
             addCriterion("engine_factory_location_g_y not in", values, "engineFactoryLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGYBetween(Integer value1, Integer value2) {
+        public Criteria andEngineFactoryLocationGYBetween(Double value1, Double value2) {
             addCriterion("engine_factory_location_g_y between", value1, value2, "engineFactoryLocationGY");
             return (Criteria) this;
         }
 
-        public Criteria andEngineFactoryLocationGYNotBetween(Integer value1, Integer value2) {
+        public Criteria andEngineFactoryLocationGYNotBetween(Double value1, Double value2) {
             addCriterion("engine_factory_location_g_y not between", value1, value2, "engineFactoryLocationGY");
             return (Criteria) this;
         }

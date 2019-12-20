@@ -29,6 +29,7 @@ public interface TbEngineFactoryMapper {
 
     int updateByPrimaryKey(TbEngineFactory record);
 
+
     //-------------------------------------------------------------------
     void insertList(List<TbEngineFactory> listEngineFactory);
 }

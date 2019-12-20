@@ -9,9 +9,9 @@ public class TbEngineFactory {
 
     private String engineFactoryId;
 
-    private Integer engineFactoryLocationGX;
+    private Double engineFactoryLocationGX;
 
-    private Integer engineFactoryLocationGY;
+    private Double engineFactoryLocationGY;
 
     private Boolean engineFactoryAlive;
 
@@ -49,19 +49,19 @@ public class TbEngineFactory {
         this.engineFactoryId = engineFactoryId == null ? null : engineFactoryId.trim();
     }
 
-    public Integer getEngineFactoryLocationGX() {
+    public Double getEngineFactoryLocationGX() {
         return engineFactoryLocationGX;
     }
 
-    public void setEngineFactoryLocationGX(Integer engineFactoryLocationGX) {
+    public void setEngineFactoryLocationGX(Double engineFactoryLocationGX) {
         this.engineFactoryLocationGX = engineFactoryLocationGX;
     }
 
-    public Integer getEngineFactoryLocationGY() {
+    public Double getEngineFactoryLocationGY() {
         return engineFactoryLocationGY;
     }
 
-    public void setEngineFactoryLocationGY(Integer engineFactoryLocationGY) {
+    public void setEngineFactoryLocationGY(Double engineFactoryLocationGY) {
         this.engineFactoryLocationGY = engineFactoryLocationGY;
     }
 

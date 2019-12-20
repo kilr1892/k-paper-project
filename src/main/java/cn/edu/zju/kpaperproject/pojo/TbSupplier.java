@@ -9,9 +9,9 @@ public class TbSupplier {
 
     private String supplierId;
 
-    private Integer supplierLocationGX;
+    private Double supplierLocationGX;
 
-    private Integer supplierLocationGY;
+    private Double supplierLocationGY;
 
     private Integer supplierType;
 
@@ -53,19 +53,19 @@ public class TbSupplier {
         this.supplierId = supplierId == null ? null : supplierId.trim();
     }
 
-    public Integer getSupplierLocationGX() {
+    public Double getSupplierLocationGX() {
         return supplierLocationGX;
     }
 
-    public void setSupplierLocationGX(Integer supplierLocationGX) {
+    public void setSupplierLocationGX(Double supplierLocationGX) {
         this.supplierLocationGX = supplierLocationGX;
     }
 
-    public Integer getSupplierLocationGY() {
+    public Double getSupplierLocationGY() {
         return supplierLocationGY;
     }
 
-    public void setSupplierLocationGY(Integer supplierLocationGY) {
+    public void setSupplierLocationGY(Double supplierLocationGY) {
         this.supplierLocationGY = supplierLocationGY;
     }
 

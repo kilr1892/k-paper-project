@@ -6,8 +6,8 @@
     <result column="experiments_number" property="experimentsNumber" jdbcType="INTEGER" />
     <result column="cycle_times" property="cycleTimes" jdbcType="INTEGER" />
     <result column="supplier_id" property="supplierId" jdbcType="VARCHAR" />
-    <result column="supplier_location_g_x" property="supplierLocationGX" jdbcType="INTEGER" />
-    <result column="supplier_location_g_y" property="supplierLocationGY" jdbcType="INTEGER" />
+    <result column="supplier_location_g_x" property="supplierLocationGX" jdbcType="DOUBLE" />
+    <result column="supplier_location_g_y" property="supplierLocationGY" jdbcType="DOUBLE" />
     <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
     <result column="supplier_fixed_cost_c" property="supplierFixedCostC" jdbcType="INTEGER" />
     <result column="supplier_alive" property="supplierAlive" jdbcType="BIT" />
@@ -111,7 +111,7 @@
       supplier_type, supplier_fixed_cost_c, supplier_alive, 
       supplier_alive_times)
     values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
-      #{supplierId,jdbcType=VARCHAR}, #{supplierLocationGX,jdbcType=INTEGER}, #{supplierLocationGY,jdbcType=INTEGER}, 
+      #{supplierId,jdbcType=VARCHAR}, #{supplierLocationGX,jdbcType=DOUBLE}, #{supplierLocationGY,jdbcType=DOUBLE}, 
       #{supplierType,jdbcType=INTEGER}, #{supplierFixedCostC,jdbcType=INTEGER}, #{supplierAlive,jdbcType=BIT}, 
       #{supplierAliveTimes,jdbcType=INTEGER})
   </insert>
@@ -163,10 +163,10 @@
         #{supplierId,jdbcType=VARCHAR},
       </if>
       <if test="supplierLocationGX != null" >
-        #{supplierLocationGX,jdbcType=INTEGER},
+        #{supplierLocationGX,jdbcType=DOUBLE},
       </if>
       <if test="supplierLocationGY != null" >
-        #{supplierLocationGY,jdbcType=INTEGER},
+        #{supplierLocationGY,jdbcType=DOUBLE},
       </if>
       <if test="supplierType != null" >
         #{supplierType,jdbcType=INTEGER},
@@ -204,10 +204,10 @@
         supplier_id = #{record.supplierId,jdbcType=VARCHAR},
       </if>
       <if test="record.supplierLocationGX != null" >
-        supplier_location_g_x = #{record.supplierLocationGX,jdbcType=INTEGER},
+        supplier_location_g_x = #{record.supplierLocationGX,jdbcType=DOUBLE},
       </if>
       <if test="record.supplierLocationGY != null" >
-        supplier_location_g_y = #{record.supplierLocationGY,jdbcType=INTEGER},
+        supplier_location_g_y = #{record.supplierLocationGY,jdbcType=DOUBLE},
       </if>
       <if test="record.supplierType != null" >
         supplier_type = #{record.supplierType,jdbcType=INTEGER},
@@ -232,8 +232,8 @@
       experiments_number = #{record.experimentsNumber,jdbcType=INTEGER},
       cycle_times = #{record.cycleTimes,jdbcType=INTEGER},
       supplier_id = #{record.supplierId,jdbcType=VARCHAR},
-      supplier_location_g_x = #{record.supplierLocationGX,jdbcType=INTEGER},
-      supplier_location_g_y = #{record.supplierLocationGY,jdbcType=INTEGER},
+      supplier_location_g_x = #{record.supplierLocationGX,jdbcType=DOUBLE},
+      supplier_location_g_y = #{record.supplierLocationGY,jdbcType=DOUBLE},
       supplier_type = #{record.supplierType,jdbcType=INTEGER},
       supplier_fixed_cost_c = #{record.supplierFixedCostC,jdbcType=INTEGER},
       supplier_alive = #{record.supplierAlive,jdbcType=BIT},
@@ -255,10 +255,10 @@
         supplier_id = #{supplierId,jdbcType=VARCHAR},
       </if>
       <if test="supplierLocationGX != null" >
-        supplier_location_g_x = #{supplierLocationGX,jdbcType=INTEGER},
+        supplier_location_g_x = #{supplierLocationGX,jdbcType=DOUBLE},
       </if>
       <if test="supplierLocationGY != null" >
-        supplier_location_g_y = #{supplierLocationGY,jdbcType=INTEGER},
+        supplier_location_g_y = #{supplierLocationGY,jdbcType=DOUBLE},
       </if>
       <if test="supplierType != null" >
         supplier_type = #{supplierType,jdbcType=INTEGER},
@@ -280,8 +280,8 @@
     set experiments_number = #{experimentsNumber,jdbcType=INTEGER},
       cycle_times = #{cycleTimes,jdbcType=INTEGER},
       supplier_id = #{supplierId,jdbcType=VARCHAR},
-      supplier_location_g_x = #{supplierLocationGX,jdbcType=INTEGER},
-      supplier_location_g_y = #{supplierLocationGY,jdbcType=INTEGER},
+      supplier_location_g_x = #{supplierLocationGX,jdbcType=DOUBLE},
+      supplier_location_g_y = #{supplierLocationGY,jdbcType=DOUBLE},
       supplier_type = #{supplierType,jdbcType=INTEGER},
       supplier_fixed_cost_c = #{supplierFixedCostC,jdbcType=INTEGER},
       supplier_alive = #{supplierAlive,jdbcType=BIT},
@@ -291,13 +291,24 @@
 
 
   <insert id="insertList" parameterType="java.util.List">
+
+    insert into tb_supplier (id, experiments_number, cycle_times,
+    supplier_id, supplier_location_g_x, supplier_location_g_y,
+    supplier_type, supplier_fixed_cost_c, supplier_alive,
+    supplier_alive_times)
+    values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER},
+    #{supplierId,jdbcType=VARCHAR}, #{supplierLocationGX,jdbcType=DOUBLE}, #{supplierLocationGY,jdbcType=DOUBLE},
+    #{supplierType,jdbcType=INTEGER}, #{supplierFixedCostC,jdbcType=INTEGER}, #{supplierAlive,jdbcType=BIT},
+    #{supplierAliveTimes,jdbcType=INTEGER})
+
+
     INSERT INTO `tb_supplier`
     (id, `experiments_number`, `cycle_times`, `supplier_id`, `supplier_location_g_x`, `supplier_location_g_y`, `supplier_type`, `supplier_fixed_cost_c`, `supplier_alive`,
     supplier_alive_times)
     VALUES
     <foreach collection="list" item="item" index="index" separator=",">
       (NULL , #{item.experimentsNumber,jdbcType=INTEGER}, #{item.cycleTimes,jdbcType=INTEGER},
-      #{item.supplierId,jdbcType=VARCHAR}, #{item.supplierLocationGX,jdbcType=INTEGER}, #{item.supplierLocationGY,jdbcType=INTEGER},
+      #{item.supplierId,jdbcType=VARCHAR}, #{item.supplierLocationGX,jdbcType=DOUBLE}, #{item.supplierLocationGY,jdbcType=DOUBLE},
       #{item.supplierType,jdbcType=INTEGER}, #{item.supplierFixedCostC,jdbcType=INTEGER}, #{item.supplierAlive,jdbcType=BIT},
       #{item.supplierAliveTimes,jdbcType=INTEGER})
     </foreach>

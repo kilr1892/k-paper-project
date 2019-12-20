@@ -4,6 +4,8 @@ import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  * .
  *
@@ -15,13 +17,27 @@ public class InitEngineFactoryUtils {
     /**
      * 生成主机厂初始x y坐标
      *
+     * @param mapPosition 已有的x,y坐标
      * @return 返回生成(0 - 20)内x y坐标
      */
-    public static int[] initPosition() {
+    public static double[] initPosition(Map<Double, Double> mapPosition) {
         // 0-20
-        int x = RandomUtils.nextInt(EngineFactoryEnum.engineFactoryLocationLow, EngineFactoryEnum.engineFactoryLocationUpper + 1);
-        int y = RandomUtils.nextInt(EngineFactoryEnum.engineFactoryLocationLow, EngineFactoryEnum.engineFactoryLocationUpper + 1);
-        return new int[]{x, y};
+        while (true) {
+            double x = RandomUtils.nextDouble(EngineFactoryEnum.engineFactoryLocationLow, EngineFactoryEnum.engineFactoryLocationUpper);
+            double y = RandomUtils.nextDouble(EngineFactoryEnum.engineFactoryLocationLow, EngineFactoryEnum.engineFactoryLocationUpper);
+            // 通过x取得y值
+            Double valueY = mapPosition.get(x);
+            if (valueY == null) {
+                // 没用y的值,就是没有x的key, 就是ok的
+                return new double[]{x, y};
+            } else {
+                // 有相同的x, 看看y一不一样
+                if (y != valueY) {
+                    mapPosition.put(x, y);
+                    return new double[]{x, y};
+                }
+            }
+        }
     }
 
     /**
@@ -75,7 +91,7 @@ public class InitEngineFactoryUtils {
     /**
      * 主机厂初始质量
      *
-     * @return  1~10间的随机数
+     * @return 1~10间的随机数
      */
     public static int initQuality() {
         return RandomUtils.nextInt(EngineFactoryEnum.engineFactoryInitQualityLow, EngineFactoryEnum.engineFactoryInitQualityUpper + 1);
