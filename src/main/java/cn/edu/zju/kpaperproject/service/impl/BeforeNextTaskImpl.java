@@ -290,8 +290,6 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         }
 
 
-
-
         // 信誉度前30的主机厂集合
         TbEngineFactoryDynamic[] arrEngineFactoryWith30HighestCredit = genEngineFactoryWith30HighestCredit(listEngineFactory, mapEngineFactoryDynamic);
         // 信誉度前30的供应商集合
@@ -310,8 +308,14 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             }
         }
 
-        // 用来存新生成的主机厂id, 和信誉度最高的供应商id        supplierDynamicWithHighestCredit.getSupplierId();
+        // 用来存储已有存活的主机厂位置
+        Map<Double, Double> mapEngineFactoryPosition = new HashMap<>();
+        // 用来存储已有存活的供应商位置
+        Map<Double, Double> mapSupplierPosition = new HashMap<>();
+        genMapEngineFactoryPositionAmdMapSupplierPosition(mapEngineFactoryPosition, listEngineFactory
+                , mapSupplierPosition, listSupplier);
 
+        // 用来存新生成的主机厂id, 和信誉度最高的供应商id        supplierDynamicWithHighestCredit.getSupplierId();
         Map<String, String> mapNewEngineFactoryIdVsSupplierIdWithHighestCredit = new HashMap<>(3);
         EngineFactoryFinalProvision engineFactoryFinalProvision = listEngineFactoryFinalProvisions.get(0);
         int marketNeedNumber = engineFactoryFinalProvision.getMarketNeedNumber();
@@ -347,7 +351,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 // 地理位置
                 tbSupplier = mapSupplier.get(supplierDynamicWithHighestCredit.getSupplierId());
 
-                int[] position = genNewPosition(new int[]{tbSupplier.getSupplierLocationGX(), tbSupplier.getSupplierLocationGY()});
+                double[] position = genNewPosition(new double[]{tbSupplier.getSupplierLocationGX(), tbSupplier.getSupplierLocationGY()}, mapEngineFactoryPosition);
 
                 tbEngineFactory.setEngineFactoryLocationGX(position[NumberEnum.POSITION_X_ARRAY_INDEX]);
                 tbEngineFactory.setEngineFactoryLocationGY(position[NumberEnum.POSITION_Y_ARRAY_INDEX]);
@@ -571,7 +575,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
                     // 地理位置
                     tbEngineFactory = mapEngineFactory.get(engineFactoryDynamicWithHighestCredit.getEngineFactoryId());
-                    int[] position = genNewPosition(new int[]{tbEngineFactory.getEngineFactoryLocationGX(), tbEngineFactory.getEngineFactoryLocationGY()});
+                    double[] position = genNewPosition(new double[]{tbEngineFactory.getEngineFactoryLocationGX(), tbEngineFactory.getEngineFactoryLocationGY()}, mapEngineFactoryPosition);
                     tbSupplier.setSupplierLocationGX(position[NumberEnum.POSITION_X_ARRAY_INDEX]);
                     tbSupplier.setSupplierLocationGY(position[NumberEnum.POSITION_Y_ARRAY_INDEX]);
                     // 供应商代码
@@ -606,7 +610,6 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 }
             }
         }
-
 
 
         // 关系强度, 都是重新生成的, 每个阶段生成, 历史数据用map读出来,
@@ -755,6 +758,27 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 此时已经完成进入和退出
         storeIntoDatabase(listEngineFactory, listEngineFactoryDynamic, listSupplier, listSupplierDynamics, listNewRelationMatrix);
 
+    }
+
+    /**
+     * 生成还存活的供应商及主机厂的位置
+     *
+     * @param mapEngineFactoryPosition 存入的主机厂位置
+     * @param listEngineFactory        主机厂静态集合
+     * @param mapSupplierPosition      存入的供应商位置
+     * @param listSupplier             供应商静态数据集合
+     */
+    private void genMapEngineFactoryPositionAmdMapSupplierPosition(Map<Double, Double> mapEngineFactoryPosition, List<TbEngineFactory> listEngineFactory, Map<Double, Double> mapSupplierPosition, List<TbSupplier> listSupplier) {
+        for (TbEngineFactory aEngineFactory : listEngineFactory) {
+            if (aEngineFactory.getEngineFactoryAlive()) {
+                mapEngineFactoryPosition.put(aEngineFactory.getEngineFactoryLocationGX(), aEngineFactory.getEngineFactoryLocationGY());
+            }
+        }
+        for (TbSupplier aSupplier : listSupplier) {
+            if (aSupplier.getSupplierAlive()) {
+                mapSupplierPosition.put(aSupplier.getSupplierLocationGX(), aSupplier.getSupplierLocationGY());
+            }
+        }
     }
 
     /**
@@ -1480,23 +1504,35 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
      * 生成新的坐标
      *
      * @param arrPosition 信誉度最高的主机厂或供应商的位置坐标
+     * @param mapPosition 主机厂或供应商的位置map
      * @return 生成的新坐标
      */
-    private int[] genNewPosition(int[] arrPosition) {
-        int[] res = new int[2];
-        int x = arrPosition[0];
-        int y = arrPosition[1];
-        int x2 = x - 2 > 0 ? x - 2 : 0;
-        int y2 = y - 2 > 0 ? y - 2 : 0;
-        int newX = RandomUtils.nextInt(x2, x + 3);
-        int newY = RandomUtils.nextInt(y2, y + 3);
-        newX = newX < 0 ? 0 : newX;
-        newX = newX > 20 ? 20 : newX;
-        newY = newY < 0 ? 0 : newY;
-        newY = newY > 20 ? 20 : newY;
-        res[0] = newX;
-        res[1] = newY;
-        return res;
+    private double[] genNewPosition(double[] arrPosition, Map<Double, Double> mapPosition) {
+        double x = arrPosition[0];
+        double y = arrPosition[1];
+        double xLow = x - 2.5 > 0 ? x - 2.5 : 0;
+        double xHigh = x + 2.5 < 20 ? x + 2.5 : 20;
+        double yLow = y - 2.5 > 0 ? y - 2.5 : 0;
+        double yHigh = y + 2.5 < 20 ? y + 2.5 : 20;
+        while (true) {
+            double newX = RandomUtils.nextDouble(xLow, xHigh);
+            double newY = RandomUtils.nextDouble(yLow, yHigh);
+            // 强行一位小数
+            x = (int) (newX * 10) / 10;
+            y = (int) (newY * 10) / 10;
+            Double valueY = mapPosition.get(x);
+            if (valueY == null) {
+                // 没有x的key, 就是ok的
+                return new double[]{x, y};
+            } else {
+                // 有相同的x, 看看y一不一样
+                if (y != valueY) {
+                    mapPosition.put(x, y);
+                    return new double[]{x, y};
+                }
+            }
+
+        }
     }
 
 //--------------------------生成最终的交货结果-----------------------------

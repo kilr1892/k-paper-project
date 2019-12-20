@@ -153,7 +153,7 @@ public class StartTaskServiceImpl implements StartTaskService {
             // 服务产能
             supplierTask.setSupplierCapacity(tbSupplierDynamic.getSupplierCapacityM());
             // 地理位置
-            supplierTask.setSupplierLocationXY(new int[]{aSupplier.getSupplierLocationGX(), aSupplier.getSupplierLocationGY()});
+            supplierTask.setSupplierLocationXY(new []{aSupplier.getSupplierLocationGX(), aSupplier.getSupplierLocationGY()});
             // 剩余产能
             supplierTask.setSupplierRestCapacity(tbSupplierDynamic.getSupplierCapacityM());
 

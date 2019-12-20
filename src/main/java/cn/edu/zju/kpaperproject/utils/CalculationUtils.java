@@ -41,29 +41,15 @@ public class CalculationUtils {
         k1 = k1 + cycleTimes * k1Step;
         k2 = k2 + cycleTimes * k2Step;
 
-//        int price = RandomUtils.nextInt(priceLow, priceUpper + NumberEnum.QUALITY_STEP);
-//
-//        int demandForecast = (int) Math.round(k1 - k2 * price / quality);
         int price;
         int demandForecast = 0;
 
         if (k1 - k2 * priceUpper / quality > 0) {
             while (demandForecast <= 0) {
                 price = RandomUtils.nextInt(priceLow, priceUpper + 1);
-//                price = RandomUtils.nextInt(priceLow, (int)(quality * k1 / k2));
                 demandForecast = (int) Math.round(k1 - k2 * price / quality);
             }
         }
-
-//        for (int i = 0; i < 100; i++) {
-//            price = RandomUtils.nextInt(priceLow, priceUpper + 1);
-//            demandForecast = (int) Math.round(k1 - k2 * price / quality);
-//            if (demandForecast > 0) {
-//                break;
-//            }
-//        }
-//        log.error("demandForecast : " + demandForecast);
-//        return demandForecast >= 0 ? demandForecast : 0;
         return demandForecast;
     }
 
@@ -202,14 +188,14 @@ public class CalculationUtils {
      */
     private static double calDistance(EngineFactoryManufacturingTask aEngineFactoryManufacturingTask, SupplierTask supplierTask) {
 
-        int[] engineFactoryLocationXY = aEngineFactoryManufacturingTask.getEngineFactoryLocationXY();
-        int[] supplierLocationXY = supplierTask.getSupplierLocationXY();
-        int engineX = engineFactoryLocationXY[0];
-        int engineY = engineFactoryLocationXY[1];
-        int supplierX = supplierLocationXY[0];
-        int supplierY = supplierLocationXY[1];
-        double powX = Math.pow((engineX - supplierX), 2);
-        double powY = Math.pow((engineY - supplierY), 2);
+        double[] engineFactoryLocationXY = aEngineFactoryManufacturingTask.getEngineFactoryLocationXY();
+        double[] supplierLocationXY = supplierTask.getSupplierLocationXY();
+        int engineX = (int) (engineFactoryLocationXY[0]*10);
+        int engineY = (int) (engineFactoryLocationXY[1]*10);
+        int supplierX = (int) (supplierLocationXY[0]*10);
+        int supplierY = (int) (supplierLocationXY[1]*10);
+        double powX = Math.pow((engineX - supplierX), 2) / 100;
+        double powY = Math.pow((engineY - supplierY), 2) / 100;
         return Math.sqrt(powX + powY);
     }
 
@@ -221,14 +207,14 @@ public class CalculationUtils {
      * @param supplierLocationXY      供应商位置坐标
      * @return 两地间的距离
      */
-    public static double calDistance(int[] engineFactoryLocationXY, int[] supplierLocationXY) {
+    public static double calDistance(double[] engineFactoryLocationXY, double[] supplierLocationXY) {
 
-        int engineX = engineFactoryLocationXY[0];
-        int engineY = engineFactoryLocationXY[1];
-        int supplierX = supplierLocationXY[0];
-        int supplierY = supplierLocationXY[1];
-        double powX = Math.pow((engineX - supplierX), 2);
-        double powY = Math.pow((engineY - supplierY), 2);
+        int engineX = (int) (engineFactoryLocationXY[0]*10);
+        int engineY = (int) (engineFactoryLocationXY[1]*10);
+        int supplierX = (int) (supplierLocationXY[0]*10);
+        int supplierY = (int) (supplierLocationXY[1]*10);
+        double powX = Math.pow((engineX - supplierX), 2) / 100;
+        double powY = Math.pow((engineY - supplierY), 2) / 100;
         return Math.sqrt(powX + powY);
     }
 

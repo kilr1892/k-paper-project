@@ -3,9 +3,11 @@ package cn.edu.zju.kpaperproject.mapper;
 import cn.edu.zju.kpaperproject.pojo.TbSupplier;
 import cn.edu.zju.kpaperproject.pojo.TbSupplierExample;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface TbSupplierMapper {
     int countByExample(TbSupplierExample example);
 

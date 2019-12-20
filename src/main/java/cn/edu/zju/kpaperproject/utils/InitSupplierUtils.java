@@ -24,6 +24,9 @@ public class InitSupplierUtils {
         while (true) {
             double x = RandomUtils.nextInt(SupplierEnum.supplierLocationLow, SupplierEnum.supplierLocationUpper);
             double y = RandomUtils.nextInt(SupplierEnum.supplierLocationLow, SupplierEnum.supplierLocationUpper);
+            // 强行一位小数
+            x = (int) (x * 10) / 10;
+            y = (int) (y * 10) / 10;
             // 通过x取得y值
             Double valueY = mapPosition.get(x);
             if (valueY == null) {

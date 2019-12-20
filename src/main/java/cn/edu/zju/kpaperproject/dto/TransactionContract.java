@@ -17,7 +17,7 @@ public class TransactionContract {
     /** 主机厂信誉度 */
     private double engineFactoryCredit;
     /** 主机厂位置坐标 */
-    private int[] engineFactoryLocationXY;
+    private double[] engineFactoryLocationXY;
     /** 主机厂初始期望的价格 */
     private int[] engineFactory2ServiceOfferPrice;
     /** 供应商id */
@@ -25,7 +25,7 @@ public class TransactionContract {
     /** 供应商信誉度 */
     private double supplierCredit;
     /** 供应商位置坐标 */
-    private int[] supplierLocationXY;
+    private double[] supplierLocationXY;
     /** 任务类型 */
     private int taskType;
     /** 主机厂任务需求量 也是 供应商这笔订单需要提供的量 */

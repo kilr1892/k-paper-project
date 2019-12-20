@@ -10,7 +10,7 @@
   </parent>
   <groupId>cn.edu.zju</groupId>
   <artifactId>k-paper-project</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0-SNAPSHOT</version>
   <name>k-paper-project</name>
   <description>柯师兄的论文项目</description>
 

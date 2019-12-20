@@ -29,11 +29,11 @@ public class EngineFactoryManufacturingTask {
     /** 期望质量 */
     private int engineFactoryExpectedQuality;
     /** 位置坐标 */
-    private int[] engineFactoryLocationXY;
+    private double[] engineFactoryLocationXY;
     /** 匹配度 */
     private double matchDegree;
 
-    public EngineFactoryManufacturingTask(String engineFactoryId, double engineFactoryCredit,int[] engineFactoryLocationXY) {
+    public EngineFactoryManufacturingTask(String engineFactoryId, double engineFactoryCredit,double[] engineFactoryLocationXY) {
         this.engineFactoryId = engineFactoryId;
         this.engineFactoryCredit = engineFactoryCredit;
         this.engineFactoryLocationXY = engineFactoryLocationXY;
