@@ -153,7 +153,7 @@ public class StartTaskServiceImpl implements StartTaskService {
             // 服务产能
             supplierTask.setSupplierCapacity(tbSupplierDynamic.getSupplierCapacityM());
             // 地理位置
-            supplierTask.setSupplierLocationXY(new []{aSupplier.getSupplierLocationGX(), aSupplier.getSupplierLocationGY()});
+            supplierTask.setSupplierLocationXY(new double[]{aSupplier.getSupplierLocationGX(), aSupplier.getSupplierLocationGY()});
             // 剩余产能
             supplierTask.setSupplierRestCapacity(tbSupplierDynamic.getSupplierCapacityM());
 
@@ -251,7 +251,7 @@ public class StartTaskServiceImpl implements StartTaskService {
                 // 任务分解模型实例
                 // 主机id + 信誉度 + 地理位置
                 EngineFactoryManufacturingTask engineFactoryManufacturingTask = new EngineFactoryManufacturingTask(
-                        engineFactoryId, engineFactoryCredit, new int[]{aEngineFactory.getEngineFactoryLocationGX(), aEngineFactory.getEngineFactoryLocationGY()});
+                        engineFactoryId, engineFactoryCredit, new double[]{aEngineFactory.getEngineFactoryLocationGX(), aEngineFactory.getEngineFactoryLocationGY()});
 
                 // 任务类型
                 engineFactoryManufacturingTask.setTaskType(supplierTypeCodes[i]);

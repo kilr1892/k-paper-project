@@ -291,17 +291,6 @@
 
 
   <insert id="insertList" parameterType="java.util.List">
-
-    insert into tb_supplier (id, experiments_number, cycle_times,
-    supplier_id, supplier_location_g_x, supplier_location_g_y,
-    supplier_type, supplier_fixed_cost_c, supplier_alive,
-    supplier_alive_times)
-    values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER},
-    #{supplierId,jdbcType=VARCHAR}, #{supplierLocationGX,jdbcType=DOUBLE}, #{supplierLocationGY,jdbcType=DOUBLE},
-    #{supplierType,jdbcType=INTEGER}, #{supplierFixedCostC,jdbcType=INTEGER}, #{supplierAlive,jdbcType=BIT},
-    #{supplierAliveTimes,jdbcType=INTEGER})
-
-
     INSERT INTO `tb_supplier`
     (id, `experiments_number`, `cycle_times`, `supplier_id`, `supplier_location_g_x`, `supplier_location_g_y`, `supplier_type`, `supplier_fixed_cost_c`, `supplier_alive`,
     supplier_alive_times)

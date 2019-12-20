@@ -26,8 +26,8 @@ public class InitEngineFactoryUtils {
             double x = RandomUtils.nextDouble(EngineFactoryEnum.engineFactoryLocationLow, EngineFactoryEnum.engineFactoryLocationUpper);
             double y = RandomUtils.nextDouble(EngineFactoryEnum.engineFactoryLocationLow, EngineFactoryEnum.engineFactoryLocationUpper);
             // 强行一位小数
-            x = (int) (x * 10) / 10;
-            y = (int) (y * 10) / 10;
+            x = (int) (x * 10) / 10d;
+            y = (int) (y * 10) / 10d;
             // 通过x取得y值
             Double valueY = mapPosition.get(x);
             if (valueY == null) {

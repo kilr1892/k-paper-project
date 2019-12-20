@@ -1176,7 +1176,6 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 // 利用率为1(供不应求)
                 if (initAvgSupplierPrice >= avgSupplierOrderNumber) {
                     // 初始价格的平均价 >= 所有成交价格的平均值
-                    // TODO 测试的时候看看动态数据都是否更新
                     // 调整产能
                     supplierCapacity = (int) Math.round(supplierCapacity * 1.1);
                     // 更新下一阶段的产能
@@ -1518,8 +1517,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             double newX = RandomUtils.nextDouble(xLow, xHigh);
             double newY = RandomUtils.nextDouble(yLow, yHigh);
             // 强行一位小数
-            x = (int) (newX * 10) / 10;
-            y = (int) (newY * 10) / 10;
+            x = (int) (newX * 10) / 10d;
+            y = (int) (newY * 10) / 10d;
             Double valueY = mapPosition.get(x);
             if (valueY == null) {
                 // 没有x的key, 就是ok的

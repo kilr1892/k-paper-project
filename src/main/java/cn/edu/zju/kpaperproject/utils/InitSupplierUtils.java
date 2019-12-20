@@ -22,11 +22,11 @@ public class InitSupplierUtils {
      */
     public static double[] initPosition(Map<Double, Double> mapPosition) {
         while (true) {
-            double x = RandomUtils.nextInt(SupplierEnum.supplierLocationLow, SupplierEnum.supplierLocationUpper);
-            double y = RandomUtils.nextInt(SupplierEnum.supplierLocationLow, SupplierEnum.supplierLocationUpper);
+            double x = RandomUtils.nextDouble(SupplierEnum.supplierLocationLow, SupplierEnum.supplierLocationUpper);
+            double y = RandomUtils.nextDouble(SupplierEnum.supplierLocationLow, SupplierEnum.supplierLocationUpper);
             // 强行一位小数
-            x = (int) (x * 10) / 10;
-            y = (int) (y * 10) / 10;
+            x = (int) (x * 10) / 10d;
+            y = (int) (y * 10) / 10d;
             // 通过x取得y值
             Double valueY = mapPosition.get(x);
             if (valueY == null) {
