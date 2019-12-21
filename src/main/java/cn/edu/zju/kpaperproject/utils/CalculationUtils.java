@@ -156,7 +156,8 @@ public class CalculationUtils {
             int intersectionUpper = Math.min(enPriUpper, supPriUpper);
             return (intersectionUpper - intersectionLow) * 2;
         } else {
-            return enPriUpper - supPriLow;
+//            return enPriUpper - supPriLow;
+            return supPriUpper - enPriLow;
         }
     }
 

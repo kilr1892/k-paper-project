@@ -164,6 +164,66 @@ public class TbSupplierDynamicExample {
             return (Criteria) this;
         }
 
+        public Criteria andExperimentsNumberIsNull() {
+            addCriterion("experiments_number is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberIsNotNull() {
+            addCriterion("experiments_number is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberEqualTo(Integer value) {
+            addCriterion("experiments_number =", value, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberNotEqualTo(Integer value) {
+            addCriterion("experiments_number <>", value, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberGreaterThan(Integer value) {
+            addCriterion("experiments_number >", value, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberGreaterThanOrEqualTo(Integer value) {
+            addCriterion("experiments_number >=", value, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberLessThan(Integer value) {
+            addCriterion("experiments_number <", value, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberLessThanOrEqualTo(Integer value) {
+            addCriterion("experiments_number <=", value, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberIn(List<Integer> values) {
+            addCriterion("experiments_number in", values, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberNotIn(List<Integer> values) {
+            addCriterion("experiments_number not in", values, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberBetween(Integer value1, Integer value2) {
+            addCriterion("experiments_number between", value1, value2, "experimentsNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExperimentsNumberNotBetween(Integer value1, Integer value2) {
+            addCriterion("experiments_number not between", value1, value2, "experimentsNumber");
+            return (Criteria) this;
+        }
+
         public Criteria andCycleTimesIsNull() {
             addCriterion("cycle_times is null");
             return (Criteria) this;
@@ -951,6 +1011,186 @@ public class TbSupplierDynamicExample {
 
         public Criteria andSupplierActualSaleNumberNotBetween(Integer value1, Integer value2) {
             addCriterion("supplier_actual_sale_number not between", value1, value2, "supplierActualSaleNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationProbabilityIsNull() {
+            addCriterion("supplier_innovation_probability is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationProbabilityIsNotNull() {
+            addCriterion("supplier_innovation_probability is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationProbabilityEqualTo(Double value) {
+            addCriterion("supplier_innovation_probability =", value, "supplierInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationProbabilityNotEqualTo(Double value) {
+            addCriterion("supplier_innovation_probability <>", value, "supplierInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationProbabilityGreaterThan(Double value) {
+            addCriterion("supplier_innovation_probability >", value, "supplierInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationProbabilityGreaterThanOrEqualTo(Double value) {
+            addCriterion("supplier_innovation_probability >=", value, "supplierInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationProbabilityLessThan(Double value) {
+            addCriterion("supplier_innovation_probability <", value, "supplierInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationProbabilityLessThanOrEqualTo(Double value) {
+            addCriterion("supplier_innovation_probability <=", value, "supplierInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationProbabilityIn(List<Double> values) {
+            addCriterion("supplier_innovation_probability in", values, "supplierInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationProbabilityNotIn(List<Double> values) {
+            addCriterion("supplier_innovation_probability not in", values, "supplierInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationProbabilityBetween(Double value1, Double value2) {
+            addCriterion("supplier_innovation_probability between", value1, value2, "supplierInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationProbabilityNotBetween(Double value1, Double value2) {
+            addCriterion("supplier_innovation_probability not between", value1, value2, "supplierInnovationProbability");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherInnovationIsNull() {
+            addCriterion("supplier_whether_innovation is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherInnovationIsNotNull() {
+            addCriterion("supplier_whether_innovation is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherInnovationEqualTo(Boolean value) {
+            addCriterion("supplier_whether_innovation =", value, "supplierWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherInnovationNotEqualTo(Boolean value) {
+            addCriterion("supplier_whether_innovation <>", value, "supplierWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherInnovationGreaterThan(Boolean value) {
+            addCriterion("supplier_whether_innovation >", value, "supplierWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherInnovationGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("supplier_whether_innovation >=", value, "supplierWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherInnovationLessThan(Boolean value) {
+            addCriterion("supplier_whether_innovation <", value, "supplierWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherInnovationLessThanOrEqualTo(Boolean value) {
+            addCriterion("supplier_whether_innovation <=", value, "supplierWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherInnovationIn(List<Boolean> values) {
+            addCriterion("supplier_whether_innovation in", values, "supplierWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherInnovationNotIn(List<Boolean> values) {
+            addCriterion("supplier_whether_innovation not in", values, "supplierWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherInnovationBetween(Boolean value1, Boolean value2) {
+            addCriterion("supplier_whether_innovation between", value1, value2, "supplierWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierWhetherInnovationNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("supplier_whether_innovation not between", value1, value2, "supplierWhetherInnovation");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationTimesIsNull() {
+            addCriterion("supplier_innovation_times is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationTimesIsNotNull() {
+            addCriterion("supplier_innovation_times is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationTimesEqualTo(Integer value) {
+            addCriterion("supplier_innovation_times =", value, "supplierInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationTimesNotEqualTo(Integer value) {
+            addCriterion("supplier_innovation_times <>", value, "supplierInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationTimesGreaterThan(Integer value) {
+            addCriterion("supplier_innovation_times >", value, "supplierInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationTimesGreaterThanOrEqualTo(Integer value) {
+            addCriterion("supplier_innovation_times >=", value, "supplierInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationTimesLessThan(Integer value) {
+            addCriterion("supplier_innovation_times <", value, "supplierInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationTimesLessThanOrEqualTo(Integer value) {
+            addCriterion("supplier_innovation_times <=", value, "supplierInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationTimesIn(List<Integer> values) {
+            addCriterion("supplier_innovation_times in", values, "supplierInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationTimesNotIn(List<Integer> values) {
+            addCriterion("supplier_innovation_times not in", values, "supplierInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationTimesBetween(Integer value1, Integer value2) {
+            addCriterion("supplier_innovation_times between", value1, value2, "supplierInnovationTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierInnovationTimesNotBetween(Integer value1, Integer value2) {
+            addCriterion("supplier_innovation_times not between", value1, value2, "supplierInnovationTimes");
             return (Criteria) this;
         }
     }

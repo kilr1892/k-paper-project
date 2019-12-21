@@ -3,6 +3,8 @@ package cn.edu.zju.kpaperproject.pojo;
 public class TbSupplierDynamic {
     private Integer id;
 
+    private Integer experimentsNumber;
+
     private Integer cycleTimes;
 
     private String supplierId;
@@ -29,12 +31,26 @@ public class TbSupplierDynamic {
 
     private Integer supplierActualSaleNumber;
 
+    private Double supplierInnovationProbability;
+
+    private Boolean supplierWhetherInnovation;
+
+    private Integer supplierInnovationTimes;
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getExperimentsNumber() {
+        return experimentsNumber;
+    }
+
+    public void setExperimentsNumber(Integer experimentsNumber) {
+        this.experimentsNumber = experimentsNumber;
     }
 
     public Integer getCycleTimes() {
@@ -139,5 +155,29 @@ public class TbSupplierDynamic {
 
     public void setSupplierActualSaleNumber(Integer supplierActualSaleNumber) {
         this.supplierActualSaleNumber = supplierActualSaleNumber;
+    }
+
+    public Double getSupplierInnovationProbability() {
+        return supplierInnovationProbability;
+    }
+
+    public void setSupplierInnovationProbability(Double supplierInnovationProbability) {
+        this.supplierInnovationProbability = supplierInnovationProbability;
+    }
+
+    public Boolean getSupplierWhetherInnovation() {
+        return supplierWhetherInnovation;
+    }
+
+    public void setSupplierWhetherInnovation(Boolean supplierWhetherInnovation) {
+        this.supplierWhetherInnovation = supplierWhetherInnovation;
+    }
+
+    public Integer getSupplierInnovationTimes() {
+        return supplierInnovationTimes;
+    }
+
+    public void setSupplierInnovationTimes(Integer supplierInnovationTimes) {
+        this.supplierInnovationTimes = supplierInnovationTimes;
     }
 }

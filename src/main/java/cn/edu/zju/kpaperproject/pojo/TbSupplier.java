@@ -1,5 +1,8 @@
 package cn.edu.zju.kpaperproject.pojo;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class TbSupplier {
     private Integer id;
 
