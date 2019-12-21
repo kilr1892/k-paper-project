@@ -292,6 +292,25 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             }
         }
 
+        for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
+            String supplierId = aSupplierDynamic.getSupplierId();
+            if (mapSupplier.get(supplierId).getSupplierAlive()) {
+                double supplierInnovationProbability = aSupplierDynamic.getSupplierInnovationProbability();
+                if (RandomUtils.nextDouble(0, 1) < supplierInnovationProbability) {
+                    // 有创新
+                    aSupplierDynamic.setSupplierWhetherInnovation(true);
+                    aSupplierDynamic.setSupplierInnovationTimes(aSupplierDynamic.getSupplierInnovationTimes()+1);
+                    // 质量改变
+                    int newSupplierQuality = aSupplierDynamic.getSupplierQualityQs() + RandomUtils.nextInt(0, 5) - 2;
+                    // 质量限
+                    newSupplierQuality = newSupplierQuality > 10 ? 10 : (newSupplierQuality < 1 ? 1 : newSupplierQuality);
+                    aSupplierDynamic.setSupplierQualityQs(newSupplierQuality);
+                } else {
+                    // 无创新
+                    aSupplierDynamic.setSupplierWhetherInnovation(false);
+                }
+            }
+        }
 
         // 信誉度前30的主机厂集合
         TbEngineFactoryDynamic[] arrEngineFactoryWith30HighestCredit = genEngineFactoryWith30HighestCredit(listEngineFactory, mapEngineFactoryDynamic);
@@ -380,6 +399,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 // 需求预测
                 tbEngineFactoryDynamic.setEngineFactoryDemandForecastD(CalculationUtils.demandForecast(cycleTime
                         , price[NumberEnum.PRICE_LOW_ARRAY_INDEX], price[NumberEnum.PRICE_UPPER_ARRAY_INDEX], quality));
+                // 创新概率
                 tbEngineFactoryDynamic.setEngineFactoryInnovationProbability(RandomUtils.nextDouble(0, 1));
                 tbEngineFactoryDynamic.setEngineFactoryInnovationTimes(0);
                 // 加入集合中
@@ -563,7 +583,9 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                     tbSupplierDynamic.setSupplierPricePU(price[NumberEnum.PRICE_UPPER_ARRAY_INDEX]);
                     // 质量
                     tbSupplierDynamic.setSupplierQualityQs(InitSupplierUtils.initQuality());
-
+                    // 创新概率
+                    tbSupplierDynamic.setSupplierInnovationProbability(RandomUtils.nextDouble(0, 1));
+                    tbSupplierDynamic.setSupplierInnovationTimes(0);
                     // 动态数据里的type
                     tbSupplierDynamic.setSupplierType(InitSupplierUtils.initType(supplierTypeCode[i]));
                     // 加入集合中

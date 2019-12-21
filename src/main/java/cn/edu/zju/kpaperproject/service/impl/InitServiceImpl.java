@@ -107,7 +107,6 @@ public class InitServiceImpl implements InitService {
             // 插入数据库
             tbEngineFactoryDynamicMapper.insertSelective(tbEngineFactoryDynamic);
         }
-
     }
 
     /**
@@ -122,6 +121,7 @@ public class InitServiceImpl implements InitService {
         tbSupplier.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
         TbSupplierDynamic tbSupplierDynamic = new TbSupplierDynamic();
         // 0
+        tbSupplierDynamic.setExperimentsNumber(experimentsNumber);
         tbSupplierDynamic.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
 
         int[] supplierTypeSum = {SupplierEnum.supplierInit210Sum, SupplierEnum.supplierInit220Sum, SupplierEnum.supplierInit230Sum
@@ -134,7 +134,7 @@ public class InitServiceImpl implements InitService {
         for (int i = 0; i < supplierTypeSum.length; i++) {
             for (int j = 0; j < supplierTypeSum[i]; j++) {
                 //
-                supplierInit(supplierTypeCode[i], tbSupplier, tbSupplierDynamic);
+                supplierInit(supplierTypeCode[i], tbSupplier, tbSupplierDynamic, experimentsNumber);
                 tbSupplierMapper.insertSelective(tbSupplier);
                 // 插入数据库
                 tbSupplierDynamicMapper.insertSelective(tbSupplierDynamic);
@@ -148,8 +148,9 @@ public class InitServiceImpl implements InitService {
      * @param typeCode          供应商代码
      * @param tbSupplier        同一个TbSupplier
      * @param tbSupplierDynamic 同一个TbSupplierDynamic
+     * @param experimentsNumber 实验次数
      */
-    private void supplierInit(int typeCode, TbSupplier tbSupplier, TbSupplierDynamic tbSupplierDynamic) {
+    private void supplierInit(int typeCode, TbSupplier tbSupplier, TbSupplierDynamic tbSupplierDynamic, int experimentsNumber) {
         // 供应商id
         String supplierId = CommonUtils.genId();
         tbSupplier.setSupplierId(supplierId);
@@ -167,6 +168,7 @@ public class InitServiceImpl implements InitService {
         // 存活次数
         tbSupplier.setSupplierAliveTimes(0);
         // 动态数据----------------
+        tbSupplierDynamic.setExperimentsNumber(experimentsNumber);
         tbSupplierDynamic.setCycleTimes(NumberEnum.CYCLE_TIME_INIT);
         // 供应商id
         tbSupplierDynamic.setSupplierId(supplierId);
@@ -182,7 +184,9 @@ public class InitServiceImpl implements InitService {
         tbSupplierDynamic.setSupplierPricePU(price[NumberEnum.PRICE_UPPER_ARRAY_INDEX]);
         // 质量
         tbSupplierDynamic.setSupplierQualityQs(InitSupplierUtils.initQuality());
-//        tbSupplierDynamic.setSupplierServiceAlive(true);
+        // 创新概率
+        tbSupplierDynamic.setSupplierInnovationProbability(RandomUtils.nextDouble(0, 1));
+        tbSupplierDynamic.setSupplierInnovationTimes(0);
     }
 
 
