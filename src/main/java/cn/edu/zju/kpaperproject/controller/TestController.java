@@ -31,7 +31,7 @@ public class TestController {
     public Map<String, ArrayList> getMapper(@PathVariable("cycleTimes") int cycleTimes) {
         Map<String, ArrayList> mapResult = new HashMap<>(2);
 
-        List<GraphVo> list = tbRelationMatrixMapper.selectPositionByCycleTime(99);
+        List<GraphVo> list = tbRelationMatrixMapper.selectPositionByCycleTime(cycleTimes);
         // key : node
         ArrayList<GraphNode> listGraphNodes = new ArrayList<>(list.size());
         // key : link
@@ -60,20 +60,15 @@ public class TestController {
             // #构造map
             // _主机厂存入map里
             graphNode = mapEngineFactory.get(engineFactoryId);
-            if (graphNode != null) {
-                // 已有要累加
-                double symbolSize = graphNode.getSymbolSize();
-                symbolSize += relationScore;
-                graphNode.setSymbolSize(symbolSize);
-                mapEngineFactory.put(engineFactoryId, graphNode);
-            }else {
+            if (graphNode == null) {
                 graphNode = new GraphNode();
                 graphNode.setId(engineFactoryId);
                 graphNode.setName(engineFactoryId.substring(0, 4));
                 graphNode.setX(tbEngineFactory.getEngineFactoryLocationGX());
                 graphNode.setY(tbEngineFactory.getEngineFactoryLocationGY());
                 graphNode.setSymbolSize(relationScore);
-                graphNode.setColor("#3798FF");
+                graphNode.setColor("#E54064");
+                graphNode.setTotalAsset(aGraphVo.getTbEngineFactoryDynamic().getEngineFactoryTotalAssetsP());
                 mapEngineFactory.put(engineFactoryId, graphNode);
             }
             // _供应商存入map里
@@ -85,24 +80,36 @@ public class TestController {
                 graphNode.setX(tbSupplier.getSupplierLocationGX());
                 graphNode.setY(tbSupplier.getSupplierLocationGY());
                 graphNode.setSymbolSize(8);
-                graphNode.setColor("#E54064");
+                graphNode.setColor("#3798FF");
+                graphNode.setTotalAsset(aGraphVo.getTbSupplierDynamic().getSupplierTotalAssetsP());
                 mapSupplier.put(supplierId, graphNode);
             }
 
             // # links
             // _关系强度大于某值的连线
+            // TODO 关系强度要分为3档, 线的粗细
             if (relationScore > 0.4) {
+                // 连线了
                 graphLink = new GraphLink();
                 graphLink.setSourceId(engineFactoryId);
                 graphLink.setTargetId(supplierId);
+                // 线的粗细
+                if (relationScore < 0.6) {
+                    graphLink.setLineWidth(0.5);
+                } else if (relationScore < 1) {
+                    graphLink.setLineWidth(1.5);
+                } else {
+                    graphLink.setLineWidth(3.5);
+                }
                 listGraphLinks.add(graphLink);
             }
         }
+
+
         // #主机厂与供应商node存入集合
         // _主机厂
         // __主机厂根据值从小到大
-        Queue<GraphNode> queue = new PriorityQueue<>(((o1, o2) ->
-                o1.getSymbolSize() - o2.getSymbolSize() >= 0 ? 1 : -1));
+        Queue<GraphNode> queue = new PriorityQueue<>(((o1, o2) -> o1.getTotalAsset() - o2.getTotalAsset() >= 0 ? 1 : -1));
         for (Map.Entry<String, GraphNode> entry : mapEngineFactory.entrySet()) {
             queue.add(entry.getValue());
         }
@@ -110,14 +117,28 @@ public class TestController {
         int i = 0;
         while (queue.peek() != null) {
             graphNode = queue.poll();
-            graphNode.setSymbolSize((i * 3 + 8));
-//            graphNode.setSymbolSize((10));
+            graphNode.setSymbolSize(i * 2 + 8);
             listGraphNodes.add(graphNode);
             i++;
         }
         // _供应商
         for (Map.Entry<String, GraphNode> entry : mapSupplier.entrySet()) {
-            listGraphNodes.add(entry.getValue());
+            queue.add(entry.getValue());
+        }
+        i = 0;
+        int firstLevelLimit = (int) (queue.size() * 0.3);
+        int secocdLevelLimit = (int) (queue.size() * 0.6);
+        while (queue.peek() != null) {
+            graphNode = queue.poll();
+            if (i < firstLevelLimit) {
+                graphNode.setSymbolSize(8);
+            } else if (i < secocdLevelLimit) {
+                graphNode.setSymbolSize(15);
+            } else {
+                graphNode.setSymbolSize(25);
+            }
+            listGraphNodes.add(graphNode);
+            i++;
         }
 
         // #node和link加入map

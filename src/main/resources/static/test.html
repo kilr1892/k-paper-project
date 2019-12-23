@@ -16,9 +16,6 @@
     $.getJSON('http://localhost:8080/api/graph/99', function (json) {
         myChart.hideLoading();
         myChart.setOption(option = {
-            // title: {
-            //     text: 'NPM Dependencies'
-            // },
             animationDurationUpdate: 1500,
             animationEasingUpdate: 'quinticInOut',
             series: [
@@ -43,12 +40,18 @@
                     links: json.links.map(function (link) {
                         return {
                             source: link.sourceId,
-                            target: link.targetId
+                            target: link.targetId,
+                            lineStyle: {
+                                normal: {
+                                    width: link.lineWidth
+                                }
+                            }
                         };
                     }),
                     label: {
-                        emphasis: {
-                            position: 'right',
+                        normal: {
+                            // position: 'right',
+                            fontSize: 8,
                             show: true
                         }
                     },

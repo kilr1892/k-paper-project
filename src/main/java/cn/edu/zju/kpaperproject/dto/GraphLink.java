@@ -12,4 +12,5 @@ import lombok.Data;
 public class GraphLink {
     private String sourceId;
     private String targetId;
+    private double lineWidth;
 }

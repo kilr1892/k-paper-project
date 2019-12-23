@@ -17,4 +17,5 @@ public class GraphNode {
     private double y;
     private String color;
     private double symbolSize;
+    private int totalAsset;
 }
