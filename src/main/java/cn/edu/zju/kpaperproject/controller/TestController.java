@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * RestfulApi
@@ -72,11 +69,11 @@ public class TestController {
             }else {
                 graphNode = new GraphNode();
                 graphNode.setId(engineFactoryId);
-                graphNode.setName("["+tbEngineFactory.getEngineFactoryLocationGX() +","+ tbEngineFactory.getEngineFactoryLocationGY()+"]");
+                graphNode.setName(engineFactoryId.substring(0, 4));
                 graphNode.setX(tbEngineFactory.getEngineFactoryLocationGX());
                 graphNode.setY(tbEngineFactory.getEngineFactoryLocationGY());
                 graphNode.setSymbolSize(relationScore);
-                graphNode.setColor("#4f19c7");
+                graphNode.setColor("#3798FF");
                 mapEngineFactory.put(engineFactoryId, graphNode);
             }
             // _供应商存入map里
@@ -84,17 +81,17 @@ public class TestController {
             if (graphNode == null) {
                 graphNode = new GraphNode();
                 graphNode.setId(supplierId);
-                graphNode.setName("["+tbSupplier.getSupplierLocationGX()+","+tbSupplier.getSupplierLocationGY()+"]");
+                graphNode.setName(supplierId.substring(0, 4));
                 graphNode.setX(tbSupplier.getSupplierLocationGX());
                 graphNode.setY(tbSupplier.getSupplierLocationGY());
                 graphNode.setSymbolSize(8);
-                graphNode.setColor("#c71969");
+                graphNode.setColor("#E54064");
                 mapSupplier.put(supplierId, graphNode);
             }
 
             // # links
-            // _关系强度大于0.3的连线
-            if (relationScore > 0.5) {
+            // _关系强度大于某值的连线
+            if (relationScore > 0.4) {
                 graphLink = new GraphLink();
                 graphLink.setSourceId(engineFactoryId);
                 graphLink.setTargetId(supplierId);
@@ -103,13 +100,26 @@ public class TestController {
         }
         // #主机厂与供应商node存入集合
         // _主机厂
+        // __主机厂根据值从小到大
+        Queue<GraphNode> queue = new PriorityQueue<>(((o1, o2) ->
+                o1.getSymbolSize() - o2.getSymbolSize() >= 0 ? 1 : -1));
         for (Map.Entry<String, GraphNode> entry : mapEngineFactory.entrySet()) {
-            listGraphNodes.add(entry.getValue());
+            queue.add(entry.getValue());
+        }
+        // __主机厂加入list中
+        int i = 0;
+        while (queue.peek() != null) {
+            graphNode = queue.poll();
+            graphNode.setSymbolSize((i * 3 + 8));
+//            graphNode.setSymbolSize((10));
+            listGraphNodes.add(graphNode);
+            i++;
         }
         // _供应商
         for (Map.Entry<String, GraphNode> entry : mapSupplier.entrySet()) {
             listGraphNodes.add(entry.getValue());
         }
+
         // #node和link加入map
         mapResult.put("nodes", listGraphNodes);
         mapResult.put("links", listGraphLinks);

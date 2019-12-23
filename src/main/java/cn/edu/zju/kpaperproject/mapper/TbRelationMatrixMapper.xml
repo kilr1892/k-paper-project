@@ -320,18 +320,31 @@
       <result column="supplier_location_g_y" property="supplierLocationGY" jdbcType="DOUBLE"/>
     </association>
 
+    <association property="tbEngineFactoryDynamic" javaType="cn.edu.zju.kpaperproject.pojo.TbEngineFactoryDynamic">
+      <result column="engine_factory_total_assets_p" property="engineFactoryTotalAssetsP" jdbcType="INTEGER" />
+    </association>
+    <association property="tbSupplierDynamic" javaType="cn.edu.zju.kpaperproject.pojo.TbSupplierDynamic">
+      <result column="supplier_total_assets_p" property="supplierTotalAssetsP" jdbcType="INTEGER" />
+    </association>
   </resultMap>
   <select id="selectPositionByCycleTime" resultMap="GraphMap">
-    SELECT tb_engine_factory.engine_factory_id,
-           tb_engine_factory.engine_factory_location_g_x,
-           tb_engine_factory.engine_factory_location_g_y,
-           tb_supplier.supplier_id,
-           tb_supplier.supplier_location_g_x,
-           tb_supplier.supplier_location_g_y,
-           tb_relation_matrix.relation_score
-    FROM tb_relation_matrix
-           INNER JOIN tb_engine_factory ON tb_engine_factory.cycle_times = tb_relation_matrix.cycle_times AND tb_engine_factory.engine_factory_id = tb_relation_matrix.engine_factory_id
-           INNER JOIN tb_supplier ON tb_supplier.cycle_times = tb_engine_factory.cycle_times AND tb_supplier.supplier_id = tb_relation_matrix.supplier_id
-    WHERE tb_relation_matrix.cycle_times = #{cycleTimes}
+    SELECT
+      tb_engine_factory.engine_factory_id,
+      tb_engine_factory.engine_factory_location_g_x,
+      tb_engine_factory.engine_factory_location_g_y,
+      tb_supplier.supplier_id,
+      tb_supplier.supplier_location_g_x,
+      tb_supplier.supplier_location_g_y,
+      tb_relation_matrix.relation_score,
+      tb_engine_factory_dynamic.engine_factory_total_assets_p,
+      tb_supplier_dynamic.supplier_total_assets_p
+    FROM
+      tb_relation_matrix
+        INNER JOIN tb_engine_factory ON tb_engine_factory.cycle_times = tb_relation_matrix.cycle_times AND tb_engine_factory.engine_factory_id = tb_relation_matrix.engine_factory_id
+        INNER JOIN tb_supplier ON tb_supplier.cycle_times = tb_engine_factory.cycle_times AND tb_supplier.supplier_id = tb_relation_matrix.supplier_id
+        INNER JOIN tb_supplier_dynamic ON tb_supplier_dynamic.cycle_times = tb_relation_matrix.cycle_times AND tb_supplier_dynamic.supplier_id = tb_relation_matrix.supplier_id
+        INNER JOIN tb_engine_factory_dynamic ON tb_engine_factory_dynamic.cycle_times = tb_relation_matrix.cycle_times AND tb_engine_factory_dynamic.engine_factory_id = tb_relation_matrix.engine_factory_id
+    WHERE
+      tb_relation_matrix.cycle_times = #{cycleTimes}
   </select>
 </mapper>
