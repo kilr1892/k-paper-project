@@ -954,66 +954,6 @@ public class TbSupplierDynamicExample {
             return (Criteria) this;
         }
 
-        public Criteria andSupplierActualSaleNumberIsNull() {
-            addCriterion("supplier_actual_sale_number is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualSaleNumberIsNotNull() {
-            addCriterion("supplier_actual_sale_number is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualSaleNumberEqualTo(Integer value) {
-            addCriterion("supplier_actual_sale_number =", value, "supplierActualSaleNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualSaleNumberNotEqualTo(Integer value) {
-            addCriterion("supplier_actual_sale_number <>", value, "supplierActualSaleNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualSaleNumberGreaterThan(Integer value) {
-            addCriterion("supplier_actual_sale_number >", value, "supplierActualSaleNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualSaleNumberGreaterThanOrEqualTo(Integer value) {
-            addCriterion("supplier_actual_sale_number >=", value, "supplierActualSaleNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualSaleNumberLessThan(Integer value) {
-            addCriterion("supplier_actual_sale_number <", value, "supplierActualSaleNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualSaleNumberLessThanOrEqualTo(Integer value) {
-            addCriterion("supplier_actual_sale_number <=", value, "supplierActualSaleNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualSaleNumberIn(List<Integer> values) {
-            addCriterion("supplier_actual_sale_number in", values, "supplierActualSaleNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualSaleNumberNotIn(List<Integer> values) {
-            addCriterion("supplier_actual_sale_number not in", values, "supplierActualSaleNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualSaleNumberBetween(Integer value1, Integer value2) {
-            addCriterion("supplier_actual_sale_number between", value1, value2, "supplierActualSaleNumber");
-            return (Criteria) this;
-        }
-
-        public Criteria andSupplierActualSaleNumberNotBetween(Integer value1, Integer value2) {
-            addCriterion("supplier_actual_sale_number not between", value1, value2, "supplierActualSaleNumber");
-            return (Criteria) this;
-        }
-
         public Criteria andSupplierInnovationProbabilityIsNull() {
             addCriterion("supplier_innovation_probability is null");
             return (Criteria) this;

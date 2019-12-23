@@ -29,8 +29,6 @@ public class TbSupplierDynamic {
 
     private Integer avgQuality;
 
-    private Integer supplierActualSaleNumber;
-
     private Double supplierInnovationProbability;
 
     private Boolean supplierWhetherInnovation;
@@ -147,14 +145,6 @@ public class TbSupplierDynamic {
 
     public void setAvgQuality(Integer avgQuality) {
         this.avgQuality = avgQuality;
-    }
-
-    public Integer getSupplierActualSaleNumber() {
-        return supplierActualSaleNumber;
-    }
-
-    public void setSupplierActualSaleNumber(Integer supplierActualSaleNumber) {
-        this.supplierActualSaleNumber = supplierActualSaleNumber;
     }
 
     public Double getSupplierInnovationProbability() {

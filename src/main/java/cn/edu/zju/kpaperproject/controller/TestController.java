@@ -1,86 +1,118 @@
-//package cn.edu.zju.kpaperproject.controller;
-//
-//import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
-//import cn.edu.zju.kpaperproject.dto.SupplierTask;
-//import cn.edu.zju.kpaperproject.dto.TransactionContract;
-//import cn.edu.zju.kpaperproject.pojo.*;
-//import cn.edu.zju.kpaperproject.service.BeforeNextTask;
-//import cn.edu.zju.kpaperproject.service.InitService;
-//import cn.edu.zju.kpaperproject.service.ProcessTaskService;
-//import cn.edu.zju.kpaperproject.service.StartTaskService;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.PathVariable;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Map;
-//
-///**
-// * .
-// *
-// * @author RichardLee
-// * @version v1.0
-// */
-//@RestController
-//@Slf4j
-//public class TestController {
-//
-//    @Autowired
-//    InitService initService;
-//    @Autowired
-//    StartTaskService startTaskService;
-//    @Autowired
-//    ProcessTaskService processTaskService;
-//    @Autowired
-//    BeforeNextTask beforeNextTask;
-//
-//    @GetMapping("/test/{experimentsNumber}/{cycleTIme}")
-//    public String test(@PathVariable("experimentsNumber") int experimentsNumber, @PathVariable("cycleTIme") int cycleTime) {
-//        log.info("!!!!START!!!!!++++++++++++++++++++++++++");
-//
-////        int experimentsNumber = 1;
-////        int cycleTime = 5;
-//        if (cycleTime == 1) {
-//            initService.init(experimentsNumber);
-//        }
-//        List<TbEngineFactory> listEngineFactory = listEngineFactory = startTaskService.getListEngineFactoryWithAlive(experimentsNumber, cycleTime);
-//
-//        List<TbEngineFactoryDynamic> listEngineFactoryDynamic = new ArrayList<>();
-//        List<TbSupplier> listSuppliers = startTaskService.getListTbSuppliersWithAlive(experimentsNumber, cycleTime);
-//        List<TbSupplierDynamic> listSupplierDynamic = new ArrayList<>();
-//
-//        ArrayList<ArrayList<EngineFactoryManufacturingTask>> listListEngineFactoryTaskDecomposition = startTaskService.genEngineFactoryTaskDecomposition(
-//                experimentsNumber, cycleTime, listEngineFactory, listEngineFactoryDynamic);
-//        ArrayList<ArrayList<SupplierTask>> listListSupplierTask = startTaskService.genSupplierTask(
-//                experimentsNumber, cycleTime, listSuppliers, listSupplierDynamic);
-//        Map<String, Double> mapRelationshipMatrix = startTaskService.getMapRelationshipMatrix(experimentsNumber, cycleTime);
-//        Map<String, TbRelationMatrix> mapRelationshipMatrix2WithTbRelationMatrix = startTaskService.getMapRelationshipMatrix2WithTbRelationMatrix(experimentsNumber, cycleTime);
-//        log.info("!!!!processTaskService.getTransactionContracts!!!!!");
-//        ArrayList<TransactionContract> listTransactionContract = processTaskService.getTransactionContracts(listListEngineFactoryTaskDecomposition, listListSupplierTask, mapRelationshipMatrix);
-//        log.info("!!!!processTaskService.getTransactionSettlement!!!!!");
-//        List<OrderPlus> listOrderPlus = processTaskService.getTransactionSettlement(experimentsNumber, cycleTime, listTransactionContract, mapRelationshipMatrix, mapRelationshipMatrix2WithTbRelationMatrix);
-//        log.info("!!!beforeNextTask.getListEngineFactoryFinalProvision!!!!!!");
-//        List<EngineFactoryFinalProvision> listEngineFactoryFinalProvision = beforeNextTask.getListEngineFactoryFinalProvision(experimentsNumber, cycleTime, listOrderPlus);
-//        log.info("!!!!beforeNextTask.beforeNextTask!!!!!");
-//        beforeNextTask.beforeNextTask(experimentsNumber, cycleTime, listEngineFactoryFinalProvision, listOrderPlus, listTransactionContract, listEngineFactory, listEngineFactoryDynamic, listSuppliers, listSupplierDynamic, mapRelationshipMatrix2WithTbRelationMatrix);
-//        log.info("!!!!END!!!!!++++++++++++++++++++++++++");
-//
-//
-//        System.out.println();
-//
-//        return "success";
-//    }
-//
-//    @GetMapping("/test2")
-//    public String test2() {
-//        return "success";
-//    }
-//
-//    @GetMapping("/test3")
-//    public String test3() {
-//        return "success";
-//    }
-//}
+package cn.edu.zju.kpaperproject.controller;
+
+import cn.edu.zju.kpaperproject.dto.GraphLink;
+import cn.edu.zju.kpaperproject.dto.GraphNode;
+import cn.edu.zju.kpaperproject.mapper.TbRelationMatrixMapper;
+import cn.edu.zju.kpaperproject.pojo.TbEngineFactory;
+import cn.edu.zju.kpaperproject.pojo.TbSupplier;
+import cn.edu.zju.kpaperproject.vo.GraphVo;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * RestfulApi
+ *
+ * @author RichardLee
+ * @version v1.0
+ */
+@RestController
+@Slf4j
+public class TestController {
+
+    @Autowired
+    private TbRelationMatrixMapper tbRelationMatrixMapper;
+
+    @GetMapping("/api/graph/{cycleTimes}")
+    public Map<String, ArrayList> getMapper(@PathVariable("cycleTimes") int cycleTimes) {
+        Map<String, ArrayList> mapResult = new HashMap<>(2);
+
+        List<GraphVo> list = tbRelationMatrixMapper.selectPositionByCycleTime(99);
+        // key : node
+        ArrayList<GraphNode> listGraphNodes = new ArrayList<>(list.size());
+        // key : link
+        ArrayList<GraphLink> listGraphLinks = new ArrayList<>(list.size());
+
+        // # 存已经有的工厂id, 和大小
+        Map<String, GraphNode> mapEngineFactory = new HashMap<>(100);
+        // # 存已经有的供应商id
+        Map<String, GraphNode> mapSupplier = new HashMap<>(100);
+
+        String engineFactoryId;
+        double relationScore;
+        String supplierId;
+        TbEngineFactory tbEngineFactory;
+        TbSupplier tbSupplier;
+        GraphNode graphNode;
+        GraphLink graphLink;
+        for (GraphVo aGraphVo : list) {
+            tbEngineFactory = aGraphVo.getTbEngineFactory();
+            engineFactoryId = aGraphVo.getEngineFactoryId();
+            relationScore = aGraphVo.getRelationScore();
+
+            tbSupplier = aGraphVo.getTbSupplier();
+            supplierId = aGraphVo.getSupplierId();
+
+            // #构造map
+            // _主机厂存入map里
+            graphNode = mapEngineFactory.get(engineFactoryId);
+            if (graphNode != null) {
+                // 已有要累加
+                double symbolSize = graphNode.getSymbolSize();
+                symbolSize += relationScore;
+                graphNode.setSymbolSize(symbolSize);
+                mapEngineFactory.put(engineFactoryId, graphNode);
+            }else {
+                graphNode = new GraphNode();
+                graphNode.setId(engineFactoryId);
+                graphNode.setName("["+tbEngineFactory.getEngineFactoryLocationGX() +","+ tbEngineFactory.getEngineFactoryLocationGY()+"]");
+                graphNode.setX(tbEngineFactory.getEngineFactoryLocationGX());
+                graphNode.setY(tbEngineFactory.getEngineFactoryLocationGY());
+                graphNode.setSymbolSize(relationScore);
+                graphNode.setColor("#4f19c7");
+                mapEngineFactory.put(engineFactoryId, graphNode);
+            }
+            // _供应商存入map里
+            graphNode = mapSupplier.get(supplierId);
+            if (graphNode == null) {
+                graphNode = new GraphNode();
+                graphNode.setId(supplierId);
+                graphNode.setName("["+tbSupplier.getSupplierLocationGX()+","+tbSupplier.getSupplierLocationGY()+"]");
+                graphNode.setX(tbSupplier.getSupplierLocationGX());
+                graphNode.setY(tbSupplier.getSupplierLocationGY());
+                graphNode.setSymbolSize(8);
+                graphNode.setColor("#c71969");
+                mapSupplier.put(supplierId, graphNode);
+            }
+
+            // # links
+            // _关系强度大于0.3的连线
+            if (relationScore > 0.5) {
+                graphLink = new GraphLink();
+                graphLink.setSourceId(engineFactoryId);
+                graphLink.setTargetId(supplierId);
+                listGraphLinks.add(graphLink);
+            }
+        }
+        // #主机厂与供应商node存入集合
+        // _主机厂
+        for (Map.Entry<String, GraphNode> entry : mapEngineFactory.entrySet()) {
+            listGraphNodes.add(entry.getValue());
+        }
+        // _供应商
+        for (Map.Entry<String, GraphNode> entry : mapSupplier.entrySet()) {
+            listGraphNodes.add(entry.getValue());
+        }
+        // #node和link加入map
+        mapResult.put("nodes", listGraphNodes);
+        mapResult.put("links", listGraphLinks);
+        return mapResult;
+    }
+}

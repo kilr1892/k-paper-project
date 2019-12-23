@@ -664,7 +664,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         if (engineFactoryManufacturingTask.getEngineFactoryNeedServiceNumber() == 0) {
             return listRes;
         }
-//        if (listSupplierTask.size() != 0) {
+//        if (listSupplierTask.symbolSize() != 0) {
 //            log.info("+++++++++++++++" + listSupplierTask.get(0).getSupplierType());
 //        } else {
 //            log.info("+++++++++++++++供应商任务分解为0");

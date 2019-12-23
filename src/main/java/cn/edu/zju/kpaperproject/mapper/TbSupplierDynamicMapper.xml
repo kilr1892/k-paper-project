@@ -16,7 +16,6 @@
     <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
     <result column="avg_price" property="avgPrice" jdbcType="INTEGER" />
     <result column="avg_quality" property="avgQuality" jdbcType="INTEGER" />
-    <result column="supplier_actual_sale_number" property="supplierActualSaleNumber" jdbcType="INTEGER" />
     <result column="supplier_innovation_probability" property="supplierInnovationProbability" jdbcType="DOUBLE" />
     <result column="supplier_whether_innovation" property="supplierWhetherInnovation" jdbcType="BIT" />
     <result column="supplier_innovation_times" property="supplierInnovationTimes" jdbcType="INTEGER" />
@@ -82,8 +81,8 @@
   <sql id="Base_Column_List" >
     id, experiments_number, cycle_times, supplier_id, supplier_total_assets_p, supplier_credit_a, 
     supplier_capacity_m, supplier_price_p_l, supplier_price_p_u, supplier_quality_qs, 
-    supplier_capacity_utilization, supplier_type, avg_price, avg_quality, supplier_actual_sale_number, 
-    supplier_innovation_probability, supplier_whether_innovation, supplier_innovation_times
+    supplier_capacity_utilization, supplier_type, avg_price, avg_quality, supplier_innovation_probability, 
+    supplier_whether_innovation, supplier_innovation_times
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplierDynamicExample" >
     select
@@ -121,17 +120,15 @@
       supplier_capacity_m, supplier_price_p_l, supplier_price_p_u, 
       supplier_quality_qs, supplier_capacity_utilization, 
       supplier_type, avg_price, avg_quality, 
-      supplier_actual_sale_number, supplier_innovation_probability, 
-      supplier_whether_innovation, supplier_innovation_times
-      )
+      supplier_innovation_probability, supplier_whether_innovation, 
+      supplier_innovation_times)
     values (#{id,jdbcType=INTEGER}, #{experimentsNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
       #{supplierId,jdbcType=VARCHAR}, #{supplierTotalAssetsP,jdbcType=INTEGER}, #{supplierCreditA,jdbcType=DOUBLE}, 
       #{supplierCapacityM,jdbcType=INTEGER}, #{supplierPricePL,jdbcType=INTEGER}, #{supplierPricePU,jdbcType=INTEGER}, 
       #{supplierQualityQs,jdbcType=INTEGER}, #{supplierCapacityUtilization,jdbcType=DOUBLE}, 
       #{supplierType,jdbcType=INTEGER}, #{avgPrice,jdbcType=INTEGER}, #{avgQuality,jdbcType=INTEGER}, 
-      #{supplierActualSaleNumber,jdbcType=INTEGER}, #{supplierInnovationProbability,jdbcType=DOUBLE}, 
-      #{supplierWhetherInnovation,jdbcType=BIT}, #{supplierInnovationTimes,jdbcType=INTEGER}
-      )
+      #{supplierInnovationProbability,jdbcType=DOUBLE}, #{supplierWhetherInnovation,jdbcType=BIT}, 
+      #{supplierInnovationTimes,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zju.kpaperproject.pojo.TbSupplierDynamic" >
     insert into tb_supplier_dynamic
@@ -177,9 +174,6 @@
       </if>
       <if test="avgQuality != null" >
         avg_quality,
-      </if>
-      <if test="supplierActualSaleNumber != null" >
-        supplier_actual_sale_number,
       </if>
       <if test="supplierInnovationProbability != null" >
         supplier_innovation_probability,
@@ -233,9 +227,6 @@
       </if>
       <if test="avgQuality != null" >
         #{avgQuality,jdbcType=INTEGER},
-      </if>
-      <if test="supplierActualSaleNumber != null" >
-        #{supplierActualSaleNumber,jdbcType=INTEGER},
       </if>
       <if test="supplierInnovationProbability != null" >
         #{supplierInnovationProbability,jdbcType=DOUBLE},
@@ -299,9 +290,6 @@
       <if test="record.avgQuality != null" >
         avg_quality = #{record.avgQuality,jdbcType=INTEGER},
       </if>
-      <if test="record.supplierActualSaleNumber != null" >
-        supplier_actual_sale_number = #{record.supplierActualSaleNumber,jdbcType=INTEGER},
-      </if>
       <if test="record.supplierInnovationProbability != null" >
         supplier_innovation_probability = #{record.supplierInnovationProbability,jdbcType=DOUBLE},
       </if>
@@ -332,7 +320,6 @@
       supplier_type = #{record.supplierType,jdbcType=INTEGER},
       avg_price = #{record.avgPrice,jdbcType=INTEGER},
       avg_quality = #{record.avgQuality,jdbcType=INTEGER},
-      supplier_actual_sale_number = #{record.supplierActualSaleNumber,jdbcType=INTEGER},
       supplier_innovation_probability = #{record.supplierInnovationProbability,jdbcType=DOUBLE},
       supplier_whether_innovation = #{record.supplierWhetherInnovation,jdbcType=BIT},
       supplier_innovation_times = #{record.supplierInnovationTimes,jdbcType=INTEGER}
@@ -382,9 +369,6 @@
       <if test="avgQuality != null" >
         avg_quality = #{avgQuality,jdbcType=INTEGER},
       </if>
-      <if test="supplierActualSaleNumber != null" >
-        supplier_actual_sale_number = #{supplierActualSaleNumber,jdbcType=INTEGER},
-      </if>
       <if test="supplierInnovationProbability != null" >
         supplier_innovation_probability = #{supplierInnovationProbability,jdbcType=DOUBLE},
       </if>
@@ -412,12 +396,14 @@
       supplier_type = #{supplierType,jdbcType=INTEGER},
       avg_price = #{avgPrice,jdbcType=INTEGER},
       avg_quality = #{avgQuality,jdbcType=INTEGER},
-      supplier_actual_sale_number = #{supplierActualSaleNumber,jdbcType=INTEGER},
       supplier_innovation_probability = #{supplierInnovationProbability,jdbcType=DOUBLE},
       supplier_whether_innovation = #{supplierWhetherInnovation,jdbcType=BIT},
       supplier_innovation_times = #{supplierInnovationTimes,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+
 
 
 
@@ -430,7 +416,7 @@
     supplier_capacity_m, supplier_price_p_l, supplier_price_p_u,
     supplier_quality_qs, supplier_capacity_utilization,
     supplier_type, avg_price, avg_quality,
-    supplier_actual_sale_number, supplier_innovation_probability,
+    supplier_innovation_probability,
     supplier_whether_innovation, supplier_innovation_times
     )
     VALUES
@@ -440,7 +426,7 @@
       #{item.supplierCapacityM,jdbcType=INTEGER}, #{item.supplierPricePL,jdbcType=INTEGER}, #{item.supplierPricePU,jdbcType=INTEGER},
       #{item.supplierQualityQs,jdbcType=INTEGER}, #{item.supplierCapacityUtilization,jdbcType=DOUBLE},
       #{item.supplierType,jdbcType=INTEGER}, #{item.avgPrice,jdbcType=INTEGER}, #{item.avgQuality,jdbcType=INTEGER},
-      #{item.supplierActualSaleNumber,jdbcType=INTEGER}, #{item.supplierInnovationProbability,jdbcType=DOUBLE},
+      #{item.supplierInnovationProbability,jdbcType=DOUBLE},
       #{item.supplierWhetherInnovation,jdbcType=BIT}, #{item.supplierInnovationTimes,jdbcType=INTEGER}
       )
     </foreach>

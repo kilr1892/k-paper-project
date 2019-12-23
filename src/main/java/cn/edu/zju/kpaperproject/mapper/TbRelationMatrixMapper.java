@@ -2,6 +2,7 @@ package cn.edu.zju.kpaperproject.mapper;
 
 import cn.edu.zju.kpaperproject.pojo.TbRelationMatrix;
 import cn.edu.zju.kpaperproject.pojo.TbRelationMatrixExample;
+import cn.edu.zju.kpaperproject.vo.GraphVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -32,4 +33,6 @@ public interface TbRelationMatrixMapper {
     int updateByPrimaryKey(TbRelationMatrix record);
 //----------------
     void insertList(List<TbRelationMatrix> listNewRelationMatrix);
+
+    List<GraphVo> selectPositionByCycleTime(int cycleTimes);
 }

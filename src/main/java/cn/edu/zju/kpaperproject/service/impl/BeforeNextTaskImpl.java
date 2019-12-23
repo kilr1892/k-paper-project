@@ -281,7 +281,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                     aEngineFactoryDynamic.setEngineFactoryWhetherInnovation(true);
                     aEngineFactoryDynamic.setEngineFactoryInnovationTimes(aEngineFactoryDynamic.getEngineFactoryInnovationTimes() + 1);
                     // 质量改变
-                    int newEngineFactoryQuality = aEngineFactoryDynamic.getEngineFactoryQualityQ() + RandomUtils.nextInt(0, 5) - 2;
+                    int newEngineFactoryQuality = aEngineFactoryDynamic.getEngineFactoryQualityQ() + RandomUtils.nextInt(0, 5) - 1;
                     // 质量限
                     newEngineFactoryQuality = newEngineFactoryQuality > 10 ? 10 : (newEngineFactoryQuality < 1 ? 1 : newEngineFactoryQuality);
                     aEngineFactoryDynamic.setEngineFactoryQualityQ(newEngineFactoryQuality);
@@ -291,7 +291,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 }
             }
         }
-
+        // 供应商创新
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
             String supplierId = aSupplierDynamic.getSupplierId();
             if (mapSupplier.get(supplierId).getSupplierAlive()) {
@@ -299,9 +299,9 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 if (RandomUtils.nextDouble(0, 1) < supplierInnovationProbability) {
                     // 有创新
                     aSupplierDynamic.setSupplierWhetherInnovation(true);
-                    aSupplierDynamic.setSupplierInnovationTimes(aSupplierDynamic.getSupplierInnovationTimes()+1);
+                    aSupplierDynamic.setSupplierInnovationTimes(aSupplierDynamic.getSupplierInnovationTimes() + 1);
                     // 质量改变
-                    int newSupplierQuality = aSupplierDynamic.getSupplierQualityQs() + RandomUtils.nextInt(0, 5) - 2;
+                    int newSupplierQuality = aSupplierDynamic.getSupplierQualityQs() + RandomUtils.nextInt(0, 5) - 1;
                     // 质量限
                     newSupplierQuality = newSupplierQuality > 10 ? 10 : (newSupplierQuality < 1 ? 1 : newSupplierQuality);
                     aSupplierDynamic.setSupplierQualityQs(newSupplierQuality);
@@ -345,7 +345,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         if (marketNeedNumber > sumFinalProductNumberWithAlive) {
             // 真实需求 > 所有主机厂的(阶段结束, 实际能提供的产品)之和
             // 随机生成1~3个主机厂
-            int tmp = RandomUtils.nextInt(1, 4);
+            int tmp = RandomUtils.nextInt(2, 5);
             for (int i = 0; i < tmp; i++) {
                 tbEngineFactory = new TbEngineFactory();
                 tbEngineFactoryDynamic = new TbEngineFactoryDynamic();
@@ -537,7 +537,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 //            log.error("|||supplierCapacity < engineFactoryNeedServiceNumberWithAlive : "+(supplierCapacity < engineFactoryNeedServiceNumberWithAlive));
             if (supplierCapacity < engineFactoryNeedServiceNumberWithAlive) {
                 // 供应商产能 < 主机厂对该类服务的需求
-                int tmp = RandomUtils.nextInt(1, 4);
+                int tmp = RandomUtils.nextInt(2, 5);
 //                log.info(supplierTypeCode[i]+" 生成供应商个数 "+tmp);
                 for (int j = 0; j < tmp; j++) {
                     tbSupplier = new TbSupplier();
@@ -710,7 +710,9 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         for (TbSupplier aSupplier : listSupplier) {
             aSupplier.setCycleTimes(cycleTime);
             aSupplier.setSupplierAliveTimes(aSupplier.getSupplierAliveTimes() + 1);
-            mapSupplierDynamic.get(aSupplier.getSupplierId()).setCycleTimes(cycleTime);
+            TbSupplierDynamic supplierDynamic = mapSupplierDynamic.get(aSupplier.getSupplierId());
+            supplierDynamic.setCycleTimes(cycleTime);
+            supplierDynamic.setExperimentsNumber(experimentsNumber);
         }
 
         storeTransactionContract(experimentsNumber, cycleTime, listTransactionContract);
@@ -737,9 +739,10 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         // 要淘汰的供应商
         Set<TbSupplier> setSupplier = new HashSet<>();
 
-        // 主机厂(价格/质量)淘汰前10%小的
+        // 主机厂(价格/质量)淘汰高的30%
         Queue<TbEngineFactoryDynamic> queueEngineFactoryDynamicTmp1 = new PriorityQueue<>(((o1, o2) ->
-                o2.getEngineFactoryPricePL() * 1d / o1.getEngineFactoryQualityQ() - o1.getEngineFactoryPricePL() * 1d / o2.getEngineFactoryQualityQ() >= 0 ? 1 : -1));
+                (o2.getEngineFactoryPricePL()+o2.getEngineFactoryPricePU()) /2d / o2.getEngineFactoryQualityQ()
+                        - (o1.getEngineFactoryPricePL()+o1.getEngineFactoryPricePU()) / 2d / o1.getEngineFactoryQualityQ() >= 0 ? 1 : -1));
         // 主机厂和供应商信誉度淘汰10%小的
         Queue<TbEngineFactoryDynamic> queueEngineFactoryDynamicTmp2 = new PriorityQueue<>(((o1, o2) ->
                 o1.getEngineFactoryCreditH() - o2.getEngineFactoryCreditH() >= 0 ? 1 : -1));
