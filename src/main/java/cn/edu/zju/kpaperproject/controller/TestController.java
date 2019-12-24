@@ -36,7 +36,6 @@ public class TestController {
         ArrayList<GraphNode> listGraphNodes = new ArrayList<>(list.size());
         // key : link
         ArrayList<GraphLink> listGraphLinks = new ArrayList<>(list.size());
-
         // # 存已经有的工厂id, 和大小
         Map<String, GraphNode> mapEngineFactory = new HashMap<>(100);
         // # 存已经有的供应商id
@@ -49,6 +48,7 @@ public class TestController {
         TbSupplier tbSupplier;
         GraphNode graphNode;
         GraphLink graphLink;
+
         for (GraphVo aGraphVo : list) {
             tbEngineFactory = aGraphVo.getTbEngineFactory();
             engineFactoryId = aGraphVo.getEngineFactoryId();
@@ -63,10 +63,11 @@ public class TestController {
             if (graphNode == null) {
                 graphNode = new GraphNode();
                 graphNode.setId(engineFactoryId);
-                graphNode.setName(engineFactoryId.substring(0, 4));
+                graphNode.setName(engineFactoryId.substring(0, 3));
+//                graphNode.setName(engineFactoryId.substring(0, 4) + "\n" + tbEngineFactory.getEngineFactoryLocationGX() + " , " + tbEngineFactory.getEngineFactoryLocationGY());
                 graphNode.setX(tbEngineFactory.getEngineFactoryLocationGX());
                 graphNode.setY(tbEngineFactory.getEngineFactoryLocationGY());
-                graphNode.setSymbolSize(relationScore);
+//                graphNode.setSymbolSize(relationScore);
                 graphNode.setColor("#E54064");
                 graphNode.setTotalAsset(aGraphVo.getTbEngineFactoryDynamic().getEngineFactoryTotalAssetsP());
                 mapEngineFactory.put(engineFactoryId, graphNode);
@@ -76,10 +77,11 @@ public class TestController {
             if (graphNode == null) {
                 graphNode = new GraphNode();
                 graphNode.setId(supplierId);
-                graphNode.setName(supplierId.substring(0, 4));
+                graphNode.setName(supplierId.substring(0, 3));
+//                graphNode.setName(supplierId.substring(0, 4)+ "\n" + tbSupplier.getSupplierLocationGX() + " , " + tbSupplier.getSupplierLocationGY());
                 graphNode.setX(tbSupplier.getSupplierLocationGX());
                 graphNode.setY(tbSupplier.getSupplierLocationGY());
-                graphNode.setSymbolSize(8);
+//                graphNode.setSymbolSize(8);
                 graphNode.setColor("#3798FF");
                 graphNode.setTotalAsset(aGraphVo.getTbSupplierDynamic().getSupplierTotalAssetsP());
                 mapSupplier.put(supplierId, graphNode);
@@ -87,7 +89,6 @@ public class TestController {
 
             // # links
             // _关系强度大于某值的连线
-            // TODO 关系强度要分为3档, 线的粗细
             if (relationScore > 0.4) {
                 // 连线了
                 graphLink = new GraphLink();
@@ -97,13 +98,27 @@ public class TestController {
                 if (relationScore < 0.6) {
                     graphLink.setLineWidth(0.5);
                 } else if (relationScore < 1) {
-                    graphLink.setLineWidth(1.5);
+                    graphLink.setLineWidth(2.5);
                 } else {
-                    graphLink.setLineWidth(3.5);
+                    graphLink.setLineWidth(4.5);
                 }
                 listGraphLinks.add(graphLink);
             }
         }
+
+        // #画4个坐标点
+        int[] ints = {0, 10, 20};
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                graphNode = new GraphNode();
+                graphNode.setX(ints[i]);
+                graphNode.setSymbolSize(20);
+                graphNode.setColor("#F7C124");
+                graphNode.setY(ints[j]);
+                listGraphNodes.add(graphNode);
+            }
+        }
+
 
 
         // #主机厂与供应商node存入集合
@@ -117,7 +132,7 @@ public class TestController {
         int i = 0;
         while (queue.peek() != null) {
             graphNode = queue.poll();
-            graphNode.setSymbolSize(i * 2 + 8);
+            graphNode.setSymbolSize(i * 5 + 24);
             listGraphNodes.add(graphNode);
             i++;
         }

@@ -2,22 +2,35 @@
 <html style="height: 100%">
 <head>
     <meta charset="utf-8">
+    <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/js/echarts4.0.js"></script>
 </head>
 <body style="height: 100%; margin: 0">
-<div id="container" style="height: 100%"></div>
-<script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
-<script type="text/javascript" src="/js/echarts4.0.js"></script>
+<div id="container" style="height: 3000px;width: 3000px"></div>
 <script type="text/javascript">
     var dom = document.getElementById("container");
     var myChart = echarts.init(dom);
+    // myChart.resize(500, 500);
+    // var myChart = echarts.init(dom,null,render('svg'));
     var app = {};
     option = null;
     myChart.showLoading();
-    $.getJSON('http://localhost:8080/api/graph/99', function (json) {
+    $.getJSON('http://localhost:8080/api/graph/60'
+        , function (json) {
         myChart.hideLoading();
         myChart.setOption(option = {
             animationDurationUpdate: 1500,
             animationEasingUpdate: 'quinticInOut',
+            toolbox: {
+                show: true,
+                feature: {
+                    saveAsImage: {
+                        show:true,
+                        excludeComponents :['toolbox'],
+                        pixelRatio: 3
+                    }
+                }
+            },
             series: [
                 {
                     type: 'graph',
@@ -26,7 +39,7 @@
                     data: json.nodes.map(function (node) {
                         return {
                             x: node.x,
-                            y: node.y,
+                            y: -node.y,
                             id: node.id,
                             name: node.name,
                             symbolSize: node.symbolSize,
@@ -49,11 +62,13 @@
                         };
                     }),
                     label: {
-                        normal: {
+                        // emphasis: {
+                        // normal: {
                             // position: 'right',
                             fontSize: 8,
+                            // fontSize: document.body.clientWidth / 1920 * 11,
                             show: true
-                        }
+                        // }
                     },
                     roam: true,
                     focusNodeAdjacency: true,
@@ -67,8 +82,8 @@
                 }
             ]
         }, true);
+        console.log(option);
     });
-    ;
     if (option && typeof option === "object") {
         myChart.setOption(option, true);
     }
