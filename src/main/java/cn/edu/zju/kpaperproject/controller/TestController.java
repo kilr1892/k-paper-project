@@ -96,11 +96,11 @@ public class TestController {
                 graphLink.setTargetId(supplierId);
                 // 线的粗细
                 if (relationScore < 0.6) {
-                    graphLink.setLineWidth(0.5);
+                    graphLink.setLineWidth(1.8);
                 } else if (relationScore < 1) {
-                    graphLink.setLineWidth(2.5);
+                    graphLink.setLineWidth(7.5);
                 } else {
-                    graphLink.setLineWidth(4.5);
+                    graphLink.setLineWidth(10.5);
                 }
                 listGraphLinks.add(graphLink);
             }

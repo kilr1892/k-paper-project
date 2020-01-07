@@ -15,7 +15,7 @@
     var app = {};
     option = null;
     myChart.showLoading();
-    $.getJSON('http://localhost:8080/api/graph/60'
+    $.getJSON('http://localhost:8080/api/graph/18'
         , function (json) {
         myChart.hideLoading();
         myChart.setOption(option = {
@@ -74,6 +74,7 @@
                     focusNodeAdjacency: true,
                     lineStyle: {
                         normal: {
+                            // color:'#000000',
                             width: 0.5,
                             curveness: 0.3,
                             opacity: 0.7
