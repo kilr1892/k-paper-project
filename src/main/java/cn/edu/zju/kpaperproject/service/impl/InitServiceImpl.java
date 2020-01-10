@@ -39,6 +39,8 @@ public class InitServiceImpl implements InitService {
     @Autowired
     private TbRelationMatrixMapper tbRelationMatrixMapper;
 
+    @Autowired
+    private DemandForecastMapper demandForecastMapper;
 
     @Override
     public void init(int experimentsNumber) {
@@ -67,6 +69,10 @@ public class InitServiceImpl implements InitService {
         tbEngineFactoryDynamic.setExperimentsNumber(experimentsNumber);
 
         Map<Double, Double> mapPosition = new HashMap<>(EngineFactoryEnum.engineFactoryInitSum);
+
+
+        int initMarketNeedNumber = demandForecastMapper.selectByPrimaryKey(0).getTrueDemandForecast();
+
 
         for (int i = 0; i < EngineFactoryEnum.engineFactoryInitSum; i++) {
             // 工厂id
@@ -98,9 +104,9 @@ public class InitServiceImpl implements InitService {
             // 质量
             int quality = InitEngineFactoryUtils.initQuality();
             tbEngineFactoryDynamic.setEngineFactoryQualityQ(quality);
-            // 需求预测
-            tbEngineFactoryDynamic.setEngineFactoryDemandForecastD(CalculationUtils.demandForecast((NumberEnum.CYCLE_TIME_INIT)
-                    , price[NumberEnum.PRICE_LOW_ARRAY_INDEX], price[NumberEnum.PRICE_UPPER_ARRAY_INDEX], quality));
+            // 需求预测(已改为读表)
+            tbEngineFactoryDynamic.setEngineFactoryDemandForecastD(CalculationUtils.demandForecast(
+                    price[NumberEnum.PRICE_LOW_ARRAY_INDEX], price[NumberEnum.PRICE_UPPER_ARRAY_INDEX], quality,initMarketNeedNumber));
             // 创新概率
             tbEngineFactoryDynamic.setEngineFactoryInnovationProbability(RandomUtils.nextDouble(0, 1));
             tbEngineFactoryDynamic.setEngineFactoryInnovationTimes(0);

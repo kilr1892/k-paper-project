@@ -260,7 +260,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         int engineFactoryNeedServiceNumber = transactionContract.getEngineFactoryNeedServiceNumber();
 
         int[] res = new int[2];
-        res[0] = absJKI * orderPrice * engineFactoryNeedServiceNumber + (absIJK - 1) * orderPrice * actualTransactionsNumber;
+        res[0] = (int) (absJKI * orderPrice * engineFactoryNeedServiceNumber + (absIJK - 1.25) * orderPrice * actualTransactionsNumber);
         // 两地距离
         int distance = (int) Math.round(CalculationUtils.calDistance(transactionContract.getEngineFactoryLocationXY(), transactionContract.getSupplierLocationXY()));
         res[1] = (int) ((absIJK * orderPrice * engineFactoryNeedServiceNumber + (1 + absJKI) * orderPrice * actualTransactionsNumber - distance * CalculationEnum.freight) * 0.1);

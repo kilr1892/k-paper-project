@@ -338,6 +338,9 @@ public class StartTaskServiceImpl implements StartTaskService {
             int round = (int) Math.round(priceRange[i] * TaskDecompositionEnum.taskDecompositionXic * taskDecompositionEjcs[codeType] / TaskDecompositionEnum.taskDecompositionEjd);
             res[i] = round;
         }
+        if (res[0] == res[1] && res[0] != 0) {
+            res[1] = res[1] + 1;
+        }
         return res;
     }
 

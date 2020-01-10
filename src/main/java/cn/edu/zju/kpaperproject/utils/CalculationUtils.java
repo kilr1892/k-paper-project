@@ -4,7 +4,6 @@ package cn.edu.zju.kpaperproject.utils;
 import cn.edu.zju.kpaperproject.dto.EngineFactoryManufacturingTask;
 import cn.edu.zju.kpaperproject.dto.SupplierTask;
 import cn.edu.zju.kpaperproject.enums.CalculationEnum;
-import cn.edu.zju.kpaperproject.enums.EngineFactoryEnum;
 import cn.edu.zju.kpaperproject.enums.NumberEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
@@ -32,25 +31,31 @@ public class CalculationUtils {
      * @param quality    质量
      * @return 预测值
      */
-    public static int demandForecast(int cycleTimes, int priceLow, int priceUpper, int quality) {
-        int k1 = EngineFactoryEnum.engineFactoryDemandForecastInitK1;
-        double k2 = EngineFactoryEnum.engineFactoryDemandForecastInitK2;
-        int k1Step = EngineFactoryEnum.engineFactoryDemandForecastK1Step;
-        double k2Step = EngineFactoryEnum.engineFactoryDemandForecastK2Step;
+    public static int demandForecast(int priceLow, int priceUpper, int quality, int initMarketNeedNumber) {
+//        int k1 = EngineFactoryEnum.engineFactoryDemandForecastInitK1;
+//        double k2 = EngineFactoryEnum.engineFactoryDemandForecastInitK2;
+//        int k1Step = EngineFactoryEnum.engineFactoryDemandForecastK1Step;
+//        double k2Step = EngineFactoryEnum.engineFactoryDemandForecastK2Step;
+//
+//        k1 = k1 + cycleTimes * k1Step;
+//        k2 = k2 + cycleTimes * k2Step;
+//
+//        int price;
+//        int demandForecast = 0;
+//
+//        if (k1 - k2 * priceUpper / quality > 0) {
+//            while (demandForecast <= 0) {
+//                price = RandomUtils.nextInt(priceLow, priceUpper + 1);
+//                demandForecast = (int) Math.round(k1 - k2 * price / quality);
+//            }
+//        }
+//        return demandForecast;
 
-        k1 = k1 + cycleTimes * k1Step;
-        k2 = k2 + cycleTimes * k2Step;
-
-        int price;
-        int demandForecast = 0;
-
-        if (k1 - k2 * priceUpper / quality > 0) {
-            while (demandForecast <= 0) {
-                price = RandomUtils.nextInt(priceLow, priceUpper + 1);
-                demandForecast = (int) Math.round(k1 - k2 * price / quality);
-            }
-        }
-        return demandForecast;
+//        int initMarketNeedNumber = demandForecastMapper.selectByPrimaryKey(cycleTimes).getTrueDemandForecast();
+        int price = RandomUtils.nextInt(priceLow, priceUpper + 1);
+        int i = (int) (initMarketNeedNumber * (0.5 + 0.5 * 100 * quality / price));
+        i = i < 0 ? 0 : i;
+        return i;
     }
 
     /**
