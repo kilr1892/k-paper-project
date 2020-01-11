@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cn.edu.zju.kpaperproject.enums.Config.*;
+
 /**
  * .
  *
@@ -108,7 +110,7 @@ public class InitServiceImpl implements InitService {
             tbEngineFactoryDynamic.setEngineFactoryDemandForecastD(CalculationUtils.demandForecast(
                     price[NumberEnum.PRICE_LOW_ARRAY_INDEX], price[NumberEnum.PRICE_UPPER_ARRAY_INDEX], quality,initMarketNeedNumber));
             // 创新概率
-            tbEngineFactoryDynamic.setEngineFactoryInnovationProbability(RandomUtils.nextDouble(0, 1));
+            tbEngineFactoryDynamic.setEngineFactoryInnovationProbability(RandomUtils.nextDouble(ENGINE_FACTORY_INNOVATION_PROBABILITY_LOW, ENGINE_FACTORY_INNOVATION_PROBABILITY_UPPER));
             tbEngineFactoryDynamic.setEngineFactoryInnovationTimes(0);
             // 插入数据库
             tbEngineFactoryDynamicMapper.insertSelective(tbEngineFactoryDynamic);
@@ -191,7 +193,7 @@ public class InitServiceImpl implements InitService {
         // 质量
         tbSupplierDynamic.setSupplierQualityQs(InitSupplierUtils.initQuality());
         // 创新概率
-        tbSupplierDynamic.setSupplierInnovationProbability(RandomUtils.nextDouble(0, 1));
+        tbSupplierDynamic.setSupplierInnovationProbability(RandomUtils.nextDouble(SUPPLIER_INNOVATION_PROBABILITY_LOW, SUPPLIER_INNOVATION_PROBABILITY_UPPER));
         tbSupplierDynamic.setSupplierInnovationTimes(0);
     }
 

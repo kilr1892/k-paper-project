@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static cn.edu.zju.kpaperproject.enums.Config.TRANSACTION_SETTLEMENT_GUARANTEED;
+
 /**
  * 任务处理相关的服务
  *
@@ -319,7 +321,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                 tmpAbs *= performanceProbability[i];
             }
         }
-        res = (int) Math.round((0.8 + 0.2 * tmpAbs) * engineFactoryNeedServiceNumber);
+        res = (int) Math.round((TRANSACTION_SETTLEMENT_GUARANTEED + (1 - TRANSACTION_SETTLEMENT_GUARANTEED) * tmpAbs) * engineFactoryNeedServiceNumber);
         return res;
     }
 

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+import static cn.edu.zju.kpaperproject.enums.Config.DEMAND_FORECAST_GUARANTEED;
+
 /**
  * 与计算相关.
  *
@@ -53,7 +55,7 @@ public class CalculationUtils {
 
 //        int initMarketNeedNumber = demandForecastMapper.selectByPrimaryKey(cycleTimes).getTrueDemandForecast();
         int price = RandomUtils.nextInt(priceLow, priceUpper + 1);
-        int i = (int) (initMarketNeedNumber * (0.5 + 0.5 * 100 * quality / price));
+        int i = (int) (initMarketNeedNumber * (DEMAND_FORECAST_GUARANTEED + (1 - DEMAND_FORECAST_GUARANTEED) * 100 * quality / price));
         i = i < 0 ? 0 : i;
         return i;
     }

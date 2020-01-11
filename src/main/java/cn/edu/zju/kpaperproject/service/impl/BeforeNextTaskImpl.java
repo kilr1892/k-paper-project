@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static cn.edu.zju.kpaperproject.enums.Config.*;
+
 /**
  * .
  *
@@ -352,8 +354,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
         if (marketNeedNumber > sumFinalProductNumberWithAlive) {
             // 真实需求 > 所有主机厂的(阶段结束, 实际能提供的产品)之和
-            // 随机生成1~3个主机厂
-            int tmp = RandomUtils.nextInt(3, 7);
+            // 主机厂的进入
+            int tmp = RandomUtils.nextInt(ENGINE_FACTORY_ENTER_LOW, ENGINE_FACTORY_ENTER_UPPER);
             for (int i = 0; i < tmp; i++) {
                 tbEngineFactory = new TbEngineFactory();
                 tbEngineFactoryDynamic = new TbEngineFactoryDynamic();
@@ -380,7 +382,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 
 //                double[] position = genNewPosition(new double[]{tbSupplier.getSupplierLocationGX(), tbSupplier.getSupplierLocationGY()}, mapEngineFactoryPosition);
                 double[] position;
-                if (i < tmp * 0.7) {
+                double v = tmp * ENGINE_FACTORY_POSITION_NEAR_PROPORTION;
+                if (i < v) {
                     // 位置70%按照原来的
                     position = genNewPosition(new double[]{tbSupplier.getSupplierLocationGX(), tbSupplier.getSupplierLocationGY()}, mapEngineFactoryPosition);
                 } else {
@@ -416,7 +419,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                 tbEngineFactoryDynamic.setEngineFactoryDemandForecastD(CalculationUtils.demandForecast(
                         price[NumberEnum.PRICE_LOW_ARRAY_INDEX], price[NumberEnum.PRICE_UPPER_ARRAY_INDEX], quality,initMarketNeedNumber));
                 // 创新概率
-                tbEngineFactoryDynamic.setEngineFactoryInnovationProbability(RandomUtils.nextDouble(0, 1));
+                tbEngineFactoryDynamic.setEngineFactoryInnovationProbability(RandomUtils.nextDouble(ENGINE_FACTORY_INNOVATION_PROBABILITY_LOW, ENGINE_FACTORY_INNOVATION_PROBABILITY_UPPER));
                 tbEngineFactoryDynamic.setEngineFactoryInnovationTimes(0);
                 // 加入集合中
                 listEngineFactory.add(tbEngineFactory);
@@ -554,7 +557,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 //            log.error("|||supplierCapacity < engineFactoryNeedServiceNumberWithAlive : "+(supplierCapacity < engineFactoryNeedServiceNumberWithAlive));
             if (supplierCapacity < engineFactoryNeedServiceNumberWithAlive) {
                 // 供应商产能 < 主机厂对该类服务的需求
-                int tmp = RandomUtils.nextInt(3, 7);
+                // 供应商的进入
+                int tmp = RandomUtils.nextInt(SUPPLIER_ENTER_LOW, SUPPLIER_ENTER_UPPER);
 //                log.info(supplierTypeCode[i]+" 生成供应商个数 "+tmp);
                 for (int j = 0; j < tmp; j++) {
                     tbSupplier = new TbSupplier();
@@ -578,7 +582,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                     tbEngineFactory = mapEngineFactory.get(engineFactoryDynamicWithHighestCredit.getEngineFactoryId());
 //                    double[] position = genNewPosition(new double[]{tbEngineFactory.getEngineFactoryLocationGX(), tbEngineFactory.getEngineFactoryLocationGY()}, mapSupplierPosition);
                     double[] position;
-                    if (i < tmp * 0.7) {
+                    double v = tmp * SUPPLIER_POSITION_NEAR_PROPORTION;
+                    if (i < v) {
                         position = genNewPosition(new double[]{tbEngineFactory.getEngineFactoryLocationGX(), tbEngineFactory.getEngineFactoryLocationGY()}, mapSupplierPosition);
                     } else {
                         position = InitSupplierUtils.initPosition(mapSupplierPosition);
@@ -607,7 +612,7 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                     // 质量
                     tbSupplierDynamic.setSupplierQualityQs(InitSupplierUtils.initQuality());
                     // 创新概率
-                    tbSupplierDynamic.setSupplierInnovationProbability(RandomUtils.nextDouble(0, 1));
+                    tbSupplierDynamic.setSupplierInnovationProbability(RandomUtils.nextDouble(SUPPLIER_INNOVATION_PROBABILITY_LOW, SUPPLIER_INNOVATION_PROBABILITY_UPPER));
                     tbSupplierDynamic.setSupplierInnovationTimes(0);
                     // 动态数据里的type
                     tbSupplierDynamic.setSupplierType(InitSupplierUtils.initType(supplierTypeCode[i]));
@@ -829,14 +834,22 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
 //
 //
         // 主机厂与供应商应该淘汰的个数
-        int engineFactoryDynamicShouldEliminationNumber = (int) (queueEngineFactoryDynamicTmp1.size() * 0.3);
-        int supplierShouldEliminationNumber = (int) (queueSupplierDynamic.size() * 0.1);
+        int engineFactoryDynamicShouldEliminationNumber = (int) (queueEngineFactoryDynamicTmp1.size() * ENGINE_FACTORY_COST_PERFORMANCE_ELIMINATION_PROPORTION);
+        int engineFactoryDynamicShouldEliminationNumberWithCredit = (int) (queueEngineFactoryDynamicTmp1.size() * ENGINE_FACTORY_CREDIT_ELIMINATION_PROPORTION);
+        int supplierShouldEliminationNumber = (int) (queueSupplierDynamic.size() * SUPPLIER_CREDIT_ELIMINATION_PROPORTION);
         for (int i = 0; i < engineFactoryDynamicShouldEliminationNumber; i++) {
             TbEngineFactoryDynamic engineFactoryDynamicTmp1 = queueEngineFactoryDynamicTmp1.poll();
-            TbEngineFactoryDynamic engineFactoryDynamicTmp2 = queueEngineFactoryDynamicTmp2.poll();
+//            TbEngineFactoryDynamic engineFactoryDynamicTmp2 = queueEngineFactoryDynamicTmp2.poll();
             setEngineFactory.add(mapEngineFactory.get(engineFactoryDynamicTmp1.getEngineFactoryId()));
+//            setEngineFactory.add(mapEngineFactory.get(engineFactoryDynamicTmp2.getEngineFactoryId()));
+        }
+        for (int i = 0; i < engineFactoryDynamicShouldEliminationNumberWithCredit; i++) {
+//            TbEngineFactoryDynamic engineFactoryDynamicTmp1 = queueEngineFactoryDynamicTmp1.poll();
+            TbEngineFactoryDynamic engineFactoryDynamicTmp2 = queueEngineFactoryDynamicTmp2.poll();
+//            setEngineFactory.add(mapEngineFactory.get(engineFactoryDynamicTmp1.getEngineFactoryId()));
             setEngineFactory.add(mapEngineFactory.get(engineFactoryDynamicTmp2.getEngineFactoryId()));
         }
+
         for (int i = 0; i < supplierShouldEliminationNumber; i++) {
             setSupplier.add(mapSupplier.get(queueSupplierDynamic.poll().getSupplierId()));
         }
