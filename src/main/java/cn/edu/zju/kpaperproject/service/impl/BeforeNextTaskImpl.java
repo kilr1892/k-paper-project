@@ -966,16 +966,16 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         for (EngineFactoryFinalProvision aEngineFactoryFinalProvision : listEngineFactoryFinalProvisions) {
             String engineFactoryId = aEngineFactoryFinalProvision.getEngineFactoryId();
             TbEngineFactory engineFactory = mapEngineFactory.get(engineFactoryId);
-            if (engineFactory.getEngineFactoryAlive()) {
+//            if (engineFactory.getEngineFactoryAlive()) {
                 sumActualSaleNumber += aEngineFactoryFinalProvision.getActualSaleNumber();
-            }
+//            }
         }
         for (TbEngineFactoryDynamic aEngineFactoryDynamic : listEngineFactoryDynamic) {
             String engineFactoryId = aEngineFactoryDynamic.getEngineFactoryId();
             TbEngineFactory engineFactory = mapEngineFactory.get(engineFactoryId);
-            if (engineFactory.getEngineFactoryAlive()) {
+//            if (engineFactory.getEngineFactoryAlive()) {
                 sumEngineFactoryCapacity += aEngineFactoryDynamic.getEngineFactoryCapacityM();
-            }
+//            }
         }
         tbBalance.setEngineFactoryBalance(sumActualSaleNumber * 1.0 / sumEngineFactoryCapacity);
         // 二级市场供需平衡
@@ -983,17 +983,17 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
         for (OrderPlus aOrderPlus : listOrderPlus) {
             String supplierId = aOrderPlus.getSupplierId();
             TbSupplier tbSupplier = mapSupplier.get(supplierId);
-            if (tbSupplier.getSupplierAlive()) {
+//            if (tbSupplier.getSupplierAlive()) {
                 sumSupplierActualNumber += aOrderPlus.getSupplierActualNumberM();
-            }
+//            }
         }
         int sumSupplierCapacity = 0;
         for (TbSupplierDynamic aSupplierDynamic : listSupplierDynamics) {
             String supplierId = aSupplierDynamic.getSupplierId();
             TbSupplier tbSupplier = mapSupplier.get(supplierId);
-            if (tbSupplier.getSupplierAlive()) {
+//            if (tbSupplier.getSupplierAlive()) {
                 sumSupplierCapacity += aSupplierDynamic.getSupplierCapacityM();
-            }
+//            }
         }
         tbBalance.setSupplierBalance(sumSupplierActualNumber * 1.0 / sumSupplierCapacity);
 
@@ -1272,63 +1272,65 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             // 供应商原来平均价
             double initAvgSupplierPrice = (supplierPricePL + supplierPricePU) / 2.0;
 
-            if (supplierCapacityUtilization >= 0.8) {
-                // 产品成交的平均质量
-                // 利用率为1(供不应求)
-                if (initAvgSupplierPrice >= avgSupplierOrderNumber) {
-                    // 初始价格的平均价 >= 所有成交价格的平均值
-                    // 调整产能
-                    supplierCapacity = (int) Math.round(supplierCapacity * 1.5);
-                    // 更新下一阶段的产能
-                    aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
-                } else {
-                    // 初始价格的平均价 < 所有成交价格的平均值
-                    // 调整价格区间并更新
-                    if (supplierPricePL < initAvgSupplierPrice && initAvgSupplierPrice < supplierPricePU) {
-                        aSupplierDynamic.setSupplierPricePL(RandomUtils.nextInt(supplierPricePL, (int) initAvgSupplierPrice + 1));
-                        aSupplierDynamic.setSupplierPricePU(RandomUtils.nextInt((int) initAvgSupplierPrice, supplierPricePU + 1));
-                    } else {
-                        aSupplierDynamic.setSupplierPricePL((int) Math.round(initAvgSupplierPrice / 2.0));
-                        aSupplierDynamic.setSupplierPricePU((int) Math.round(initAvgSupplierPrice * 1.5));
-                    }
-                }
-            } else {
-                // 利用率 < 1(供过于求)
-                if (minEngineFactoryNeedServiceNumber <= supplierCapacity) {
-                    // 主机厂最小的任务量 <= 供应商产能
-                    if (initAvgSupplierPrice >= avgFinalMarketPrice) {
+            if (avgFinalMarketPrice != 0) {
+                if (supplierCapacityUtilization >= 0.8) {
+                    // 产品成交的平均质量
+                    // 利用率为1(供不应求)
+                    if (initAvgSupplierPrice >= avgSupplierOrderNumber) {
                         // 初始价格的平均价 >= 所有成交价格的平均值
-                        if (supplierPricePL < initAvgSupplierPrice) {
+                        // 调整产能
+                        supplierCapacity = (int) Math.round(supplierCapacity * 1.5);
+                        // 更新下一阶段的产能
+                        aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
+                    } else {
+                        // 初始价格的平均价 < 所有成交价格的平均值
+                        // 调整价格区间并更新
+                        if (supplierPricePL < initAvgSupplierPrice && initAvgSupplierPrice < supplierPricePU) {
                             aSupplierDynamic.setSupplierPricePL(RandomUtils.nextInt(supplierPricePL, (int) initAvgSupplierPrice + 1));
                             aSupplierDynamic.setSupplierPricePU(RandomUtils.nextInt((int) initAvgSupplierPrice, supplierPricePU + 1));
                         } else {
                             aSupplierDynamic.setSupplierPricePL((int) Math.round(initAvgSupplierPrice / 2.0));
                             aSupplierDynamic.setSupplierPricePU((int) Math.round(initAvgSupplierPrice * 1.5));
                         }
-                    } else {
-                        // 初始价格的平均价 < 所有成交价格的平均值
-                        int supplierQuality = aSupplierDynamic.getSupplierQualityQs();
-                        if (supplierQuality >= avgSupplierQuality) {
-                            // 质量 >= 平均质量
-                            // 调整产能
-                            supplierCapacity = (int) Math.round(supplierCapacity * 0.9);
-                            // 更新下一阶段的产能
-                            aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
-                        } else {
-                            // 质量 < 平均质量
-                            if (supplierQuality < 10) {
-                                supplierQuality++;
-                                aSupplierDynamic.setSupplierQualityQs(supplierQuality);
-                                // 更新总资产
-                                aSupplierDynamic.setSupplierTotalAssetsP((int) Math.round(aSupplierDynamic.getSupplierTotalAssetsP() * 0.9));
-                            }
-                        }
                     }
                 } else {
-                    // 供应商产能 * 1.1
-                    supplierCapacity = (int) Math.round(supplierCapacity * 1.1);
-                    // 更新下一阶段的产能
-                    aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
+                    // 利用率 < 1(供过于求)
+                    if (minEngineFactoryNeedServiceNumber <= supplierCapacity) {
+                        // 主机厂最小的任务量 <= 供应商产能
+                        if (initAvgSupplierPrice >= avgFinalMarketPrice) {
+                            // 初始价格的平均价 >= 所有成交价格的平均值
+                            if (supplierPricePL < initAvgSupplierPrice) {
+                                aSupplierDynamic.setSupplierPricePL(RandomUtils.nextInt(supplierPricePL, (int) initAvgSupplierPrice + 1));
+                                aSupplierDynamic.setSupplierPricePU(RandomUtils.nextInt((int) initAvgSupplierPrice, supplierPricePU + 1));
+                            } else {
+                                aSupplierDynamic.setSupplierPricePL((int) Math.round(initAvgSupplierPrice / 2.0));
+                                aSupplierDynamic.setSupplierPricePU((int) Math.round(initAvgSupplierPrice * 1.5));
+                            }
+                        } else {
+                            // 初始价格的平均价 < 所有成交价格的平均值
+                            int supplierQuality = aSupplierDynamic.getSupplierQualityQs();
+                            if (supplierQuality >= avgSupplierQuality) {
+                                // 质量 >= 平均质量
+                                // 调整产能
+                                supplierCapacity = (int) Math.round(supplierCapacity * 0.9);
+                                // 更新下一阶段的产能
+                                aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
+                            } else {
+                                // 质量 < 平均质量
+                                if (supplierQuality < 10) {
+                                    supplierQuality++;
+                                    aSupplierDynamic.setSupplierQualityQs(supplierQuality);
+                                    // 更新总资产
+                                    aSupplierDynamic.setSupplierTotalAssetsP((int) Math.round(aSupplierDynamic.getSupplierTotalAssetsP() * 0.9));
+                                }
+                            }
+                        }
+                    } else {
+                        // 供应商产能 * 1.1
+                        supplierCapacity = (int) Math.round(supplierCapacity * 1.1);
+                        // 更新下一阶段的产能
+                        aSupplierDynamic.setSupplierCapacityM(supplierCapacity);
+                    }
                 }
             }
         }
@@ -1426,19 +1428,20 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
             double initAvgEngineFactoryToMarketPrice = (engineFactoryPricePL + engineFactoryPricePU) / 2.0;
 
             // 主机厂修改服务质量-售价-产能
-            if (engineFactoryCapacityUtilization >=0.8) {
-                // 利用率为1(供不应求)
-                if (initAvgEngineFactoryToMarketPrice >= avgFinalMarketPrice) {
-                    // 初始价格的平均价 >= 所有成交价格的平均值
-                    // TODO 测试的时候看看动态数据都是否更新
-                    // 调整产能
-                    engineFactoryCapacity = (int) Math.round(engineFactoryCapacity * 1.3);
-                    // 更新下一阶段的产能
-                    aEngineFactoryDynamic.setEngineFactoryCapacityM(engineFactoryCapacity);
-                } else {
-                    // 初始价格的平均价 < 所有成交价格的平均值
-                    // 调整价格区间并更新
-                    if (avgFinalMarketPrice != 0) {
+            if (avgFinalMarketPrice != 0) {
+                if (engineFactoryCapacityUtilization >= 0.8) {
+                    // 利用率为1(供不应求)
+                    if (initAvgEngineFactoryToMarketPrice >= avgFinalMarketPrice) {
+                        // 初始价格的平均价 >= 所有成交价格的平均值
+                        // TODO 测试的时候看看动态数据都是否更新
+                        // 调整产能
+                        engineFactoryCapacity = (int) Math.round(engineFactoryCapacity * 1.3);
+                        // 更新下一阶段的产能
+                        aEngineFactoryDynamic.setEngineFactoryCapacityM(engineFactoryCapacity);
+                    } else {
+                        // 初始价格的平均价 < 所有成交价格的平均值
+                        // 调整价格区间并更新
+
                         if (engineFactoryPricePL < avgFinalMarketPrice && avgFinalMarketPrice < engineFactoryPricePU) {
                             aEngineFactoryDynamic.setEngineFactoryPricePL(RandomUtils.nextInt(engineFactoryPricePL, (int) avgFinalMarketPrice + 1));
                             aEngineFactoryDynamic.setEngineFactoryPricePU(RandomUtils.nextInt((int) avgFinalMarketPrice, engineFactoryPricePU + 1));
@@ -1446,15 +1449,12 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                             aEngineFactoryDynamic.setEngineFactoryPricePL((int) (avgFinalMarketPrice / 2));
                             aEngineFactoryDynamic.setEngineFactoryPricePU((int) (avgFinalMarketPrice * 1.5));
                         }
-                    } else {
-                        log.error("avgFinalMarketPrice == 0");
+
                     }
-                }
-            } else {
-                // 利用率 < 1(供过于求)
-                if (initAvgEngineFactoryToMarketPrice >= avgFinalMarketPrice) {
-                    // 初始价格的平均价 >= 所有成交价格的平均值
-                    if (avgFinalMarketPrice != 0) {
+                } else {
+                    // 利用率 < 1(供过于求)
+                    if (initAvgEngineFactoryToMarketPrice >= avgFinalMarketPrice) {
+                        // 初始价格的平均价 >= 所有成交价格的平均值
                         if (engineFactoryPricePL < avgFinalMarketPrice) {
                             aEngineFactoryDynamic.setEngineFactoryPricePL(RandomUtils.nextInt(engineFactoryPricePL, (int) avgFinalMarketPrice + 1));
                             aEngineFactoryDynamic.setEngineFactoryPricePU(RandomUtils.nextInt((int) avgFinalMarketPrice, engineFactoryPricePU + 1));
@@ -1462,25 +1462,23 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                             aEngineFactoryDynamic.setEngineFactoryPricePL((int) Math.round(avgFinalMarketPrice / 2.0));
                             aEngineFactoryDynamic.setEngineFactoryPricePU((int) Math.round(avgFinalMarketPrice * 1.5));
                         }
-                    }else {
-                        log.error("avgFinalMarketPrice == 0");
-                    }
-                } else {
-                    // 初始价格的平均价 < 所有成交价格的平均值
-                    int engineFactoryQualityQ = aEngineFactoryDynamic.getEngineFactoryQualityQ();
-                    if (engineFactoryQualityQ >= avgFinalMarketQuality) {
-                        // 质量 >= 平均质量
-                        // 调整产能
-                        engineFactoryCapacity = (int) Math.round(engineFactoryCapacity * 0.9);
-                        // 更新下一阶段的产能
-                        aEngineFactoryDynamic.setEngineFactoryCapacityM(engineFactoryCapacity);
                     } else {
-                        // 质量 < 平均质量
-                        if (engineFactoryQualityQ < 10) {
-                            engineFactoryQualityQ++;
-                            aEngineFactoryDynamic.setEngineFactoryQualityQ(engineFactoryQualityQ);
-                            // 更新总资产
-                            aEngineFactoryDynamic.setEngineFactoryTotalAssetsP((int) Math.round(aEngineFactoryDynamic.getEngineFactoryTotalAssetsP() * 0.9));
+                        // 初始价格的平均价 < 所有成交价格的平均值
+                        int engineFactoryQualityQ = aEngineFactoryDynamic.getEngineFactoryQualityQ();
+                        if (engineFactoryQualityQ >= avgFinalMarketQuality) {
+                            // 质量 >= 平均质量
+                            // 调整产能
+                            engineFactoryCapacity = (int) Math.round(engineFactoryCapacity * 0.9);
+                            // 更新下一阶段的产能
+                            aEngineFactoryDynamic.setEngineFactoryCapacityM(engineFactoryCapacity);
+                        } else {
+                            // 质量 < 平均质量
+                            if (engineFactoryQualityQ < 10) {
+                                engineFactoryQualityQ++;
+                                aEngineFactoryDynamic.setEngineFactoryQualityQ(engineFactoryQualityQ);
+                                // 更新总资产
+                                aEngineFactoryDynamic.setEngineFactoryTotalAssetsP((int) Math.round(aEngineFactoryDynamic.getEngineFactoryTotalAssetsP() * 0.9));
+                            }
                         }
                     }
                 }
@@ -1723,7 +1721,8 @@ public class BeforeNextTaskImpl implements BeforeNextTask {
                     actualSaleNumber = Math.min(actualProductNumber, restMarketNeedNumber);
                     restMarketNeedNumber -= actualSaleNumber;
                 } else {
-                    actualSaleNumber = 0;
+                    actualSaleNumber = restMarketNeedNumber;
+                    restMarketNeedNumber = 0;
                 }
 
                 engineFactoryFinalProvision.setActualSaleNumber(actualSaleNumber);
